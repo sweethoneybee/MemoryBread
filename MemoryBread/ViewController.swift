@@ -55,6 +55,7 @@ class ViewController: UIViewController {
     
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     var collectionView: UICollectionView!
+    var toolBar: HorizontalScrollToolBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,13 +92,40 @@ extension ViewController {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
+        
+        configureToolbar()
+        
+        configureLayouts()
+    }
+    
+    private func configureToolbar() {
+        toolBar = HorizontalScrollToolBar()
+        for _ in 0..<10 {
+            let view1 = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 50)).then { $0.backgroundColor = .red }
+            toolBar.appendSubview(view1)
+        }
+        
+        let view1 = UIView().then { $0.backgroundColor = .blue }
+        let view2 = UIView().then { $0.backgroundColor = .green }
+        let view3 = UIView().then { $0.backgroundColor = .darkGray }
+        toolBar.appendSubviews([view1, view2, view3])
+        view.addSubview(toolBar)
+    }
+    
+    private func configureLayouts() {
+        toolBar.snp.makeConstraints { make in
+            make.height.equalTo(100)
+            make.width.equalTo(view)
+            make.bottom.equalTo(view.snp.bottom)
+            make.centerX.equalToSuperview()
+        }
+        
     }
     
     private func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<TextCell, Item> { cell, indexPath, item in
             cell.label.text = item.word
             cell.label.textAlignment = .center
-            cell.label.font = .preferredFont(forTextStyle: .body)
             cell.didSelected(item.isSelected)
         }
         

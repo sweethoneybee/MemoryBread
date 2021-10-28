@@ -12,7 +12,8 @@ import Then
 class TextCell: UICollectionViewCell {
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
-        $0.font = .preferredFont(forTextStyle: .caption1)
+        $0.font = .preferredFont(forTextStyle: .body)
+        $0.textColor = .black
     }
     
     override init(frame: CGRect) {
@@ -34,11 +35,10 @@ extension TextCell {
             make.leading.top.equalToSuperview().offset(inset)
             make.trailing.bottom.equalToSuperview().offset(-inset)
         }
-//        label.highlightedTextColor = .blue
     }
     
     func didSelected(_ isSelected: Bool) {
         backgroundColor = isSelected ? .blue : .white
-        label.isHighlighted = isSelected
+        label.textColor = isSelected ? .white : .black
     }
 }
