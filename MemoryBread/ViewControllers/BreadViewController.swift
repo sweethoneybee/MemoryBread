@@ -16,6 +16,8 @@ class BreadViewController: UIViewController {
     
     var bread: Bread?
     private var wordItems: [WordItem]!
+    private var editingItems: [WordItem]?
+    private var selectedFilterWithEditing: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +28,13 @@ class BreadViewController: UIViewController {
                       content: Page.sampleContent,
                       separatedContent: Page.sampleSeparatedContent,
                       filterIndexes: Page.sampleFilterIndex)
-        wordItems = popluateData(from: bread)
+        wordItems = populateData(from: bread)
         
         
         configureHierarchy()
         configureDataSource()
+        configureNavigation()
+        
         addToolbar()
         
         collectionView.delegate = self
@@ -83,6 +87,30 @@ extension BreadViewController {
             make.centerX.equalToSuperview()
         }
     }
+    
+    private func configureNavigation() {
+        navigationItem.title = "타이틀"
+        navigationItem.rightBarButtonItems = [editButtonItem]
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        toolbarViewController.setEditing(editing, animated: animated)
+        
+        if editing {
+            editingItems = copy(wordItems)
+            reloadDataSource(with: editingItems)
+            return
+        }
+        
+        wordItems = copy(editingItems ?? [WordItem]())
+        
+        reloadDataSource(with: wordItems)
+        
+        updateFilterIndexes(with: wordItems)
+        editingItems = nil
+        selectedFilterWithEditing = nil
+    }
 }
 
 // MARK: - Diffable Data Source
@@ -96,53 +124,74 @@ extension BreadViewController {
         let word: String
         var isFiltered: Bool = false
         var filterColor: UIColor?
+  
+        init(word: String) {
+            self.word = word
+        }
+        
+        init(_ item: Self) {
+            self.word = item.word
+            self.filterColor = item.filterColor
+        }
         
         func hash(into hasher: inout Hasher) {
             hasher.combine(identifier)
             hasher.combine(isFiltered)
+            hasher.combine(filterColor)
         }
         
         static func ==(lhs: Self, rhs: Self) -> Bool {
             return lhs.identifier == rhs.identifier
             && lhs.isFiltered == rhs.isFiltered
+            && lhs.filterColor == rhs.filterColor
         }
     }
     
     private func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<WordCell, WordItem> { cell, indexPath, item in
+        let cellRegistration = UICollectionView.CellRegistration<WordCell, WordItem> {
+            [weak self] cell, indexPath, item in
             cell.label.text = item.word
+            
+            if self?.isEditing == true {
+                cell.backgroundColor = item.filterColor?.withAlphaComponent(0.5)
+                cell.label.textColor = .black
+                return
+            }
+            
             if item.isFiltered {
                 cell.backgroundColor = item.filterColor
                 cell.label.textColor = item.filterColor
-            } else {
-                cell.backgroundColor = .clear
-                cell.label.textColor = .black
+                return
             }
+            
+            cell.backgroundColor = .clear
+            cell.label.textColor = .black
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, WordItem>(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
         
-        reloadDataSource()
+        reloadDataSource(with: wordItems)
     }
     
-    private func reloadDataSource() {
+    private func reloadDataSource(with items: [WordItem]?) {
+        guard let items = items else { return }
         var snapshot = NSDiffableDataSourceSnapshot<Section, WordItem>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(wordItems)
+        snapshot.appendItems(items, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     func filterSelected(at index: Int, isSelected: Bool) {
         bread?.filterIndexes?[index].forEach { wordItems[$0].isFiltered = isSelected }
-        reloadDataSource()
+        reloadDataSource(with: wordItems)
     }
 }
 
 // MARK: - Data Modifier
 extension BreadViewController {
-    private func popluateData(from bread: Bread?) -> [WordItem] {
+    private func populateData(from bread: Bread?) -> [WordItem] {
         guard let separatedContent = bread?.separatedContent,
               let filterIndexes = bread?.filterIndexes else {
                   return [WordItem]()
@@ -157,20 +206,49 @@ extension BreadViewController {
         
         return wordItems
     }
+    
+    private func copy(_ items: [WordItem]) -> [WordItem] {
+        return items.map { WordItem($0) }
+    }
+    
+    private func updateFilterIndexes(with items: [WordItem]) {
+        var filterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
+        wordItems.enumerated().forEach { (itemIndex, item) in
+            if let colorIndex = FilterColor.colorIndex(for: item.filterColor) {
+                filterIndexes[colorIndex].append(itemIndex)
+            }
+        }
+        bread?.filterIndexes = filterIndexes
+    }
 }
 
 // MARK: - UICollectionView Delegate
 extension BreadViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        if isEditing,
+        let editingFilter = selectedFilterWithEditing {
+            let index = indexPath.item
+            editingItems?[index].filterColor = FilterColor(rawValue: editingFilter)?.color()
+            reloadDataSource(with: editingItems)
+        }
+    }
 }
 
 // MARK: - ColorFilterToolbar Delegate
 extension BreadViewController: ColorFilterToolbarDelegate {
     func colorFilterToolbar(didSelectColorIndex index: Int) {
+        if isEditing {
+            selectedFilterWithEditing = index
+            return
+        }
         filterSelected(at: index, isSelected: true)
     }
     
     func colorFilterToolbar(didDeselectColorIndex index: Int) {
+        if isEditing {
+            selectedFilterWithEditing = nil
+            return
+        }
         filterSelected(at: index, isSelected: false)
     }
 }

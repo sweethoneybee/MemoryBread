@@ -24,6 +24,7 @@
 		40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */; };
 		40F92B80272BD7880085224E /* FixedHorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B7F272BD7880085224E /* FixedHorizontalToolbar.swift */; };
 		40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B81272BD7B10085224E /* BreadViewController.swift */; };
+		40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B88272C3E920085224E /* UICollectionView+Selection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorFilterToolbarViewController.swift; sourceTree = "<group>"; };
 		40F92B7F272BD7880085224E /* FixedHorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHorizontalToolbar.swift; sourceTree = "<group>"; };
 		40F92B81272BD7B10085224E /* BreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadViewController.swift; sourceTree = "<group>"; };
+		40F92B88272C3E920085224E /* UICollectionView+Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Selection.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 		40C8DE2327259F5300B8C5FC /* MemoryBread */ = {
 			isa = PBXGroup;
 			children = (
+				40F92B87272C3E7D0085224E /* Extensions */,
 				40F92B83272BD7B80085224E /* ViewControllers */,
 				40F7589B272AF8ED000ADD4F /* Views */,
 				40245CFE27293547002E84A8 /* Models */,
@@ -144,6 +147,14 @@
 				40C8DE4127259F8500B8C5FC /* WordCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		40F92B87272C3E7D0085224E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				40F92B88272C3E920085224E /* UICollectionView+Selection.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,6 +239,7 @@
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
+				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
 				40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,

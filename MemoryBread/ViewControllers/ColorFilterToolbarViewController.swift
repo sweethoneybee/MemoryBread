@@ -22,6 +22,17 @@ enum FilterColor: Int, CaseIterable {
     static var count: Int {
         FilterColor.allCases.count
     }
+    
+    static func colorIndex(for color: UIColor?) -> Int? {
+        guard let color = color else { return nil }
+        switch color {
+        case .red: return FilterColor.red.rawValue
+        case .blue: return FilterColor.blue.rawValue
+        case .yellow: return FilterColor.yellow.rawValue
+        case .brown: return FilterColor.brown.rawValue
+        default: return nil
+        }
+    }
 }
 
 protocol ColorFilterToolbarDelegate: AnyObject {
@@ -30,9 +41,11 @@ protocol ColorFilterToolbarDelegate: AnyObject {
 }
 
 final class ColorFilterToolbarViewController: UIViewController {
-    private weak var collectionView: UICollectionView!
-    weak var delegate: ColorFilterToolbarDelegate?
     var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
+    weak var delegate: ColorFilterToolbarDelegate?
+    
+    private weak var collectionView: UICollectionView!
+    private var selectedItems: [IndexPath]?
     
     required init?(coder: NSCoder) {
         fatalError("not implemented")
@@ -52,6 +65,22 @@ final class ColorFilterToolbarViewController: UIViewController {
         
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = true
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        if editing {
+            selectedItems = collectionView.indexPathsForSelectedItems
+            collectionView.deselectAll(animated: animated)
+            collectionView.allowsMultipleSelection = !editing
+            return
+        }
+        
+        collectionView.allowsMultipleSelection = !editing
+        collectionView.deselectAll(animated: animated)
+        collectionView.selectAll(selectedItems, animated: animated)
+        selectedItems = nil
     }
 }
 
