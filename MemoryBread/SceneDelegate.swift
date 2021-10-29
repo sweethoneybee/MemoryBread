@@ -16,7 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let breadVC = BreadViewController()
+        let dao = BreadDAO()
+        let bread = dao.fetchAll().first ?? dao.mockBread
+        let breadVC = BreadViewController(bread: bread)
         let nvc = UINavigationController(rootViewController: breadVC)
         
         window?.rootViewController = nvc

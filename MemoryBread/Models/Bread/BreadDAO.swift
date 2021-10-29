@@ -44,4 +44,13 @@ final class BreadDAO {
         AppDelegate.viewContext.delete(bread)
         return save()
     }
+    
+    var mockBread: Bread {
+        Bread(touch: Date.now,
+                      directoryName: "임시 폴더",
+                      title: "임시 타이틀",
+                      content: Page.sampleContent,
+                      separatedContent: Page.sampleSeparatedContent,
+                      filterIndexes: Page.sampleFilterIndex)
+    }
 }

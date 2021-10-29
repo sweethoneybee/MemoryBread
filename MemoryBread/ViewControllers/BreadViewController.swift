@@ -14,22 +14,23 @@ class BreadViewController: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
     
-    var bread: Bread?
+    var bread: Bread
     private var wordItems: [WordItem]!
     private var editingItems: [WordItem]?
     private var selectedFilterWithEditing: Int?
     
+    required init?(coder: NSCoder) {
+        fatalError("not implemented")
+    }
+    
+    init(bread: Bread) {
+        self.bread = bread
+        super.init(nibName: nil, bundle: nil)
+        self.wordItems = self.populateData(from: self.bread)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        bread = Bread(touch: Date.now,
-                      directoryName: "임시 폴더",
-                      title: "임시 타이틀",
-                      content: Page.sampleContent,
-                      separatedContent: Page.sampleSeparatedContent,
-                      filterIndexes: Page.sampleFilterIndex)
-        wordItems = populateData(from: bread)
-        
         
         configureHierarchy()
         configureDataSource()
@@ -184,16 +185,16 @@ extension BreadViewController {
     }
     
     func filterSelected(at index: Int, isSelected: Bool) {
-        bread?.filterIndexes?[index].forEach { wordItems[$0].isFiltered = isSelected }
+        bread.filterIndexes?[index].forEach { wordItems[$0].isFiltered = isSelected }
         reloadDataSource(with: wordItems)
     }
 }
 
 // MARK: - Data Modifier
 extension BreadViewController {
-    private func populateData(from bread: Bread?) -> [WordItem] {
-        guard let separatedContent = bread?.separatedContent,
-              let filterIndexes = bread?.filterIndexes else {
+    private func populateData(from bread: Bread) -> [WordItem] {
+        guard let separatedContent = bread.separatedContent,
+              let filterIndexes = bread.filterIndexes else {
                   return [WordItem]()
               }
         
@@ -218,7 +219,9 @@ extension BreadViewController {
                 filterIndexes[colorIndex].append(itemIndex)
             }
         }
-        bread?.filterIndexes = filterIndexes
+        bread.filterIndexes = filterIndexes
+        bread.touch = Date.now
+        BreadDAO().save()
     }
 }
 
