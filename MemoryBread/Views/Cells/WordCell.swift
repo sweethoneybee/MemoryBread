@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class TextCell: UICollectionViewCell {
+class WordCell: UICollectionViewCell {
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
         $0.font = .preferredFont(forTextStyle: .body)
@@ -26,7 +26,7 @@ class TextCell: UICollectionViewCell {
     }
 }
 
-extension TextCell {
+extension WordCell {
     func configure() {
         layer.cornerRadius = 10
         contentView.addSubview(label)

@@ -15,19 +15,20 @@ public class Bread: NSManagedObject {
     convenience init(
         touch: Date?,
         directoryName: String?,
-        title: String? = nil,
-        content: String? = nil,
-        separatedContent: [String]? = nil,
-        filterIndex: [[Int]]? = nil,
+        title: String?,
+        content: String?,
+        separatedContent: [String]?,
+        filterIndexes: [[Int]]?,
         context: NSManagedObjectContext = AppDelegate.viewContext
     ) {
         self.init(context: context)
-        self.touch = touch
+        self.createdTime = Date()
         self.id = UUID()
+        self.touch = touch
         self.directoryName = directoryName
         self.title = title
         self.content = content
         self.separatedContent = separatedContent
-        self.filterIndex = filterIndex
+        self.filterIndexes = filterIndexes
     }
 }
