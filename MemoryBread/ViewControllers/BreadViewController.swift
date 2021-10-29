@@ -15,8 +15,9 @@ class BreadViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
     
     var bread: Bread
-    private var wordItems: [WordItem]!
+    private var wordItems: [WordItem] = []
     private var editingItems: [WordItem]?
+    private var selectedFilters: Set<Int> = []
     private var selectedFilterWithEditing: Int?
     
     required init?(coder: NSCoder) {
@@ -124,6 +125,7 @@ extension BreadViewController {
         let identifier = UUID()
         let word: String
         var isFiltered: Bool = false
+        var isPeeking: Bool = false
         var filterColor: UIColor?
   
         init(word: String) {
@@ -133,18 +135,22 @@ extension BreadViewController {
         init(_ item: Self) {
             self.word = item.word
             self.filterColor = item.filterColor
+            self.isFiltered = item.isFiltered
+            self.isPeeking = item.isPeeking
         }
         
         func hash(into hasher: inout Hasher) {
             hasher.combine(identifier)
             hasher.combine(isFiltered)
             hasher.combine(filterColor)
+            hasher.combine(isPeeking)
         }
         
         static func ==(lhs: Self, rhs: Self) -> Bool {
             return lhs.identifier == rhs.identifier
             && lhs.isFiltered == rhs.isFiltered
             && lhs.filterColor == rhs.filterColor
+            && lhs.isPeeking == rhs.isPeeking
         }
     }
     
@@ -160,8 +166,8 @@ extension BreadViewController {
             }
             
             if item.isFiltered {
-                cell.backgroundColor = item.filterColor
-                cell.label.textColor = item.filterColor
+                cell.backgroundColor = item.isPeeking ? item.filterColor?.withAlphaComponent(0.5) : item.filterColor
+                cell.label.textColor = item.isPeeking ? .black : item.filterColor
                 return
             }
             
@@ -182,11 +188,6 @@ extension BreadViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(items, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
-    }
-    
-    func filterSelected(at index: Int, isSelected: Bool) {
-        bread.filterIndexes?[index].forEach { wordItems[$0].isFiltered = isSelected }
-        reloadDataSource(with: wordItems)
     }
 }
 
@@ -232,8 +233,14 @@ extension BreadViewController: UICollectionViewDelegate {
         let editingFilter = selectedFilterWithEditing {
             let index = indexPath.item
             editingItems?[index].filterColor = FilterColor(rawValue: editingFilter)?.color()
+            editingItems?[index].isFiltered = (selectedFilters.contains(editingFilter))
             reloadDataSource(with: editingItems)
+            return
         }
+        
+        let index = indexPath.item
+        wordItems[index].isPeeking.toggle()
+        reloadDataSource(with: wordItems)
     }
 }
 
@@ -245,6 +252,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
             return
         }
         filterSelected(at: index, isSelected: true)
+        selectedFilters.insert(index)
     }
     
     func colorFilterToolbar(didDeselectColorIndex index: Int) {
@@ -253,6 +261,15 @@ extension BreadViewController: ColorFilterToolbarDelegate {
             return
         }
         filterSelected(at: index, isSelected: false)
+        selectedFilters.remove(index)
+    }
+    
+    private func filterSelected(at index: Int, isSelected: Bool) {
+        bread.filterIndexes?[index].forEach {
+            wordItems[$0].isFiltered = isSelected
+            wordItems[$0].isPeeking = false
+        }
+        reloadDataSource(with: wordItems)
     }
 }
 
