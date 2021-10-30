@@ -8,13 +8,17 @@
 import UIKit
 
 enum FilterColor: Int, CaseIterable {
-    case red, blue, yellow, brown
+    case pink, blue, mint, indigo, yellow
+    case orange, purple
     func color() -> UIColor {
         switch self {
-        case .red: return UIColor.red
-        case .blue: return UIColor.blue
-        case .yellow: return UIColor.yellow
-        case .brown: return UIColor.brown
+        case .pink: return UIColor.systemPink
+        case .blue: return UIColor.systemBlue
+        case .mint: return UIColor.systemMint
+        case .indigo: return UIColor.systemIndigo
+        case .yellow: return UIColor.systemYellow
+        case .orange: return UIColor.systemOrange
+        case .purple: return UIColor.systemPurple
         }
     }
     
@@ -25,10 +29,13 @@ enum FilterColor: Int, CaseIterable {
     static func colorIndex(for color: UIColor?) -> Int? {
         guard let color = color else { return nil }
         switch color {
-        case .red: return FilterColor.red.rawValue
-        case .blue: return FilterColor.blue.rawValue
-        case .yellow: return FilterColor.yellow.rawValue
-        case .brown: return FilterColor.brown.rawValue
+        case .systemPink: return FilterColor.pink.rawValue
+        case .systemBlue: return FilterColor.blue.rawValue
+        case .systemMint: return FilterColor.mint.rawValue
+        case .systemIndigo: return FilterColor.indigo.rawValue
+        case .systemYellow: return FilterColor.yellow.rawValue
+        case .systemOrange: return FilterColor.orange.rawValue
+        case .systemPurple: return FilterColor.purple.rawValue
         default: return nil
         }
     }

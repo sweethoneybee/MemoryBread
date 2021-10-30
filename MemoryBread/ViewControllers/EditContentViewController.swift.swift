@@ -9,6 +9,9 @@ import UIKit
 import SnapKit
 
 final class EditContentViewController: UIViewController {
+    struct UIConstants {
+        static let inset = 20
+    }
     
     var content: String
     var didCompleteEditing: ((String) -> (Void))?
@@ -24,6 +27,9 @@ final class EditContentViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        
         configureHierarchy()
         configureNavigation()
     }
@@ -46,7 +52,8 @@ extension EditContentViewController {
     
     private func configureLayouts() {
         contentTextField.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(UIConstants.inset)
         }
     }
     

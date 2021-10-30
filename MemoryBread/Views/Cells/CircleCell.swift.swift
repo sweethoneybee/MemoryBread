@@ -9,7 +9,7 @@ import UIKit
 
 final class CircleCell: UICollectionViewCell {
 
-    static let borderWidth: CGFloat = 2
+    static let borderWidth: CGFloat = 5
     
     required init?(coder: NSCoder) {
         fatalError("not implemented")
@@ -18,7 +18,7 @@ final class CircleCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         layer.cornerRadius = bounds.width / 2
-        layer.borderColor = UIColor.white.cgColor
+        layer.borderColor = UIColor.circleCellLayer.cgColor
         setBorderWidth(isSelected: isSelected)
     }
     
@@ -29,6 +29,11 @@ final class CircleCell: UICollectionViewCell {
     }
     
     private func setBorderWidth(isSelected: Bool) {
-        layer.borderWidth = isSelected ? CircleCell.borderWidth : 0
+        UIView.animate(withDuration: 0.2,
+                       delay: 0,
+                       options: .curveEaseInOut,
+                       animations: { [weak self] in
+            self?.layer.borderWidth = isSelected ? CircleCell.borderWidth : 0
+        })
     }
 }

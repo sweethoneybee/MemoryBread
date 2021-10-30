@@ -29,6 +29,6 @@ public class Bread: NSManagedObject {
         self.title = title
         self.content = content
         self.separatedContent = separatedContent
-        self.filterIndexes = filterIndexes
+        self.filterIndexes = filterIndexes ?? Array(repeating: [], count: FilterColor.count)
     }
 }

@@ -34,9 +34,8 @@ final class HorizontalToolBar: UIView {
         addSubview(collectionView)
         configureLayouts()
         
-        
-        backgroundColor = .brown
-        collectionView.backgroundColor = .green
+        backgroundColor = .horizontalToolbar
+        collectionView.backgroundColor = .horizontalToolbar
     }
 }
 

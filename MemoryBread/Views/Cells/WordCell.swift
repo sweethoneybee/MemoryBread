@@ -13,7 +13,7 @@ final class WordCell: UICollectionViewCell {
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
         $0.font = .preferredFont(forTextStyle: .body)
-        $0.textColor = .black
+        $0.textColor = .label
     }
     
     override init(frame: CGRect) {
@@ -35,10 +35,5 @@ extension WordCell {
             make.leading.top.equalToSuperview().offset(inset)
             make.trailing.bottom.equalToSuperview().offset(-inset)
         }
-    }
-    
-    func didSelected(_ isSelected: Bool) {
-        backgroundColor = isSelected ? .blue : .white
-        label.textColor = isSelected ? .white : .black
     }
 }

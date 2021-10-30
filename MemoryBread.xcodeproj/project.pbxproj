@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		40060F8C272D5D1800BA7A34 /* EditContentViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */; };
 		40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8D272D5D5100BA7A34 /* FilterColor.swift */; };
+		40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */; };
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
@@ -32,6 +33,7 @@
 /* Begin PBXFileReference section */
 		40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContentViewController.swift.swift; sourceTree = "<group>"; };
 		40060F8D272D5D5100BA7A34 /* FilterColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterColor.swift; sourceTree = "<group>"; };
+		40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+CustomColor.swift"; sourceTree = "<group>"; };
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				40F92B88272C3E920085224E /* UICollectionView+Selection.swift */,
+				40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
 				40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
+				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,
 				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift.swift in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,

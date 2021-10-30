@@ -51,7 +51,7 @@ final class BreadDAO {
                       title: "임시 타이틀",
                       content: Page.sampleContent,
                       separatedContent: Page.sampleSeparatedContent,
-                      filterIndexes: Page.sampleFilterIndex)
+                      filterIndexes: nil)
     }
 }
 

@@ -9,6 +9,10 @@ import UIKit
 import SnapKit
 
 final class BreadViewController: UIViewController {
+    struct UIConstants {
+        static let inset: CGFloat = 20
+    }
+    
     var toolbarViewController: ColorFilterToolbarViewController!
     
     var collectionView: UICollectionView!
@@ -32,6 +36,7 @@ final class BreadViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         
         configureHierarchy()
         configureDataSource()
@@ -85,7 +90,7 @@ extension BreadViewController {
     private func configureHierarchy() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .breadBody
         view.addSubview(collectionView)
         
         configureLayouts()
@@ -93,7 +98,8 @@ extension BreadViewController {
     
     private func configureLayouts() {
         collectionView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(UIConstants.inset)
         }
     }
     
@@ -112,8 +118,6 @@ extension BreadViewController {
     }
     
     private func configureNavigation() {
-        navigationItem.title = "타이틀"
-        
         let editContentItem = UIBarButtonItem(image: UIImage(systemName: "note.text"),
                                               style: .plain,
                                               target: self,
@@ -132,7 +136,6 @@ extension BreadViewController {
         let editContentViewController = EditContentViewController(content: content)
         editContentViewController.didCompleteEditing = didCompleteEditing(_:)
         let nvc = UINavigationController(rootViewController: editContentViewController)
-        nvc.navigationBar.backgroundColor = .systemBackground
         navigationController?.present(nvc, animated: true)
     }
 }
@@ -183,18 +186,18 @@ extension BreadViewController {
             
             if self?.isEditing == true {
                 cell.backgroundColor = item.filterColor?.withAlphaComponent(0.5)
-                cell.label.textColor = .black
+                cell.label.textColor = .wordCellText
                 return
             }
             
             if item.isFiltered {
                 cell.backgroundColor = item.isPeeking ? item.filterColor?.withAlphaComponent(0.5) : item.filterColor
-                cell.label.textColor = item.isPeeking ? .black : item.filterColor
+                cell.label.textColor = item.isPeeking ? .wordCellText : item.filterColor
                 return
             }
             
             cell.backgroundColor = .clear
-            cell.label.textColor = .black
+            cell.label.textColor = .wordCellText
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, WordItem>(collectionView: collectionView) { collectionView, indexPath, item in
