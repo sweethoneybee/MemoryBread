@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class BreadViewController: UIViewController {
+final class BreadViewController: UIViewController {
     var toolbarViewController: ColorFilterToolbarViewController!
     
     var collectionView: UICollectionView!
@@ -19,7 +19,7 @@ class BreadViewController: UIViewController {
     private var editingItems: [WordItem]?
     private var selectedFilters: Set<Int> = []
     private var selectedFilterWithEditing: Int?
-    
+
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
@@ -44,6 +44,25 @@ class BreadViewController: UIViewController {
         
         toolbarViewController.delegate = self
     }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        toolbarViewController.setEditing(editing, animated: animated)
+        
+        if editing {
+            editingItems = copy(wordItems)
+            reloadDataSource(with: editingItems)
+            return
+        }
+        
+        wordItems = copy(editingItems ?? [WordItem]())
+        
+        reloadDataSource(with: wordItems)
+        
+        updateFilterIndexes(with: wordItems)
+        editingItems = nil
+        selectedFilterWithEditing = nil
+    }
 }
 
 // MARK: - Configure Views
@@ -64,7 +83,7 @@ extension BreadViewController {
     }
     
     private func configureHierarchy() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
@@ -73,7 +92,9 @@ extension BreadViewController {
     }
     
     private func configureLayouts() {
-        
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     private func addToolbar() {
@@ -92,26 +113,27 @@ extension BreadViewController {
     
     private func configureNavigation() {
         navigationItem.title = "타이틀"
-        navigationItem.rightBarButtonItems = [editButtonItem]
+        
+        let editContentItem = UIBarButtonItem(image: UIImage(systemName: "note.text"),
+                                              style: .plain,
+                                              target: self,
+                                              action: #selector(showEditContentViewController))
+        navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
     }
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        toolbarViewController.setEditing(editing, animated: animated)
+}
+
+// MARK: - objc methods
+extension BreadViewController {
+    @objc
+    private func showEditContentViewController() {
+        guard isEditing == false,
+              let content = bread.content else { return }
         
-        if editing {
-            editingItems = copy(wordItems)
-            reloadDataSource(with: editingItems)
-            return
-        }
-        
-        wordItems = copy(editingItems ?? [WordItem]())
-        
-        reloadDataSource(with: wordItems)
-        
-        updateFilterIndexes(with: wordItems)
-        editingItems = nil
-        selectedFilterWithEditing = nil
+        let editContentViewController = EditContentViewController(content: content)
+        editContentViewController.didCompleteEditing = didCompleteEditing(_:)
+        let nvc = UINavigationController(rootViewController: editContentViewController)
+        nvc.navigationBar.backgroundColor = .systemBackground
+        navigationController?.present(nvc, animated: true)
     }
 }
 
@@ -224,6 +246,27 @@ extension BreadViewController {
         bread.touch = Date.now
         BreadDAO().save()
     }
+    
+    private func didCompleteEditing(_ newContent: String) {
+        let newContent = newContent.trimmingCharacters(in: [" "])
+        guard bread.content != newContent else { return }
+        
+        bread.content = newContent
+        bread.separatedContent = newContent.components(separatedBy: ["\n", " "])
+        bread.filterIndexes = Array(repeating: [], count: FilterColor.count)
+        bread.touch = Date.now
+        BreadDAO().save()
+        
+        wordItems = populateData(from: bread)
+        reloadDataSource(with: wordItems)
+        
+        filterReset()
+    }
+    
+    private func filterReset() {
+        toolbarViewController.deselectAllFilter()
+        selectedFilters.removeAll()
+    }
 }
 
 // MARK: - UICollectionView Delegate
@@ -286,35 +329,4 @@ extension BreadViewController: ColorFilterToolbarDelegate {
         }
         reloadDataSource(with: wordItems)
     }
-}
-
-struct Page {
-    static let sampleContent =
-"""
-근로계약에서 정한 휴식시간이나 대기시간이 근로시간에 속하는지 휴게시간에 속하는지는 특정업종이나
-업무의 종류에 따라 일률적으로 판단할 것이 아니다. 이는 근로계약의 내용이나 해당 사업장에 적용되는
-취업규칙과 단체협약의 규정, 근로자가 제공하는 업무의 내용과 해당 사업장의 구체적 업무 방식, 휴게 중인
-근로자에 대한 사용자의 간섭이나 감독여부, 자유롭게 이용할 수 있는 휴게장소의 구비 여부, 그 밖에 근로자의
-실질적 휴식이 방해되었다거나 사용자의 지휘, 감독을 인정할 만한 사정이 있는지와 그 정도 등 여러 사정을
-종합하여 개별사안에 따라 구체적으로 판단하여야 한다.
-근로계약에서 정한 휴식시간이나 대기시간이 근로시간에 속하는지 휴게시간에 속하는지는 특정업종이나
-업무의 종류에 따라 일률적으로 판단할 것이 아니다. 이는 근로계약의 내용이나 해당 사업장에 적용되는
-취업규칙과 단체협약의 규정, 근로자가 제공하는 업무의 내용과 해당 사업장의 구체적 업무 방식, 휴게 중인
-근로자에 대한 사용자의 간섭이나 감독여부, 자유롭게 이용할 수 있는 휴게장소의 구비 여부, 그 밖에 근로자의
-실질적 휴식이 방해되었다거나 사용자의 지휘, 감독을 인정할 만한 사정이 있는지와 그 정도 등 여러 사정을
-종합하여 개별사안에 따라 구체적으로 판단하여야 한다.
-"""
-    static var sampleSeparatedContent: [String] {
-        Page.sampleContent.components(separatedBy: ["\n", " "])
-    }
-    
-    static var sampleFilterIndex: [[Int]] {
-        [
-            [0, 1, 3, 5, 7, 9],
-            [15, 16, 17],
-            [20, 21, 25],
-            [28],
-        ]
-    }
-    var content: String
 }

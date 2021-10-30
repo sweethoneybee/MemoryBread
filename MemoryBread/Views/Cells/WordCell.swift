@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class WordCell: UICollectionViewCell {
+final class WordCell: UICollectionViewCell {
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
         $0.font = .preferredFont(forTextStyle: .body)

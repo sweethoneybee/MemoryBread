@@ -8,33 +8,6 @@
 import UIKit
 import SnapKit
 
-enum FilterColor: Int, CaseIterable {
-    case red, blue, yellow, brown
-    func color() -> UIColor {
-        switch self {
-        case .red: return UIColor.red
-        case .blue: return UIColor.blue
-        case .yellow: return UIColor.yellow
-        case .brown: return UIColor.brown
-        }
-    }
-    
-    static var count: Int {
-        FilterColor.allCases.count
-    }
-    
-    static func colorIndex(for color: UIColor?) -> Int? {
-        guard let color = color else { return nil }
-        switch color {
-        case .red: return FilterColor.red.rawValue
-        case .blue: return FilterColor.blue.rawValue
-        case .yellow: return FilterColor.yellow.rawValue
-        case .brown: return FilterColor.brown.rawValue
-        default: return nil
-        }
-    }
-}
-
 protocol ColorFilterToolbarDelegate: AnyObject {
     func colorFilterToolbar(didSelectColorIndex index: Int)
     func colorFilterToolbar(didDeselectColorIndex index: Int)
@@ -81,6 +54,10 @@ final class ColorFilterToolbarViewController: UIViewController {
         collectionView.deselectAll(animated: animated)
         collectionView.selectAll(selectedItems, animated: animated)
         selectedItems = nil
+    }
+    
+    func deselectAllFilter() {
+        collectionView.deselectAll(animated: true)
     }
 }
 
@@ -130,13 +107,13 @@ extension ColorFilterToolbarViewController: UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard isEditing != true else { return }
-        
+        guard isEditing == false else { return }
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         delegate?.colorFilterToolbar(didSelectColorIndex: item)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard isEditing == false else { return }
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         delegate?.colorFilterToolbar(didDeselectColorIndex: item)
     }
