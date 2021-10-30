@@ -229,18 +229,33 @@ extension BreadViewController {
 // MARK: - UICollectionView Delegate
 extension BreadViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        if isEditing,
-        let editingFilter = selectedFilterWithEditing {
-            let index = indexPath.item
-            editingItems?[index].filterColor = FilterColor(rawValue: editingFilter)?.color()
-            editingItems?[index].isFiltered = (selectedFilters.contains(editingFilter))
+        let index = indexPath.item
+        guard isEditing else {
+            wordItems[index].isPeeking.toggle()
+            reloadDataSource(with: wordItems)
+            return
+        }
+        
+        guard let editingFilter = selectedFilterWithEditing,
+              let filterColor = FilterColor(rawValue: editingFilter)?.color() else {
+                  editingItems?[index].filterColor = nil
+                  editingItems?[index].isFiltered = false
+                  editingItems?[index].isPeeking = false
+                  reloadDataSource(with: editingItems)
+                  return
+              }
+        
+        if editingItems?[index].filterColor == filterColor {
+            editingItems?[index].filterColor = nil
+            editingItems?[index].isFiltered = false
+            editingItems?[index].isPeeking = false
             reloadDataSource(with: editingItems)
             return
         }
         
-        let index = indexPath.item
-        wordItems[index].isPeeking.toggle()
-        reloadDataSource(with: wordItems)
+        editingItems?[index].filterColor = filterColor
+        editingItems?[index].isFiltered = selectedFilters.contains(editingFilter)
+        reloadDataSource(with: editingItems)
     }
 }
 

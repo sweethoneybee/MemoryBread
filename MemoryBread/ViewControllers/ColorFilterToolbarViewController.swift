@@ -114,11 +114,28 @@ extension ColorFilterToolbarViewController {
 
 // MARK: - UICollectionViewDelegate
 extension ColorFilterToolbarViewController: UICollectionViewDelegate {
-  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard isEditing else { return true }
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return false }
+        
+        if let cell = collectionView.cellForItem(at: indexPath),
+           cell.isSelected == false {
+            delegate?.colorFilterToolbar(didSelectColorIndex: item)
+            return true
+        }
+        
+        collectionView.deselectItem(at: indexPath, animated: true)
+        delegate?.colorFilterToolbar(didDeselectColorIndex: item)
+        return false
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard isEditing != true else { return }
+        
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         delegate?.colorFilterToolbar(didSelectColorIndex: item)
     }
-     
+
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
         delegate?.colorFilterToolbar(didDeselectColorIndex: item)

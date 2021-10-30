@@ -30,6 +30,7 @@ final class HorizontalToolBar: UIView {
         collectionView = UICollectionView(frame: bounds, collectionViewLayout: createLayout())
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.alwaysBounceVertical = false
         addSubview(collectionView)
         configureLayouts()
         
