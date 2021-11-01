@@ -13,6 +13,7 @@
 		40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F92272D9A3200BA7A34 /* BreadListCell.swift */; };
 		40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */; };
 		40060F97272DA18100BA7A34 /* BreadListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F96272DA18100BA7A34 /* BreadListController.swift */; };
+		40060F99272FCB7D00BA7A34 /* BreadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F98272FCB7D00BA7A34 /* BreadController.swift */; };
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
@@ -40,6 +41,7 @@
 		40060F92272D9A3200BA7A34 /* BreadListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListCell.swift; sourceTree = "<group>"; };
 		40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListViewController.swift; sourceTree = "<group>"; };
 		40060F96272DA18100BA7A34 /* BreadListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListController.swift; sourceTree = "<group>"; };
+		40060F98272FCB7D00BA7A34 /* BreadController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadController.swift; sourceTree = "<group>"; };
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				40060F96272DA18100BA7A34 /* BreadListController.swift */,
+				40060F98272FCB7D00BA7A34 /* BreadController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
+				40060F99272FCB7D00BA7A34 /* BreadController.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
