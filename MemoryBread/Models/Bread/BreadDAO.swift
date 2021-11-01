@@ -45,13 +45,23 @@ final class BreadDAO {
         return save()
     }
     
+    // TODO: 임시 구현한 메소드라 삭제 필요
+    func deleteAll() {
+        let breads = fetchAll()
+        for bread in breads {
+            AppDelegate.viewContext.delete(bread)
+        }
+        
+        save()
+    }
+    
     var mockBread: Bread {
         Bread(touch: Date.now,
-                      directoryName: "임시 폴더",
-                      title: "임시 타이틀",
-                      content: Page.sampleContent,
-                      separatedContent: Page.sampleSeparatedContent,
-                      filterIndexes: nil)
+              directoryName: "임시 폴더",
+              title: "임시 타이틀",
+              content: Page.sampleContent,
+              separatedContent: Page.sampleSeparatedContent,
+              filterIndexes: Array(repeating: [], count: FilterColor.count))
     }
 }
 

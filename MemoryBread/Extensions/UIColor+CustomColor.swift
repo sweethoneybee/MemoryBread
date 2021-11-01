@@ -23,4 +23,8 @@ extension UIColor {
     static var horizontalToolbar: UIColor {
         return .systemGray4
     }
+    
+    static var breadList: UIColor {
+        return .systemBackground
+    }
 }
