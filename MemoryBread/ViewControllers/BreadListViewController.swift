@@ -14,8 +14,10 @@ final class BreadListViewController: UIViewController {
         case main
     }
     
-    var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, BreadListController.BreadItem>!
+    let reuseIdentifier = "reuse-identifier-bread-list-view"
+    
+    var tableView: UITableView!
+    var dataSource: UITableViewDiffableDataSource<Section, BreadListController.BreadItem>!
     
     var breadListController = BreadListController()
     
@@ -23,7 +25,6 @@ final class BreadListViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         navigationItem.title = "암기빵"
-        navigationItem.backButtonDisplayMode = .minimal
         configureHierarchy()
         configureDataSource()
         addToolbar()
@@ -46,12 +47,12 @@ extension BreadListViewController {
     }
     
     private func configureHierarchy() {
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
-        collectionView.backgroundColor = .breadList
-        collectionView.delegate = self
+        tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.delegate = self
         
-        view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
@@ -67,44 +68,87 @@ extension BreadListViewController {
     
     @objc
     func addBread() {
-        
+        let newItem = breadListController.createBread()
+        var snapshot = dataSource.snapshot()
+        if let firstItem = snapshot.itemIdentifiers.first {
+            snapshot.insertItems([newItem], beforeItem: firstItem)
+        } else {
+            snapshot.appendItems([newItem], toSection: .main)
+        }
+        dataSource.apply(snapshot, animatingDifferences: true) {
+            let bread = self.breadListController.getBread(at: 0)
+            let breadViewController = BreadViewController(bread: bread)
+            self.navigationController?.pushViewController(breadViewController, animated: true)
+        }
     }
 }
 
 // MARK: - Data Source
 extension BreadListViewController {
     private func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration
-        <BreadListCell, BreadListController.BreadItem> { cell, indexPath, breadItem in
-            cell.titleLabel.text = breadItem.title
-            cell.bodyLabel.text = breadItem.body
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .none
-            dateFormatter.locale = Locale(identifier: "ko-KR")
-            cell.dateLabel.text = dateFormatter.string(from: breadItem.date)
-        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "ko-KR")
         
-        dataSource = UICollectionViewDiffableDataSource
-        <Section, BreadListController.BreadItem>(collectionView: collectionView) {
-            collectionView, indexPath, item in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+        let titleAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
+        let dateAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .ultraLight)]
+        let bodyAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .light)]
+        
+        dataSource = DataSource(tableView: tableView) {
+            tableView, indexPath, breadItem in
+            let cell = tableView.dequeueReusableCell(withIdentifier: self.reuseIdentifier, for: indexPath)
+            
+            var content = cell.defaultContentConfiguration()
+            let titleAttributedString = NSAttributedString(string: breadItem.title, attributes: titleAttribute)
+            content.attributedText = titleAttributedString
+            
+            let dateString = dateFormatter.string(from: breadItem.date)
+            let secondaryAttributedString = NSMutableAttributedString(string: dateString + " ", attributes: dateAttribute)
+            secondaryAttributedString.append(NSAttributedString(string: breadItem.body, attributes: bodyAttribute))
+            
+            content.secondaryAttributedText = secondaryAttributedString
+            cell.contentConfiguration = content
+            return cell
         }
-        let breadItems = breadListController.items
-        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(breadItems, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
-// MARK: - CollecionView Delegate
-extension BreadListViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
+// MARK: - TableView Delegate
+extension BreadListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let bread = breadListController.getBread(at: indexPath.item)
         let breadViewController = BreadViewController(bread: bread)
         navigationController?.pushViewController(breadViewController, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CGFloat(60)
+    }
+    
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        if let index = indexPath?.item {
+            breadListController.deleteBread(at: index)
+            
+        }
+    }
+}
+
+extension BreadListViewController {
+    class DataSource: UITableViewDiffableDataSource<Section, BreadListController.BreadItem> {
+        override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+            return true
+        }
+        
+        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+            if editingStyle == .delete {
+                if let identifierToDelete = itemIdentifier(for: indexPath) {
+                    var snapshot = self.snapshot()
+                    snapshot.deleteItems([identifierToDelete])
+                    apply(snapshot)
+                }
+            }
+        }
     }
 }

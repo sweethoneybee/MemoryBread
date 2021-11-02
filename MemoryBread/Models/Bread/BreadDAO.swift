@@ -39,29 +39,17 @@ final class BreadDAO {
         return true
     }
     
-    @discardableResult
-    func delete(_ bread: Bread) -> Bool {
+    func delete(_ bread: Bread) {
         AppDelegate.viewContext.delete(bread)
-        return save()
     }
     
-    // TODO: 임시 구현한 메소드라 삭제 필요
-    func deleteAll() {
-        let breads = fetchAll()
-        for bread in breads {
-            AppDelegate.viewContext.delete(bread)
-        }
-        
-        save()
-    }
-    
-    var mockBread: Bread {
-        Bread(touch: Date.now,
-              directoryName: "임시 폴더",
-              title: "임시 타이틀",
-              content: Page.sampleContent,
-              separatedContent: Page.sampleSeparatedContent,
-              filterIndexes: Array(repeating: [], count: FilterColor.count))
+    func create() -> Bread {
+        return Bread(touch: Date.now,
+                          directoryName: "임시 디렉토리",
+                          title: "새로운 암기빵",
+                          content: "",
+                          separatedContent: [],
+                          filterIndexes: Array(repeating: [], count: FilterColor.count))
     }
 }
 

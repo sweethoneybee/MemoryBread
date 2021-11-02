@@ -60,12 +60,12 @@ final class BreadViewController: UIViewController {
         
         if editing {
             editingItems = copy(wordItems)
-            applyData(with: editingItems ?? [])
+            applyNewData(editingItems ?? [])
             return
         }
         
         wordItems = copy(editingItems ?? [])
-        applyData(with: wordItems)
+        applyNewData(wordItems)
         
         bread.updateFilterIndexes(with: wordItems)
         BreadDAO().save()
@@ -206,7 +206,7 @@ extension BreadViewController {
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
-    private func applyData(with newItems: [WordItem]) {
+    private func applyNewData(_ newItems: [WordItem]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, WordItem>()
         snapshot.appendSections([.main])
         snapshot.appendItems(newItems, toSection: .main)
@@ -258,7 +258,7 @@ extension BreadViewController {
         BreadDAO().save()
         
         wordItems = populateData(from: bread)
-        applyData(with: wordItems)
+        applyNewData(wordItems)
         
         toolbarViewController.deselectAllFilter()
         selectedFilters.removeAll()

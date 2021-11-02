@@ -65,7 +65,5 @@ extension BreadListCell {
             make.trailing.equalToSuperview().inset(topInset)
             make.bottom.equalToSuperview().inset(topInset)
         }
-//        bodyLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-
     }
 }

@@ -40,17 +40,6 @@ extension Bread : Identifiable {
         touch = Date.now
     }
     
-    func updateFilterIndexes(with items: [BreadController.WordItem]) {
-        var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
-        items.enumerated().forEach { (itemIndex, item) in
-            if let colorIndex = FilterColor.colorIndex(for: item.filterColor) {
-                newFilterIndexes[colorIndex].append(itemIndex)
-            }
-        }
-        filterIndexes = newFilterIndexes
-        touch = Date.now
-    }
-    
     func updateContent(_ newContent: String) {
         content = newContent
         separatedContent = newContent.components(separatedBy: ["\n", " "])

@@ -43,20 +43,18 @@ extension BreadListController {
         return breads[index]
     }
     
-    func internalItems() -> [BreadItem] {
-        return [
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-            BreadItem(title: "임시 타이틀", date: Date.now, body: "근로계약에서 정한 휴식이나 대기시간이 근로시간에 속하는지 안 속하는지는 내가 알바가 아닙니다."),
-        ]
+    func createBread() -> BreadItem {
+        let newBread = BreadDAO().create()
+        breads.insert(newBread, at: 0)
+        return BreadItem(title: newBread.title ?? "",
+                         date: newBread.touch ?? Date.now,
+                         body: newBread.content ?? "")
+    }
+    
+    func deleteBread(at index: Int) {
+        let dao = BreadDAO()
+        dao.delete(breads[index])
+        dao.save()
+        breads.remove(at: index)
     }
 }
