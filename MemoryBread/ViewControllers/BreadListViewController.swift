@@ -68,7 +68,7 @@ extension BreadListViewController {
     
     @objc
     func addBread() {
-        let newItem = breadListController.createBread()
+        let newItem = breadListController.newBreadItem()
         var snapshot = dataSource.snapshot()
         if let firstItem = snapshot.itemIdentifiers.first {
             snapshot.insertItems([newItem], beforeItem: firstItem)
@@ -76,9 +76,10 @@ extension BreadListViewController {
             snapshot.appendItems([newItem], toSection: .main)
         }
         dataSource.apply(snapshot, animatingDifferences: true) {
-            let bread = self.breadListController.getBread(at: 0)
-            let breadViewController = BreadViewController(bread: bread)
-            self.navigationController?.pushViewController(breadViewController, animated: true)
+            if let bread = BreadDAO.default.bread(at: 0) {
+                let breadViewController = BreadViewController(bread: bread)
+                self.navigationController?.pushViewController(breadViewController, animated: true)
+            }
         }
     }
 }
@@ -117,9 +118,10 @@ extension BreadListViewController {
 // MARK: - TableView Delegate
 extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let bread = breadListController.getBread(at: indexPath.item)
-        let breadViewController = BreadViewController(bread: bread)
-        navigationController?.pushViewController(breadViewController, animated: true)
+        if let bread = BreadDAO.default.bread(at: indexPath.item) {
+            let breadViewController = BreadViewController(bread: bread)
+            navigationController?.pushViewController(breadViewController, animated: true)
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -130,7 +132,6 @@ extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
         if let index = indexPath?.item {
             breadListController.deleteBread(at: index)
-            
         }
     }
 }

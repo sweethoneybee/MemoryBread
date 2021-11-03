@@ -19,42 +19,33 @@ final class BreadListController {
         }
     }
     
-    lazy var breads: [Bread] = {
-        return BreadDAO().fetchAll()
-    }()
-    
-    // TODO: 이렇게 해도 될지, 계속 업데이트 시킬지 개선사항 찾아볼 것
     var items: [BreadItem] {
-        return fetchItems()
-//        return internalItems()
+        return BreadDAO.default.allBreads.map {
+            BreadItem(title: $0.title ?? "",
+                      date: $0.touch ?? Date.now,
+                      body: $0.content ?? "")
+        }
     }
 }
 
 extension BreadListController {
-    func fetchItems() -> [BreadItem] {
-        return breads.map {
-            BreadItem(title: $0.title ?? "",
-                          date: $0.touch ?? Date.now,
-                          body: $0.content ?? "")
-        }
+    func breadItem(at index: Int) -> BreadItem? {
+        guard items.count > 0 && index < items.count else { return nil }
+        return items[index]
     }
     
-    func getBread(at index: Int) -> Bread {
-        return breads[index]
-    }
-    
-    func createBread() -> BreadItem {
-        let newBread = BreadDAO().create()
-        breads.insert(newBread, at: 0)
+    func newBreadItem() -> BreadItem {
+        let newBread = BreadDAO.default.create()
         return BreadItem(title: newBread.title ?? "",
-                         date: newBread.touch ?? Date.now,
+                         date: Date.now,
                          body: newBread.content ?? "")
     }
     
-    func deleteBread(at index: Int) {
-        let dao = BreadDAO()
-        dao.delete(breads[index])
-        dao.save()
-        breads.remove(at: index)
+    @discardableResult
+    func deleteBread(at index: Int) -> Bool {
+        guard let willBeDeletedBread = BreadDAO.default.bread(at: index) else {
+            return false
+        }
+        return BreadDAO.default.delete(willBeDeletedBread)
     }
 }

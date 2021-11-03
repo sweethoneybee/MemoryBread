@@ -23,7 +23,7 @@ public class Bread: NSManagedObject {
     ) {
         self.init(context: context)
         self.createdTime = Date()
-        self.id = UUID()
+        self.id = NSNumber(value: UserManager.autoIncreaseId)
         self.touch = touch
         self.directoryName = directoryName
         self.title = title

@@ -18,7 +18,7 @@ extension Bread {
 
     @NSManaged public var createdTime: Date?
     @NSManaged public var touch: Date?
-    @NSManaged public var id: UUID?
+    @NSManaged public var id: NSNumber?
     @NSManaged public var directoryName: String?
     @NSManaged public var title: String?
     @NSManaged public var content: String?

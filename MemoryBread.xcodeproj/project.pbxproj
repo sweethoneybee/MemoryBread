@@ -17,6 +17,7 @@
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
+		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2427259F5300B8C5FC /* AppDelegate.swift */; };
 		40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */; };
 		40C8DE2C27259F5300B8C5FC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40C8DE2A27259F5300B8C5FC /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
+		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		40C8DE2127259F5300B8C5FC /* MemoryBread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryBread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40C8DE2427259F5300B8C5FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 			children = (
 				40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */,
 				40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */,
+				409CC8FD27327311009B9AA1 /* UserManager.swift */,
 				40245D0327293C60002E84A8 /* BreadDAO.swift */,
 			);
 			path = Bread;
@@ -280,6 +283,7 @@
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */,
 				40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */,
+				409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */,
 				40060F97272DA18100BA7A34 /* BreadListController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

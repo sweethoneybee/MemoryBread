@@ -8,11 +8,21 @@
 import Foundation
 
 final class BreadDAO {
+    static let `default` = BreadDAO()
+    
+    private lazy var breads: [Bread] = {
+        return fetchAll()
+    }()
+    
+    var allBreads: [Bread] {
+        return breads
+    }
+    
     private func Log(title: String, error: Error) {
         NSLog("\(title) failed. Error=\(error)")
     }
     
-    func fetchAll() -> [Bread] {
+    private func fetchAll() -> [Bread] {
         let request = Bread.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "touch", ascending: false)
         request.sortDescriptors = [sortDescriptor]
@@ -39,17 +49,28 @@ final class BreadDAO {
         return true
     }
     
-    func delete(_ bread: Bread) {
+    @discardableResult
+    func delete(_ bread: Bread) -> Bool {
+        guard let index = breads.firstIndex(of: bread) else { return false }
+        breads.remove(at: index)
         AppDelegate.viewContext.delete(bread)
+        return true
     }
     
     func create() -> Bread {
-        return Bread(touch: Date.now,
+        let bread = Bread(touch: Date.now,
                           directoryName: "임시 디렉토리",
                           title: "새로운 암기빵",
                           content: "",
                           separatedContent: [],
                           filterIndexes: Array(repeating: [], count: FilterColor.count))
+        breads.insert(bread, at: 0)
+        return bread
+    }
+    
+    func bread(at index: Int) -> Bread? {
+        guard breads.count > 0 && index < breads.count else { return nil }
+        return breads[index]
     }
 }
 
