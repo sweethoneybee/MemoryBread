@@ -28,10 +28,9 @@ final class WordCell: UICollectionViewCell {
 
 extension WordCell {
     func configure() {
-        layer.cornerRadius = 10
         contentView.addSubview(label)
         label.snp.makeConstraints { make in
-            let inset = CGFloat(2)
+            let inset = CGFloat(1)
             make.leading.top.equalToSuperview().offset(inset)
             make.trailing.bottom.equalToSuperview().offset(-inset)
         }

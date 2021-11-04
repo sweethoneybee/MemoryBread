@@ -78,14 +78,14 @@ final class BreadViewController: UIViewController {
 // MARK: - Configure Views
 extension BreadViewController {
     private func createLayout() -> UICollectionViewCompositionalLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(50),
-                                              heightDimension: .estimated(50))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(10),
+                                              heightDimension: .estimated(10))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(50))
+                                               heightDimension: .estimated(10))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
+        group.interItemSpacing = .fixed(5)
         let section = NSCollectionLayoutSection(group: group)
         
         let layout = UICollectionViewCompositionalLayout(section: section)
@@ -270,22 +270,27 @@ extension BreadViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
         let index = indexPath.item
         guard isEditing else {
-            var newItem = WordItem(wordItems[index])
-            newItem.isPeeking.toggle()
-            reloadItem(from: wordItems[index], to: newItem)
-            wordItems[index] = newItem
+            if let colorIndex = FilterColor.colorIndex(for: wordItems[index].filterColor),
+               selectedFilters.contains(colorIndex) {
+                var newItem = WordItem(wordItems[index])
+                newItem.isPeeking.toggle()
+                reloadItem(from: wordItems[index], to: newItem)
+                wordItems[index] = newItem
+            }
             return
         }
         
         guard let oldItem = editingItems?[index] else { return }
         guard let editingFilter = selectedFilterWithEditing,
               let filterColor = FilterColor(rawValue: editingFilter)?.color() else {
-                  var newItem = WordItem(oldItem)
-                  newItem.filterColor = nil
-                  newItem.isFiltered = false
-                  newItem.isPeeking = false
-                  reloadItem(from: oldItem, to: newItem)
-                  editingItems?[index] = newItem
+                  if editingItems?[index].filterColor != nil {
+                      var newItem = WordItem(oldItem)
+                      newItem.filterColor = nil
+                      newItem.isFiltered = false
+                      newItem.isPeeking = false
+                      reloadItem(from: oldItem, to: newItem)
+                      editingItems?[index] = newItem
+                  }
                   return
               }
         
