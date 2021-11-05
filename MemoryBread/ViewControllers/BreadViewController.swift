@@ -10,7 +10,7 @@ import SnapKit
 
 final class BreadViewController: UIViewController {
     struct UIConstants {
-        static let inset: CGFloat = 20
+        static let edgeInset: CGFloat = 20
         static let wordItemSpacing: CGFloat = 5
         static let lineSpacing: CGFloat = 15
     }
@@ -59,7 +59,6 @@ final class BreadViewController: UIViewController {
         configureNavigation()
         
         addGesture()
-        addToolbar()
         
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = true
@@ -103,6 +102,7 @@ extension BreadViewController {
     
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = UIConstants.lineSpacing
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: UIConstants.edgeInset, bottom: 0, trailing: UIConstants.edgeInset)
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
@@ -114,13 +114,16 @@ extension BreadViewController {
         collectionView.backgroundColor = .breadBody
         view.addSubview(collectionView)
         
+        addToolbar()
+        
         configureLayouts()
     }
     
     private func configureLayouts() {
         collectionView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(UIConstants.inset)
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(toolbarViewController.view.snp.top)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -153,6 +156,7 @@ extension BreadViewController {
     private func addGesture() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panningWords(_:)))
         panGesture.maximumNumberOfTouches = 1
+        panGesture.delegate = self
         collectionView.addGestureRecognizer(panGesture)
     }
     
@@ -427,5 +431,15 @@ extension BreadViewController: ColorFilterToolbarDelegate {
         }
         reloadDataSource(from: oldItems, to: newItems)
         wordItems = newItems
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension BreadViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if selectedFilterIndex != nil {
+            return false
+        }
+        return true
     }
 }
