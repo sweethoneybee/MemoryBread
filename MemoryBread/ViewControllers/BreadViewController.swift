@@ -11,6 +11,8 @@ import SnapKit
 final class BreadViewController: UIViewController {
     struct UIConstants {
         static let inset: CGFloat = 20
+        static let wordItemSpacing: CGFloat = 5
+        static let lineSpacing: CGFloat = 15
     }
     
     enum Section {
@@ -24,10 +26,20 @@ final class BreadViewController: UIViewController {
     
     var bread: Bread
     private var wordItems: [WordItem] = []
-    private var editingItems: [WordItem]?
+    private var editingItems: [WordItem] = []
+    private var isItemsPanned: [Bool] = []
     private var selectedFilters: Set<Int> = []
-    private var selectedFilterWithEditing: Int?
+    private var selectedFilterIndex: Int?
+    
+    private var highlightedItemIndexForEditing: Int?
 
+    private var selectedFilterColor: UIColor? {
+        if let selectedFilterIndex = selectedFilterIndex {
+            return FilterColor(rawValue: selectedFilterIndex)?.color()
+        }
+        return nil
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
@@ -46,6 +58,7 @@ final class BreadViewController: UIViewController {
         configureDataSource()
         configureNavigation()
         
+        addGesture()
         addToolbar()
         
         collectionView.delegate = self
@@ -60,18 +73,19 @@ final class BreadViewController: UIViewController {
         
         if editing {
             editingItems = copy(wordItems)
-            applyNewData(editingItems ?? [])
+            applyNewData(editingItems)
             return
         }
         
-        wordItems = copy(editingItems ?? [])
+        wordItems = copy(editingItems)
         applyNewData(wordItems)
         
         bread.updateFilterIndexes(with: wordItems)
         BreadDAO().save()
         
-        editingItems = nil
-        selectedFilterWithEditing = nil
+        editingItems.removeAll()
+        selectedFilterIndex = nil
+        highlightedItemIndexForEditing = nil
     }
 }
 
@@ -85,8 +99,10 @@ extension BreadViewController {
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(10))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .fixed(5)
+        group.interItemSpacing = .fixed(UIConstants.wordItemSpacing)
+    
         let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = UIConstants.lineSpacing
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
@@ -129,6 +145,73 @@ extension BreadViewController {
                                               action: #selector(showEditContentViewController))
         navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
         navigationItem.largeTitleDisplayMode = .never
+    }
+}
+
+// MARK: - Gesture
+extension BreadViewController {
+    private func addGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panningWords(_:)))
+        panGesture.maximumNumberOfTouches = 1
+        collectionView.addGestureRecognizer(panGesture)
+    }
+    
+    @objc
+    private func panningWords(_ sender: UIGestureRecognizer) {
+        guard isEditing else { return }
+        
+        switch sender.state {
+        case .began:
+            isItemsPanned = Array(repeating: false, count: editingItems.count)
+            if let justHighlighted = highlightedItemIndexForEditing {
+                isItemsPanned[justHighlighted] = true
+                highlightedItemIndexForEditing = nil
+            }
+        case .changed:
+            let touchedPoint = sender.location(in: collectionView)
+            if let index = collectionView.indexPathForItem(at: touchedPoint)?.item,
+               index < isItemsPanned.count,
+               isItemsPanned[index] == false {
+                isItemsPanned[index] = true
+                updateItemIfNeeded(at: index)
+            }
+        default:
+            break
+        }
+    }
+    
+    private func updateItemIfNeeded(at index: Int) {
+        guard isEditing,
+              index < editingItems.count else {
+                  return
+              }
+        
+        let updatingItem = editingItems[index]
+        
+        if selectedFilterColor == nil { // 편집 중 필터 선택 X
+            if updatingItem.filterColor != nil {
+                let newItem = removeFilterOf(oldItem: updatingItem)
+                reloadItem(from: updatingItem, to: newItem)
+                editingItems[index] = newItem
+            }
+            return
+        }
+        
+        // 편집 중 필터 선택 O.
+        if updatingItem.filterColor == selectedFilterColor {
+            let newItem = removeFilterOf(oldItem: updatingItem)
+            reloadItem(from: updatingItem, to: newItem)
+            editingItems[index] = newItem
+            return
+        }
+        
+        if let selectedFilterIndex = selectedFilterIndex {
+            var newItem = WordItem(updatingItem)
+            newItem.filterColor = selectedFilterColor
+            newItem.isFiltered = selectedFilters.contains(selectedFilterIndex)
+            reloadItem(from: updatingItem, to: newItem)
+            editingItems[index] = newItem
+        }
     }
 }
 
@@ -269,46 +352,28 @@ extension BreadViewController {
 extension BreadViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
         let index = indexPath.item
-        guard isEditing else {
-            if let colorIndex = FilterColor.colorIndex(for: wordItems[index].filterColor),
-               selectedFilters.contains(colorIndex) {
-                var newItem = WordItem(wordItems[index])
-                newItem.isPeeking.toggle()
-                reloadItem(from: wordItems[index], to: newItem)
-                wordItems[index] = newItem
-            }
+        
+        if isEditing {
+            highlightedItemIndexForEditing = index
+            updateItemIfNeeded(at: index)
             return
         }
         
-        guard let oldItem = editingItems?[index] else { return }
-        guard let editingFilter = selectedFilterWithEditing,
-              let filterColor = FilterColor(rawValue: editingFilter)?.color() else {
-                  if editingItems?[index].filterColor != nil {
-                      var newItem = WordItem(oldItem)
-                      newItem.filterColor = nil
-                      newItem.isFiltered = false
-                      newItem.isPeeking = false
-                      reloadItem(from: oldItem, to: newItem)
-                      editingItems?[index] = newItem
-                  }
-                  return
-              }
-        
-        if oldItem.filterColor == filterColor {
-            var newItem = WordItem(oldItem)
-            newItem.filterColor = nil
-            newItem.isFiltered = false
-            newItem.isPeeking = false
-            reloadItem(from: oldItem, to: newItem)
-            editingItems?[index] = newItem
-            return
+        if let colorIndex = FilterColor.colorIndex(for: wordItems[index].filterColor),
+           selectedFilters.contains(colorIndex) {
+            var newItem = WordItem(wordItems[index])
+            newItem.isPeeking.toggle()
+            reloadItem(from: wordItems[index], to: newItem)
+            wordItems[index] = newItem
         }
-        
+    }
+    
+    private func removeFilterOf(oldItem: WordItem) -> WordItem {
         var newItem = WordItem(oldItem)
-        newItem.filterColor = filterColor
-        newItem.isFiltered = selectedFilters.contains(editingFilter)
-        reloadItem(from: oldItem, to: newItem)
-        editingItems?[index] = newItem
+        newItem.filterColor = nil
+        newItem.isFiltered = false
+        newItem.isPeeking = false
+        return newItem
     }
 }
 
@@ -324,7 +389,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
     
     private func filterSelected(at index: Int) {
         if isEditing {
-            selectedFilterWithEditing = index
+            selectedFilterIndex = index
             return
         }
         selectedFilters.insert(index)
@@ -333,7 +398,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
     
     private func filterDeselected(at index: Int) {
         if isEditing {
-            selectedFilterWithEditing = nil
+            selectedFilterIndex = nil
             return
         }
         selectedFilters.remove(index)

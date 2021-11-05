@@ -12,7 +12,7 @@ import Then
 final class WordCell: UICollectionViewCell {
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
-        $0.font = .preferredFont(forTextStyle: .body)
+        $0.font = .systemFont(ofSize: 18, weight: .regular)
         $0.textColor = .label
     }
     
