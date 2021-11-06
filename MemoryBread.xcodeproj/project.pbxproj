@@ -129,7 +129,6 @@
 				40245CFE27293547002E84A8 /* Models */,
 				40C8DE2427259F5300B8C5FC /* AppDelegate.swift */,
 				40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */,
-				40C8DE2A27259F5300B8C5FC /* Main.storyboard */,
 				40C8DE3027259F5500B8C5FC /* Assets.xcassets */,
 				40C8DE3227259F5500B8C5FC /* LaunchScreen.storyboard */,
 				40C8DE3527259F5500B8C5FC /* Info.plist */,
@@ -160,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */,
+				40C8DE2A27259F5300B8C5FC /* Main.storyboard */,
 				40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */,
 				40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */,
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
