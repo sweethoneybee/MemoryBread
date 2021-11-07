@@ -19,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let breadListViewController = BreadListViewController()
         let nvc = UINavigationController(rootViewController: breadListViewController)
         nvc.navigationBar.prefersLargeTitles = true
+        nvc.navigationBar.tintColor = .systemPink
+        
         window?.rootViewController = nvc
         window?.makeKeyAndVisible()
     }

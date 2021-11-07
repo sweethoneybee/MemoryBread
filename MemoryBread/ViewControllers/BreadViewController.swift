@@ -148,6 +148,7 @@ extension BreadViewController {
                                               action: #selector(showEditContentViewController))
         navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
         navigationItem.largeTitleDisplayMode = .never
+        navigationItem.title = bread.title
     }
 }
 

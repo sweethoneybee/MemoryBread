@@ -58,11 +58,10 @@ extension BreadListViewController {
     }
     
     private func addToolbar() {
-        let addItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"),
+        let addItem = UIBarButtonItem(image: UIImage(systemName: "plus.app"),
                                       style: .plain,
                                       target: self,
                                       action: #selector(addBread))
-        addItem.tintColor = .systemPink
         navigationItem.rightBarButtonItem = addItem
     }
     
