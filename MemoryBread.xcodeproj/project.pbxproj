@@ -28,7 +28,7 @@
 		40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE4127259F8500B8C5FC /* WordCell.swift */; };
 		40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift.swift */; };
 		40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */; };
-		40F92B80272BD7880085224E /* FixedHorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B7F272BD7880085224E /* FixedHorizontalToolbar.swift */; };
+		40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B7F272BD7880085224E /* ScrollableTitleView.swift */; };
 		40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B81272BD7B10085224E /* BreadViewController.swift */; };
 		40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B88272C3E920085224E /* UICollectionView+Selection.swift */; };
 /* End PBXBuildFile section */
@@ -55,7 +55,7 @@
 		40C8DE4127259F8500B8C5FC /* WordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCell.swift; sourceTree = "<group>"; };
 		40F7589D272AFA5A000ADD4F /* CircleCell.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift.swift; sourceTree = "<group>"; };
 		40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorFilterToolbarViewController.swift; sourceTree = "<group>"; };
-		40F92B7F272BD7880085224E /* FixedHorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHorizontalToolbar.swift; sourceTree = "<group>"; };
+		40F92B7F272BD7880085224E /* ScrollableTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTitleView.swift; sourceTree = "<group>"; };
 		40F92B81272BD7B10085224E /* BreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadViewController.swift; sourceTree = "<group>"; };
 		40F92B88272C3E920085224E /* UICollectionView+Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Selection.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -138,19 +138,10 @@
 		40F7589B272AF8ED000ADD4F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				40FB78AB2738DF6600ECDDF0 /* CustomViews */,
 				40F92B84272BD7D30085224E /* Cells */,
-				40F7589C272AF8F1000ADD4F /* HorizontalToolbar */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		40F7589C272AF8F1000ADD4F /* HorizontalToolbar */ = {
-			isa = PBXGroup;
-			children = (
-				4088CEBE272A74030071134E /* HorizontalToolbar.swift */,
-				40F92B7F272BD7880085224E /* FixedHorizontalToolbar.swift */,
-			);
-			path = HorizontalToolbar;
 			sourceTree = "<group>";
 		};
 		40F92B83272BD7B80085224E /* ViewControllers */ = {
@@ -181,6 +172,15 @@
 				40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		40FB78AB2738DF6600ECDDF0 /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				4088CEBE272A74030071134E /* HorizontalToolbar.swift */,
+				40F92B7F272BD7880085224E /* ScrollableTitleView.swift */,
+			);
+			path = CustomViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,7 +274,7 @@
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
 				40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */,
-				40F92B80272BD7880085224E /* FixedHorizontalToolbar.swift in Sources */,
+				40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */,
 				40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */,

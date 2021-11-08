@@ -21,6 +21,7 @@ final class BreadViewController: UIViewController {
     
     var toolbarViewController: ColorFilterToolbarViewController!
     
+    var titleView: ScrollableTitleView!
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
     
@@ -109,9 +110,15 @@ extension BreadViewController {
     }
     
     private func configureHierarchy() {
+        titleView = ScrollableTitleView().then {
+            $0.text = bread.title
+        }
+        
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .breadBody
+        
+        view.addSubview(titleView)
         view.addSubview(collectionView)
         
         addToolbar()
@@ -120,8 +127,13 @@ extension BreadViewController {
     }
     
     private func configureLayouts() {
-        collectionView.snp.makeConstraints { make in
+        titleView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(UIConstants.edgeInset)
+            make.bottom.equalTo(collectionView.snp.top)
+        }
+        
+        collectionView.snp.makeConstraints { make in
             make.bottom.equalTo(toolbarViewController.view.snp.top)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
@@ -148,7 +160,6 @@ extension BreadViewController {
                                               action: #selector(showEditContentViewController))
         navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
         navigationItem.largeTitleDisplayMode = .never
-        navigationItem.title = bread.title
     }
 }
 
@@ -444,3 +455,9 @@ extension BreadViewController: UIGestureRecognizerDelegate {
         return true
     }
 }
+//
+//extension BreadViewController {
+//    final class DataSource: UICollectionViewDiffableDataSource<Section, WordItem> {
+//        collectionView
+//    }
+//}
