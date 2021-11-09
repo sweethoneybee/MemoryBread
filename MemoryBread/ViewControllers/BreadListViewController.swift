@@ -25,6 +25,7 @@ final class BreadListViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         navigationItem.title = "암기빵"
+        navigationItem.backButtonDisplayMode = .minimal
         configureHierarchy()
         configureDataSource()
         addToolbar()

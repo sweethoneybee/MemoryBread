@@ -53,6 +53,7 @@ extension EditContentViewController {
             $0.font = .preferredFont(forTextStyle: .body)
             $0.text = content
             $0.contentInset = UIEdgeInsets(top: 0, left: UIConstants.contentInset, bottom: 0, right: UIConstants.contentInset)
+            $0.keyboardDismissMode = .interactive
         }
         
         view.addSubview(contentTextField)

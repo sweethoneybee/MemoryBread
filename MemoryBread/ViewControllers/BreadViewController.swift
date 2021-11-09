@@ -13,6 +13,8 @@ final class BreadViewController: UIViewController {
         static let edgeInset: CGFloat = 20
         static let wordItemSpacing: CGFloat = 5
         static let lineSpacing: CGFloat = 15
+        static let backButtonOffset: CGFloat = -10
+        static let naviTitleOffset: CGFloat = backButtonOffset + 30
     }
     
     enum Section {
@@ -21,7 +23,6 @@ final class BreadViewController: UIViewController {
     
     var toolbarViewController: ColorFilterToolbarViewController!
     
-    var titleView: ScrollableTitleView!
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
     
@@ -105,20 +106,22 @@ extension BreadViewController {
         section.interGroupSpacing = UIConstants.lineSpacing
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: UIConstants.edgeInset, bottom: 0, trailing: UIConstants.edgeInset)
         
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .estimated(44))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                        elementKind: ScrollableSupplemantaryView.reuseIdentifier,
+                                                                        alignment: .top)
+        section.boundarySupplementaryItems = [sectionHeader]
+        
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
     
     private func configureHierarchy() {
-        titleView = ScrollableTitleView().then {
-            $0.text = bread.title
-        }
-        
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .breadBody
-        
-        view.addSubview(titleView)
+
         view.addSubview(collectionView)
         
         addToolbar()
@@ -127,15 +130,16 @@ extension BreadViewController {
     }
     
     private func configureLayouts() {
-        titleView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(UIConstants.edgeInset)
-            make.bottom.equalTo(collectionView.snp.top)
+        collectionView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(toolbarViewController.view.snp.top)
         }
         
-        collectionView.snp.makeConstraints { make in
-            make.bottom.equalTo(toolbarViewController.view.snp.top)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        toolbarViewController.view.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-HorizontalToolBar.UIConstants.groupHeight)
+            make.bottom.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.width.equalToSuperview()
         }
     }
     
@@ -144,13 +148,6 @@ extension BreadViewController {
         addChild(toolbarViewController)
         view.addSubview(toolbarViewController.view)
         toolbarViewController.didMove(toParent: self)
-        
-        toolbarViewController.view.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
-            make.height.equalTo(100)
-            make.width.equalToSuperview()
-            make.centerX.equalToSuperview()
-        }
     }
     
     private func configureNavigation() {
@@ -160,6 +157,23 @@ extension BreadViewController {
                                               action: #selector(showEditContentViewController))
         navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
         navigationItem.largeTitleDisplayMode = .never
+
+        // TODO: 커스텀뷰, 버튼아이템들 위치 및 사이즈 잡아주기
+        let viewFN = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width * 0.7, height: 40))
+        
+        let backButton = UIButton(frame: CGRect(x: UIConstants.backButtonOffset, y: 0, width: 40, height: 40))
+        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        backButton.tintColor = .systemPink
+        
+        viewFN.addSubview(backButton)
+        
+        let titleView = ScrollableTitleView(frame: CGRect(x: UIConstants.naviTitleOffset, y: 0, width: view.bounds.width * 0.6, height: 40)).then {
+//            $0.text = bread.title
+            $0.text = "깁미깁미 나우 깁미깁미나우 쯨쯨쯨쯨 깁미깁미나우 깁미깁미나우 쯨쯨쯨ㅉ쓰"
+        }
+        viewFN.addSubview(titleView)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewFN)
     }
 }
 
@@ -295,8 +309,17 @@ extension BreadViewController {
             cell.label.textColor = .wordCellText
         }
         
+        let headerRegistration = UICollectionView.SupplementaryRegistration
+        <ScrollableSupplemantaryView>(elementKind: ScrollableSupplemantaryView.reuseIdentifier) { supplementaryView, elementKind, indexPath in
+            supplementaryView.label.text = "친구들 셋이서 방하나 구해 안될 거 알면서 취해 뭐어때 계속해 그래 어머니 쟤네들 보면서 공부 안하면 저렇게 된다고 혀차면서 쯧쯧쯧 깁미깁미 나우 깁미깁미나우 쯧쯧쯧쯨"
+        }
+        
         dataSource = UICollectionViewDiffableDataSource<Section, WordItem>(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+        }
+        
+        dataSource.supplementaryViewProvider = { (view, kind, index) in
+            return self.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, WordItem>()
@@ -455,9 +478,3 @@ extension BreadViewController: UIGestureRecognizerDelegate {
         return true
     }
 }
-//
-//extension BreadViewController {
-//    final class DataSource: UICollectionViewDiffableDataSource<Section, WordItem> {
-//        collectionView
-//    }
-//}

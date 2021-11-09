@@ -26,8 +26,7 @@ final class ScrollableTitleView: UIView {
     }
     
     private var titleLabel = UILabel().then {
-        $0.adjustsFontForContentSizeCategory = true
-        $0.font = .preferredFont(forTextStyle: .title1)
+        $0.font = .boldSystemFont(ofSize: 22)
         $0.numberOfLines = 1
     }
     
@@ -52,7 +51,7 @@ final class ScrollableTitleView: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 0, height: Self.intrinsicHeight)
+        return CGSize(width: 100, height: Self.intrinsicHeight)
     }
 }
 
