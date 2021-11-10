@@ -26,7 +26,7 @@ final class ScrollableTitleView: UIView {
     }
     
     private var titleLabel = UILabel().then {
-        $0.font = .boldSystemFont(ofSize: 22)
+        $0.font = .preferredFont(forTextStyle: .title2)
         $0.numberOfLines = 1
     }
     

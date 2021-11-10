@@ -14,7 +14,6 @@ final class BreadViewController: UIViewController {
         static let wordItemSpacing: CGFloat = 5
         static let lineSpacing: CGFloat = 15
         static let backButtonOffset: CGFloat = -10
-        static let naviTitleOffset: CGFloat = backButtonOffset + 30
     }
     
     enum Section {
@@ -27,6 +26,14 @@ final class BreadViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
     
     var bread: Bread
+    
+    var topbarHeight: CGFloat {
+        return (view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0)
+        + (navigationController?.navigationBar.frame.height ?? 0.0)
+    }
+    
+    var customNaviView: UIView!
+    
     private var wordItems: [WordItem] = []
     private var editingItems: [WordItem] = []
     private var isItemsPanned: [Bool] = []
@@ -158,22 +165,47 @@ extension BreadViewController {
         navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
         navigationItem.largeTitleDisplayMode = .never
 
-        // TODO: 커스텀뷰, 버튼아이템들 위치 및 사이즈 잡아주기
-        let viewFN = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width * 0.7, height: 40))
-        
-        let backButton = UIButton(frame: CGRect(x: UIConstants.backButtonOffset, y: 0, width: 40, height: 40))
-        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        backButton.tintColor = .systemPink
-        
-        viewFN.addSubview(backButton)
-        
-        let titleView = ScrollableTitleView(frame: CGRect(x: UIConstants.naviTitleOffset, y: 0, width: view.bounds.width * 0.6, height: 40)).then {
-//            $0.text = bread.title
-            $0.text = "깁미깁미 나우 깁미깁미나우 쯨쯨쯨쯨 깁미깁미나우 깁미깁미나우 쯨쯨쯨ㅉ쓰"
+        // TODO: 커스텀뷰, 버튼아이템들 위치 및 사이즈 잡아주기 / topbarHeight로 잡아보자
+        final class CustomNaviView: UIView {
+            override var intrinsicContentSize: CGSize {
+                return UIView.layoutFittingExpandedSize
+            }
         }
-        viewFN.addSubview(titleView)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewFN)
+        customNaviView = CustomNaviView(frame: .zero)
+        
+        let backButtonItem = UIButton(frame: .zero).then {
+            $0.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+            $0.tintColor = .systemPink
+        }
+        let titleView = ScrollableTitleView(frame: .zero).then {
+            $0.text = "테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구"
+        }
+
+        view.addSubview(customNaviView)
+        customNaviView.addSubview(backButtonItem)
+        customNaviView.addSubview(titleView)
+        
+        customNaviView.snp.makeConstraints { make in
+            make.top.equalTo(view)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.width.equalTo(view.safeAreaLayoutGuide).offset(-50 * (navigationItem.rightBarButtonItems?.count ?? 0))
+        }
+
+        backButtonItem.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(UIConstants.backButtonOffset)
+            make.width.equalTo(45)
+        }
+
+        titleView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.equalTo(backButtonItem.snp.trailing)
+            make.trailing.equalToSuperview()
+        }
+        
+        navigationItem.titleView = customNaviView
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: UIView(frame: .zero))
     }
 }
 
