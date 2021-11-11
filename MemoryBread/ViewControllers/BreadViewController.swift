@@ -37,7 +37,7 @@ final class BreadViewController: UIViewController {
     
     private var highlightedItemIndexForEditing: Int?
 
-    private var currentContentOffset: CGPoint = .zero
+    private var currentContentOffsetY: CGFloat = .zero
     private var sectionTitleViewHeight: CGFloat = 0
     
     private var selectedFilterColor: UIColor? {
@@ -45,6 +45,10 @@ final class BreadViewController: UIViewController {
             return FilterColor(rawValue: selectedFilterIndex)?.color()
         }
         return nil
+    }
+    
+    private var collectionViewContentWidth: CGFloat {
+        return view.safeAreaLayoutGuide.layoutFrame.width - UIConstants.edgeInset * 2
     }
     
     required init?(coder: NSCoder) {
@@ -71,6 +75,10 @@ final class BreadViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
         
         toolbarViewController.delegate = self
+        
+        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: ScrollableSupplemantaryView.font) ?? 0
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -163,14 +171,9 @@ extension BreadViewController {
         navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
         navigationItem.largeTitleDisplayMode = .never
 
-        // TODO: 커스텀뷰, 버튼아이템들 위치 및 사이즈 잡아주기 / topbarHeight로 잡아보자
         naviTitleView = ScrollableTitleView(frame: .zero).then {
-            $0.text = "테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구"
+            $0.text = bread.title
         }
-//        navigationItem.titleView = naviTitleView
-//        navigationItem.titleView?.isHidden = true
-        
-    
     }
 }
 
@@ -254,6 +257,12 @@ extension BreadViewController {
         let nvc = UINavigationController(rootViewController: editContentViewController)
         navigationController?.present(nvc, animated: true)
     }
+    
+    @objc
+    private func orientationDidChange(_ notification: Notification) {
+        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: ScrollableSupplemantaryView.font) ?? 0
+        updateNaviTitleViewShowingIfNeeded()
+    }
 }
 
 // MARK: - Diffable Data Source
@@ -287,10 +296,10 @@ extension BreadViewController {
     
     private func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<WordCell, WordItem> {
-            [weak self] cell, indexPath, item in
+            cell, indexPath, item in
             cell.label.text = item.word
             
-            if self?.isEditing == true {
+            if self.isEditing == true {
                 cell.backgroundColor = item.filterColor?.withAlphaComponent(0.5)
                 cell.label.textColor = .wordCellText
                 return
@@ -308,7 +317,7 @@ extension BreadViewController {
         
         let headerRegistration = UICollectionView.SupplementaryRegistration
         <ScrollableSupplemantaryView>(elementKind: ScrollableSupplemantaryView.reuseIdentifier) { supplementaryView, elementKind, indexPath in
-            supplementaryView.label.text = "친구들 셋이서 방하나 구해 안될 거 알면서 취해 뭐어때 계속해 그래 어머니 쟤네들 보면서 공부 안하면 저렇게 된다고 혀차면서 쯧쯧쯧 깁미깁미 나우 깁미깁미나우 쯧쯧쯧쯨"
+            supplementaryView.label.text = self.bread.title
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, WordItem>(collectionView: collectionView) { collectionView, indexPath, item in
@@ -476,18 +485,25 @@ extension BreadViewController: UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: - UIScroll
+// MARK: - UIScrollViewDelegate
 extension BreadViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        currentContentOffset = scrollView.contentOffset
-        
-        if scrollView.contentOffset.y >= sectionTitleViewHeight && navigationItem.titleView == nil {
-            navigationItem.titleView = naviTitleView
+        currentContentOffsetY = scrollView.contentOffset.y
+        updateNaviTitleViewShowingIfNeeded()
+    }
+    
+    private func updateNaviTitleViewShowingIfNeeded() {
+        if currentContentOffsetY >= sectionTitleViewHeight {
+            if navigationItem.titleView == nil {
+                navigationItem.titleView = naviTitleView
+            }
             return
         }
         
-        if scrollView.contentOffset.y < sectionTitleViewHeight && navigationItem.titleView != nil {
-            navigationItem.titleView = nil
+        if currentContentOffsetY < sectionTitleViewHeight {
+            if navigationItem.titleView != nil {
+                navigationItem.titleView = nil
+            }
             return
         }
     }

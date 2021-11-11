@@ -10,7 +10,7 @@ import SnapKit
 
 final class ScrollableSupplemantaryView: UICollectionReusableView {
     static let reuseIdentifier = "scrollable-supplemantary-view"
-
+    static let font = UIFont.boldSystemFont(ofSize: 22)
     let label = UILabel()
 
     required init?(coder: NSCoder) {
@@ -24,7 +24,7 @@ final class ScrollableSupplemantaryView: UICollectionReusableView {
 
     func configure() {
         addSubview(label)
-        label.font = .boldSystemFont(ofSize: 22)
+        label.font = Self.font
         label.numberOfLines = 0
         label.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
