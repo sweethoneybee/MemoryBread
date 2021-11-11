@@ -51,7 +51,8 @@ final class ScrollableTitleView: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 100, height: Self.intrinsicHeight)
+//        return CGSize(width: 100, height: Self.intrinsicHeight)
+        return UIView.layoutFittingExpandedSize
     }
 }
 

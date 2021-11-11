@@ -27,12 +27,7 @@ final class BreadViewController: UIViewController {
     
     var bread: Bread
     
-    var topbarHeight: CGFloat {
-        return (view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0)
-        + (navigationController?.navigationBar.frame.height ?? 0.0)
-    }
-    
-    var customNaviView: UIView!
+    var naviTitleView: UIView!
     
     private var wordItems: [WordItem] = []
     private var editingItems: [WordItem] = []
@@ -42,6 +37,9 @@ final class BreadViewController: UIViewController {
     
     private var highlightedItemIndexForEditing: Int?
 
+    private var currentContentOffset: CGPoint = .zero
+    private var sectionTitleViewHeight: CGFloat = 0
+    
     private var selectedFilterColor: UIColor? {
         if let selectedFilterIndex = selectedFilterIndex {
             return FilterColor(rawValue: selectedFilterIndex)?.color()
@@ -166,46 +164,13 @@ extension BreadViewController {
         navigationItem.largeTitleDisplayMode = .never
 
         // TODO: 커스텀뷰, 버튼아이템들 위치 및 사이즈 잡아주기 / topbarHeight로 잡아보자
-        final class CustomNaviView: UIView {
-            override var intrinsicContentSize: CGSize {
-                return UIView.layoutFittingExpandedSize
-            }
+        naviTitleView = ScrollableTitleView(frame: .zero).then {
+            $0.text = "테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구"
         }
+//        navigationItem.titleView = naviTitleView
+//        navigationItem.titleView?.isHidden = true
         
-        customNaviView = CustomNaviView(frame: .zero)
-        
-        let backButtonItem = UIButton(frame: .zero).then {
-            $0.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-            $0.tintColor = .systemPink
-        }
-        let titleView = ScrollableTitleView(frame: .zero).then {
-            $0.text = "테스트문구 테스트문구 테스트문구 테스트문구 테스트문구 테스트문구"
-        }
-
-        view.addSubview(customNaviView)
-        customNaviView.addSubview(backButtonItem)
-        customNaviView.addSubview(titleView)
-        
-        customNaviView.snp.makeConstraints { make in
-            make.top.equalTo(view)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.width.equalTo(view.safeAreaLayoutGuide).offset(-50 * (navigationItem.rightBarButtonItems?.count ?? 0))
-        }
-
-        backButtonItem.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.leading.equalToSuperview().offset(UIConstants.backButtonOffset)
-            make.width.equalTo(45)
-        }
-
-        titleView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.leading.equalTo(backButtonItem.snp.trailing)
-            make.trailing.equalToSuperview()
-        }
-        
-        navigationItem.titleView = customNaviView
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: UIView(frame: .zero))
+    
     }
 }
 
@@ -508,5 +473,22 @@ extension BreadViewController: UIGestureRecognizerDelegate {
             return false
         }
         return true
+    }
+}
+
+// MARK: - UIScroll
+extension BreadViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        currentContentOffset = scrollView.contentOffset
+        
+        if scrollView.contentOffset.y >= sectionTitleViewHeight && navigationItem.titleView == nil {
+            navigationItem.titleView = naviTitleView
+            return
+        }
+        
+        if scrollView.contentOffset.y < sectionTitleViewHeight && navigationItem.titleView != nil {
+            navigationItem.titleView = nil
+            return
+        }
     }
 }
