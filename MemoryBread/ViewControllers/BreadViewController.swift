@@ -20,14 +20,15 @@ final class BreadViewController: UIViewController {
         case main
     }
     
-    var toolbarViewController: ColorFilterToolbarViewController!
+    private var toolbarViewController: ColorFilterToolbarViewController!
     
-    var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
     
-    var bread: Bread
+    private var bread: Bread
     
-    var naviTitleView: UIView!
+    private var naviTitleView: ScrollableTitleView!
+    private var editContentButtonItem: UIBarButtonItem!
     
     private var wordItems: [WordItem] = []
     private var editingItems: [WordItem] = []
@@ -76,7 +77,7 @@ final class BreadViewController: UIViewController {
         
         toolbarViewController.delegate = self
         
-        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: ScrollableSupplemantaryView.font) ?? 0
+        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
         
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
@@ -89,15 +90,17 @@ final class BreadViewController: UIViewController {
             editingItems = copy(wordItems)
             applyNewData(editingItems)
             collectionView.setContentOffset(currentContentOffset, animated: false)
+            editContentButtonItem.isEnabled = false
             return
         }
         
         wordItems = copy(editingItems)
         applyNewData(wordItems)
         collectionView.setContentOffset(currentContentOffset, animated: false)
+        editContentButtonItem.isEnabled = true
         
         bread.updateFilterIndexes(with: wordItems)
-        BreadDAO().save()
+        BreadDAO.default.save()
         
         editingItems.removeAll()
         selectedFilterIndex = nil
@@ -124,7 +127,7 @@ extension BreadViewController {
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                 heightDimension: .estimated(44))
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                        elementKind: ScrollableSupplemantaryView.reuseIdentifier,
+                                                                        elementKind: SupplemantaryTitleView.reuseIdentifier,
                                                                         alignment: .top)
         section.boundarySupplementaryItems = [sectionHeader]
         
@@ -166,11 +169,11 @@ extension BreadViewController {
     }
     
     private func configureNavigation() {
-        let editContentItem = UIBarButtonItem(image: UIImage(systemName: "note.text"),
+        editContentButtonItem = UIBarButtonItem(image: UIImage(systemName: "note.text"),
                                               style: .plain,
                                               target: self,
                                               action: #selector(showEditContentViewController))
-        navigationItem.rightBarButtonItems = [editButtonItem, editContentItem]
+        navigationItem.rightBarButtonItems = [editButtonItem, editContentButtonItem]
         navigationItem.largeTitleDisplayMode = .never
 
         naviTitleView = ScrollableTitleView(frame: .zero).then {
@@ -262,7 +265,7 @@ extension BreadViewController {
     
     @objc
     private func orientationDidChange(_ notification: Notification) {
-        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: ScrollableSupplemantaryView.font) ?? 0
+        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
         updateNaviTitleViewShowingIfNeeded()
     }
 }
@@ -318,8 +321,12 @@ extension BreadViewController {
         }
         
         let headerRegistration = UICollectionView.SupplementaryRegistration
-        <ScrollableSupplemantaryView>(elementKind: ScrollableSupplemantaryView.reuseIdentifier) { supplementaryView, elementKind, indexPath in
+        <SupplemantaryTitleView>(elementKind: SupplemantaryTitleView.reuseIdentifier) { supplementaryView, elementKind, indexPath in
             supplementaryView.label.text = self.bread.title
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapSupplementaryTitleView(_:)))
+            supplementaryView.label.addGestureRecognizer(tapGesture)
+            supplementaryView.label.isUserInteractionEnabled = true
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, WordItem>(collectionView: collectionView) { collectionView, indexPath, item in
@@ -385,7 +392,7 @@ extension BreadViewController {
         guard bread.content != newContent else { return }
         
         bread.updateContent(newContent)
-        BreadDAO().save()
+        BreadDAO.default.save()
         
         wordItems = populateData(from: bread)
         applyNewData(wordItems)
@@ -508,5 +515,36 @@ extension BreadViewController: UIScrollViewDelegate {
             }
             return
         }
+    }
+}
+
+// MARK: - Alert
+extension BreadViewController {
+    @objc private func didTapSupplementaryTitleView(_ sender: UITapGestureRecognizer) {
+        let titleEditAlert = UIAlertController(title: "제목 변경", message: nil, preferredStyle: .alert)
+        titleEditAlert.addTextField { [weak self] textField in
+            textField.clearButtonMode = .always
+            textField.returnKeyType = .done
+            textField.text = self?.bread.title
+        }
+        
+        titleEditAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        titleEditAlert.addAction(UIAlertAction(title: "완료", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            if let inputText = titleEditAlert.textFields?.first?.text {
+                self.bread.updateTitle(inputText)
+                BreadDAO.default.save()
+                self.updateTitleViews(using: inputText)
+            }
+        })
+        
+        present(titleEditAlert, animated: true)
+    }
+    
+    private func updateTitleViews(using title: String) {
+        naviTitleView.text = bread.title
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadSections([.main])
+        dataSource.apply(snapshot)
     }
 }

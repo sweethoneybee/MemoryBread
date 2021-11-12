@@ -46,4 +46,9 @@ extension Bread : Identifiable {
         filterIndexes = Array(repeating: [], count: FilterColor.count)
         touch = Date.now
     }
+    
+    func updateTitle(_ newTitle: String) {
+        title = newTitle
+        touch = Date.now
+    }
 }

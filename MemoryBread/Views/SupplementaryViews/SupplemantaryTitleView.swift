@@ -8,11 +8,14 @@
 import UIKit
 import SnapKit
 
-final class ScrollableSupplemantaryView: UICollectionReusableView {
+final class SupplemantaryTitleView: UICollectionReusableView {
     static let reuseIdentifier = "scrollable-supplemantary-view"
     static let font = UIFont.boldSystemFont(ofSize: 22)
+    
     let label = UILabel()
-
+    
+    var didLabelTap: ((UILabel) -> (Void))?
+    
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
@@ -27,7 +30,8 @@ final class ScrollableSupplemantaryView: UICollectionReusableView {
         label.font = Self.font
         label.numberOfLines = 0
         label.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.top.leading.equalToSuperview()
+            make.trailing.lessThanOrEqualToSuperview()
             make.bottom.equalToSuperview().offset(-10)
         }
     }

@@ -30,7 +30,7 @@ final class ScrollableTitleView: UIView {
         $0.numberOfLines = 1
     }
     
-    var _text = ""
+    private var _text = ""
     var text: String? {
         get { return titleLabel.text }
         set { titleLabel.text = newValue }

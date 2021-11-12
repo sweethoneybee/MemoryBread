@@ -13,9 +13,9 @@ final class EditContentViewController: UIViewController {
         static let contentInset: CGFloat = 20
     }
     
-    var content: String
     var didCompleteEditing: ((String) -> (Void))?
     
+    private var content: String
     private var contentTextField: UITextView!
     private var bottomConstraint: Constraint?
     private var keyboardShown = false

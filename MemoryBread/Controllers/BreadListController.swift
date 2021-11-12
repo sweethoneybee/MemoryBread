@@ -20,11 +20,13 @@ final class BreadListController {
     }
     
     var items: [BreadItem] {
-        return BreadDAO.default.allBreads.map {
-            BreadItem(title: $0.title ?? "",
-                      date: $0.touch ?? Date.now,
-                      body: $0.content ?? "")
-        }
+        return BreadDAO.default.allBreads
+            .map {
+                BreadItem(title: $0.title ?? "",
+                          date: $0.touch ?? Date.now,
+                          body: $0.content ?? "")
+            }
+            .sorted{ $0.date > $1.date }
     }
 }
 

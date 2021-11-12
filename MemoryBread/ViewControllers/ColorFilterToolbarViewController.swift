@@ -14,8 +14,9 @@ protocol ColorFilterToolbarDelegate: AnyObject {
 }
 
 final class ColorFilterToolbarViewController: UIViewController {
-    var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
     weak var delegate: ColorFilterToolbarDelegate?
+    
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
     
     private weak var collectionView: UICollectionView!
     private var selectedItems: [IndexPath]?

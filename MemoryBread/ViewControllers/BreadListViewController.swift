@@ -16,10 +16,10 @@ final class BreadListViewController: UIViewController {
     
     let reuseIdentifier = "reuse-identifier-bread-list-view"
     
-    var tableView: UITableView!
-    var dataSource: BreadListViewController.DataSource!
+    private var tableView: UITableView!
+    private var dataSource: BreadListViewController.DataSource!
     
-    var breadListController = BreadListController()
+    private var breadListController = BreadListController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,15 +88,11 @@ extension BreadListViewController {
 // MARK: - Data Source
 extension BreadListViewController {
     private func configureDataSource() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        dateFormatter.locale = Locale(identifier: "ko-KR")
-        
         let titleAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
         let dateAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .ultraLight)]
         let bodyAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .light)]
         
+        let dateHelper = DateHelper()
         dataSource = DataSource(tableView: tableView) {
             tableView, indexPath, breadItem in
             let cell = tableView.dequeueReusableCell(withIdentifier: self.reuseIdentifier, for: indexPath)
@@ -104,12 +100,16 @@ extension BreadListViewController {
             var content = cell.defaultContentConfiguration()
             let titleAttributedString = NSAttributedString(string: breadItem.title, attributes: titleAttribute)
             content.attributedText = titleAttributedString
+            content.textProperties.numberOfLines = 1
             
-            let dateString = dateFormatter.string(from: breadItem.date)
+            let dateString = dateHelper.string(from: breadItem.date)
+            
             let secondaryAttributedString = NSMutableAttributedString(string: dateString + " ", attributes: dateAttribute)
             secondaryAttributedString.append(NSAttributedString(string: breadItem.body, attributes: bodyAttribute))
             
             content.secondaryAttributedText = secondaryAttributedString
+            content.secondaryTextProperties.numberOfLines = 1
+            
             cell.contentConfiguration = content
             return cell
         }
