@@ -37,7 +37,7 @@ final class BreadViewController: UIViewController {
     
     private var highlightedItemIndexForEditing: Int?
 
-    private var currentContentOffsetY: CGFloat = .zero
+    private var currentContentOffset: CGPoint = .zero
     private var sectionTitleViewHeight: CGFloat = 0
     
     private var selectedFilterColor: UIColor? {
@@ -88,11 +88,13 @@ final class BreadViewController: UIViewController {
         if editing {
             editingItems = copy(wordItems)
             applyNewData(editingItems)
+            collectionView.setContentOffset(currentContentOffset, animated: false)
             return
         }
         
         wordItems = copy(editingItems)
         applyNewData(wordItems)
+        collectionView.setContentOffset(currentContentOffset, animated: false)
         
         bread.updateFilterIndexes(with: wordItems)
         BreadDAO().save()
@@ -488,19 +490,19 @@ extension BreadViewController: UIGestureRecognizerDelegate {
 // MARK: - UIScrollViewDelegate
 extension BreadViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        currentContentOffsetY = scrollView.contentOffset.y
+        currentContentOffset = scrollView.contentOffset
         updateNaviTitleViewShowingIfNeeded()
     }
     
     private func updateNaviTitleViewShowingIfNeeded() {
-        if currentContentOffsetY >= sectionTitleViewHeight {
+        if currentContentOffset.y >= sectionTitleViewHeight {
             if navigationItem.titleView == nil {
                 navigationItem.titleView = naviTitleView
             }
             return
         }
         
-        if currentContentOffsetY < sectionTitleViewHeight {
+        if currentContentOffset.y < sectionTitleViewHeight {
             if navigationItem.titleView != nil {
                 navigationItem.titleView = nil
             }

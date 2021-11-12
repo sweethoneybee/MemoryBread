@@ -17,7 +17,7 @@ final class BreadListViewController: UIViewController {
     let reuseIdentifier = "reuse-identifier-bread-list-view"
     
     var tableView: UITableView!
-    var dataSource: UITableViewDiffableDataSource<Section, BreadListController.BreadItem>!
+    var dataSource: BreadListViewController.DataSource!
     
     var breadListController = BreadListController()
     
@@ -29,6 +29,8 @@ final class BreadListViewController: UIViewController {
         configureHierarchy()
         configureDataSource()
         addToolbar()
+        
+        tableView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,7 +52,6 @@ extension BreadListViewController {
     private func configureHierarchy() {
         tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        tableView.delegate = self
         
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
@@ -112,6 +113,10 @@ extension BreadListViewController {
             cell.contentConfiguration = content
             return cell
         }
+        
+        dataSource.didDeleteItemAt = { [weak self] index in
+            self?.breadListController.deleteBread(at: index)
+        }
     }
 }
 
@@ -128,16 +133,13 @@ extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return CGFloat(60)
     }
-    
-    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-        if let index = indexPath?.item {
-            breadListController.deleteBread(at: index)
-        }
-    }
 }
 
 extension BreadListViewController {
     class DataSource: UITableViewDiffableDataSource<Section, BreadListController.BreadItem> {
+        weak var dataController: BreadListController?
+        var didDeleteItemAt: ((Int) -> Void)?
+        
         override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
             return true
         }
@@ -148,6 +150,7 @@ extension BreadListViewController {
                     var snapshot = self.snapshot()
                     snapshot.deleteItems([identifierToDelete])
                     apply(snapshot)
+                    didDeleteItemAt?(indexPath.item)
                 }
             }
         }
