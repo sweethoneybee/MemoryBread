@@ -68,7 +68,8 @@ final class BreadDAO: NSObject {
                           title: "새로운 암기빵",
                           content: "",
                           separatedContent: [],
-                          filterIndexes: Array(repeating: [], count: FilterColor.count))
+                          filterIndexes: Array(repeating: [], count: FilterColor.count),
+                          selectedFilters: nil)
         return bread
     }
     

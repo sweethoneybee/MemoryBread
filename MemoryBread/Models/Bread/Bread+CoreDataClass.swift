@@ -19,6 +19,7 @@ public class Bread: NSManagedObject {
         content: String?,
         separatedContent: [String]?,
         filterIndexes: [[Int]]?,
+        selectedFilters: [Int]?,
         context: NSManagedObjectContext = AppDelegate.viewContext
     ) {
         self.init(context: context)
@@ -30,5 +31,6 @@ public class Bread: NSManagedObject {
         self.content = content
         self.separatedContent = separatedContent
         self.filterIndexes = filterIndexes ?? Array(repeating: [], count: FilterColor.count)
+        self.selectedFilters = selectedFilters ?? [Int]()
     }
 }

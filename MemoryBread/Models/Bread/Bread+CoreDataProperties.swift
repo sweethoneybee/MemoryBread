@@ -24,11 +24,10 @@ extension Bread {
     @NSManaged public var content: String?
     @NSManaged public var separatedContent: [String]?
     @NSManaged public var filterIndexes: [[Int]]?
-
+    @NSManaged public var selectedFilters: [Int]?
 }
 
 extension Bread : Identifiable {
-    // TODO: 분리해야함
     func updateFilterIndexes(with items: [BreadViewController.WordItem]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
         items.enumerated().forEach { (itemIndex, item) in
@@ -42,7 +41,7 @@ extension Bread : Identifiable {
     
     func updateContent(_ newContent: String) {
         content = newContent
-        separatedContent = newContent.components(separatedBy: ["\n", " "])
+        separatedContent = newContent.components(separatedBy: ["\n", " ", "\t"])
         filterIndexes = Array(repeating: [], count: FilterColor.count)
         touch = Date.now
     }

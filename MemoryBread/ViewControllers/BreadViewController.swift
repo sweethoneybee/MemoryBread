@@ -34,7 +34,7 @@ final class BreadViewController: UIViewController {
     private var editingItems: [WordItem] = []
     private var isItemsPanned: [Bool] = []
     private var selectedFilters: Set<Int> = []
-    private var selectedFilterIndex: Int?
+    private var editingFilterIndex: Int?
     
     private var highlightedItemIndexForEditing: Int?
 
@@ -42,8 +42,8 @@ final class BreadViewController: UIViewController {
     private var sectionTitleViewHeight: CGFloat = 0
     
     private var selectedFilterColor: UIColor? {
-        if let selectedFilterIndex = selectedFilterIndex {
-            return FilterColor(rawValue: selectedFilterIndex)?.color()
+        if let editingFilterIndex = editingFilterIndex {
+            return FilterColor(rawValue: editingFilterIndex)?.color()
         }
         return nil
     }
@@ -80,6 +80,16 @@ final class BreadViewController: UIViewController {
         sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
         
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+        
+        if let selectedFilters = bread.selectedFilters {
+            toolbarViewController.selectAllFilter(selectedFilters)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        bread.selectedFilters = Array(selectedFilters)
+        BreadDAO.default.save()
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -103,7 +113,7 @@ final class BreadViewController: UIViewController {
         BreadDAO.default.save()
         
         editingItems.removeAll()
-        selectedFilterIndex = nil
+        editingFilterIndex = nil
         highlightedItemIndexForEditing = nil
     }
 }
@@ -240,10 +250,10 @@ extension BreadViewController {
             return
         }
         
-        if let selectedFilterIndex = selectedFilterIndex {
+        if let editingFilterIndex = editingFilterIndex {
             var newItem = WordItem(updatingItem)
             newItem.filterColor = selectedFilterColor
-            newItem.isFiltered = selectedFilters.contains(selectedFilterIndex)
+            newItem.isFiltered = selectedFilters.contains(editingFilterIndex)
             reloadItem(from: updatingItem, to: newItem)
             editingItems[index] = newItem
         }
@@ -258,7 +268,7 @@ extension BreadViewController {
               let content = bread.content else { return }
         
         let editContentViewController = EditContentViewController(content: content)
-        editContentViewController.didCompleteEditing = didCompleteEditing(_:)
+        editContentViewController.didCompleteEditing = didCompleteContentEditing(_:)
         let nvc = UINavigationController(rootViewController: editContentViewController)
         navigationController?.present(nvc, animated: true)
     }
@@ -387,11 +397,12 @@ extension BreadViewController {
         return items.map { WordItem($0) }
     }
     
-    private func didCompleteEditing(_ newContent: String) {
+    private func didCompleteContentEditing(_ newContent: String) {
         let newContent = newContent.trimmingCharacters(in: [" "])
         guard bread.content != newContent else { return }
         
         bread.updateContent(newContent)
+        bread.selectedFilters?.removeAll()
         BreadDAO.default.save()
         
         wordItems = populateData(from: bread)
@@ -443,7 +454,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
     
     private func filterSelected(at index: Int) {
         if isEditing {
-            selectedFilterIndex = index
+            editingFilterIndex = index
             return
         }
         selectedFilters.insert(index)
@@ -452,7 +463,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
     
     private func filterDeselected(at index: Int) {
         if isEditing {
-            selectedFilterIndex = nil
+            editingFilterIndex = nil
             return
         }
         selectedFilters.remove(index)
@@ -487,7 +498,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
 // MARK: - UIGestureRecognizerDelegate
 extension BreadViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if selectedFilterIndex != nil {
+        if editingFilterIndex != nil {
             return false
         }
         return true
