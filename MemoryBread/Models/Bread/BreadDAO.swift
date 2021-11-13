@@ -6,42 +6,48 @@
 //
 
 import Foundation
+import CoreData
 
-final class BreadDAO {
+extension Notification.Name {
+    static let breadObjectsDidChange = Notification.Name("breadObjectsDidChange")
+}
+
+final class BreadDAO: NSObject {
     static let `default` = BreadDAO()
     
-    private lazy var breads: [Bread] = {
-        return fetchAll()
+    private let context = AppDelegate.viewContext
+    private lazy var fetchedResultController: NSFetchedResultsController<Bread> = {
+        let fetchRequest = Bread.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
+        let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                    managedObjectContext: context,
+                                                    sectionNameKeyPath: nil,
+                                                    cacheName: nil)
+        do {
+            try controller.performFetch()
+        } catch {
+            fatalError("perform fetch failed")
+        }
+        
+        controller.delegate = self
+        return controller
     }()
     
     var allBreads: [Bread] {
-        return breads
+        if let breadObjects = fetchedResultController.fetchedObjects {
+            return breadObjects
+        }
+        return [Bread]()
     }
     
     private func Log(title: String, error: Error) {
         NSLog("\(title) failed. Error=\(error)")
     }
     
-    private func fetchAll() -> [Bread] {
-        let request = Bread.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "touch", ascending: false)
-        request.sortDescriptors = [sortDescriptor]
-        
-        let fetchedBread: [Bread]
-        do {
-            fetchedBread = try AppDelegate.viewContext.fetch(request)
-        } catch {
-            Log(title: "FetchAll()", error: error)
-            fetchedBread = [Bread]()
-        }
-        
-        return fetchedBread
-    }
-    
     @discardableResult
     func save() -> Bool {
         do {
-            try AppDelegate.viewContext.save()
+            try context.save()
         } catch {
             Log(title: "save()", error: error)
             return false
@@ -50,10 +56,9 @@ final class BreadDAO {
     }
     
     @discardableResult
-    func delete(_ bread: Bread) -> Bool {
-        guard let index = breads.firstIndex(of: bread) else { return false }
-        breads.remove(at: index)
-        AppDelegate.viewContext.delete(bread)
+    func delete(at indexPath: IndexPath) -> Bool {
+        let breadObject = fetchedResultController.object(at: indexPath)
+        context.delete(breadObject)
         return true
     }
     
@@ -64,13 +69,21 @@ final class BreadDAO {
                           content: "",
                           separatedContent: [],
                           filterIndexes: Array(repeating: [], count: FilterColor.count))
-        breads.insert(bread, at: 0)
         return bread
     }
     
-    func bread(at index: Int) -> Bread? {
-        guard breads.count > 0 && index < breads.count else { return nil }
-        return breads[index]
+    func bread(at indexPath: IndexPath) -> Bread {
+        return fetchedResultController.object(at: indexPath)
+    }
+    
+    func first() -> Bread? {
+        return fetchedResultController.fetchedObjects?.first
+    }
+}
+
+extension BreadDAO: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        NotificationCenter.default.post(name: .breadObjectsDidChange, object: nil)
     }
 }
 
@@ -93,4 +106,5 @@ struct Page {
     }
     var content: String
 }
+
 

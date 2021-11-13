@@ -12,10 +12,9 @@ final class BreadListController {
         let title: String
         let date: Date
         let body: String
-        let identifier = UUID()
-        
+
         func hash(into hasher: inout Hasher) {
-            hasher.combine(identifier)
+            hasher.combine(date)
         }
     }
     
@@ -26,7 +25,11 @@ final class BreadListController {
                           date: $0.touch ?? Date.now,
                           body: $0.content ?? "")
             }
-            .sorted{ $0.date > $1.date }
+    }
+    
+    var breadItemsDidChange: (([BreadItem]) -> (Void))?
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(breadObjectDidChange), name: .breadObjectsDidChange, object: nil)
     }
 }
 
@@ -44,10 +47,14 @@ extension BreadListController {
     }
     
     @discardableResult
-    func deleteBread(at index: Int) -> Bool {
-        guard let willBeDeletedBread = BreadDAO.default.bread(at: index) else {
-            return false
-        }
-        return BreadDAO.default.delete(willBeDeletedBread)
+    func deleteBread(at indexPath: IndexPath) -> Bool {
+        return BreadDAO.default.delete(at: indexPath)
+    }
+}
+
+extension BreadListController {
+    @objc
+    func breadObjectDidChange() {
+        breadItemsDidChange?(items)
     }
 }

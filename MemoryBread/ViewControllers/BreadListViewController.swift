@@ -18,8 +18,16 @@ final class BreadListViewController: UIViewController {
     
     private var tableView: UITableView!
     private var dataSource: BreadListViewController.DataSource!
+
+    private var isAdding = false
     
     private var breadListController = BreadListController()
+    private func breadItemsDidChange(_ items: [BreadListController.BreadItem]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(items, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,9 +39,8 @@ final class BreadListViewController: UIViewController {
         addToolbar()
         
         tableView.delegate = self
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
+        breadListController.breadItemsDidChange = breadItemsDidChange(_:)
+        
         let breadItems = breadListController.items
         var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
         snapshot.appendSections([.main])
@@ -69,19 +76,12 @@ extension BreadListViewController {
     
     @objc
     func addBread() {
-        let newItem = breadListController.newBreadItem()
-        var snapshot = dataSource.snapshot()
-        if let firstItem = snapshot.itemIdentifiers.first {
-            snapshot.insertItems([newItem], beforeItem: firstItem)
-        } else {
-            snapshot.appendItems([newItem], toSection: .main)
-        }
-        dataSource.apply(snapshot, animatingDifferences: true) {
-            if let bread = BreadDAO.default.bread(at: 0) {
-                let breadViewController = BreadViewController(bread: bread)
-                self.navigationController?.pushViewController(breadViewController, animated: true)
-            }
-        }
+        guard isAdding == false else { return }
+        isAdding = true
+        let bread = BreadDAO.default.create()
+        let breadViewController = BreadViewController(bread: bread)
+        navigationController?.pushViewController(breadViewController, animated: true)
+        isAdding = false
     }
 }
 
@@ -113,20 +113,15 @@ extension BreadListViewController {
             cell.contentConfiguration = content
             return cell
         }
-        
-        dataSource.didDeleteItemAt = { [weak self] index in
-            self?.breadListController.deleteBread(at: index)
-        }
     }
 }
 
 // MARK: - TableView Delegate
 extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let bread = BreadDAO.default.bread(at: indexPath.item) {
-            let breadViewController = BreadViewController(bread: bread)
-            navigationController?.pushViewController(breadViewController, animated: true)
-        }
+        let bread = BreadDAO.default.bread(at: indexPath)
+        let breadViewController = BreadViewController(bread: bread)
+        navigationController?.pushViewController(breadViewController, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -137,21 +132,13 @@ extension BreadListViewController: UITableViewDelegate {
 
 extension BreadListViewController {
     class DataSource: UITableViewDiffableDataSource<Section, BreadListController.BreadItem> {
-        weak var dataController: BreadListController?
-        var didDeleteItemAt: ((Int) -> Void)?
-        
         override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
             return true
         }
         
         override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
             if editingStyle == .delete {
-                if let identifierToDelete = itemIdentifier(for: indexPath) {
-                    var snapshot = self.snapshot()
-                    snapshot.deleteItems([identifierToDelete])
-                    apply(snapshot)
-                    didDeleteItemAt?(indexPath.item)
-                }
+                BreadDAO.default.delete(at: indexPath)
             }
         }
     }
