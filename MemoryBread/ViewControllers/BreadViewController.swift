@@ -23,7 +23,7 @@ final class BreadViewController: UIViewController {
     private var toolbarViewController: ColorFilterToolbarViewController!
     
     private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, WordItem>!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
     
     private var bread: Bread
     
@@ -97,14 +97,14 @@ final class BreadViewController: UIViewController {
         toolbarViewController.setEditing(editing, animated: animated)
         
         if editing {
-            editingItems = copy(wordItems)
-            applyNewData(editingItems)
+            editingItems = wordItems
+            reconfigureItems()
             editContentButtonItem.isEnabled = false
             return
         }
         
-        wordItems = copy(editingItems)
-        applyNewData(wordItems)
+        wordItems = editingItems
+        reconfigureItems()
         editContentButtonItem.isEnabled = true
         
         bread.updateFilterIndexes(with: wordItems)
@@ -190,140 +190,41 @@ extension BreadViewController {
     }
 }
 
-// MARK: - Gesture
-extension BreadViewController {
-    private func addGesture() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panningWords(_:)))
-        panGesture.maximumNumberOfTouches = 1
-        panGesture.delegate = self
-        collectionView.addGestureRecognizer(panGesture)
-    }
-    
-    @objc
-    private func panningWords(_ sender: UIGestureRecognizer) {
-        guard isEditing else { return }
-        
-        switch sender.state {
-        case .began:
-            isItemsPanned = Array(repeating: false, count: editingItems.count)
-            if let justHighlighted = highlightedItemIndexForEditing {
-                isItemsPanned[justHighlighted] = true
-                highlightedItemIndexForEditing = nil
-            }
-        case .changed:
-            let touchedPoint = sender.location(in: collectionView)
-            if let index = collectionView.indexPathForItem(at: touchedPoint)?.item,
-               index < isItemsPanned.count,
-               isItemsPanned[index] == false {
-                isItemsPanned[index] = true
-                updateItemIfNeeded(at: index)
-            }
-        default:
-            break
-        }
-    }
-    
-    private func updateItemIfNeeded(at index: Int) {
-        guard isEditing,
-              index < editingItems.count else {
-                  return
-              }
-        
-        let updatingItem = editingItems[index]
-        
-        if selectedFilterColor == nil { // 편집 중 필터 선택 X
-            if updatingItem.filterColor != nil {
-                let newItem = removeFilterOf(oldItem: updatingItem)
-                reloadItem(from: updatingItem, to: newItem)
-                editingItems[index] = newItem
-            }
-            return
-        }
-        
-        // 편집 중 필터 선택 O.
-        if updatingItem.filterColor == selectedFilterColor {
-            let newItem = removeFilterOf(oldItem: updatingItem)
-            reloadItem(from: updatingItem, to: newItem)
-            editingItems[index] = newItem
-            return
-        }
-        
-        if let editingFilterIndex = editingFilterIndex {
-            var newItem = WordItem(updatingItem)
-            newItem.filterColor = selectedFilterColor
-            newItem.isFiltered = selectedFilters.contains(editingFilterIndex)
-            reloadItem(from: updatingItem, to: newItem)
-            editingItems[index] = newItem
-        }
-    }
-}
-
-// MARK: - objc methods
-extension BreadViewController {
-    @objc
-    private func showEditContentViewController() {
-        guard isEditing == false,
-              let content = bread.content else { return }
-        
-        let editContentViewController = EditContentViewController(content: content)
-        editContentViewController.didCompleteEditing = didCompleteContentEditing(_:)
-        let nvc = UINavigationController(rootViewController: editContentViewController)
-        navigationController?.present(nvc, animated: true)
-    }
-    
-    @objc
-    private func orientationDidChange(_ notification: Notification) {
-        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
-        updateNaviTitleViewShowingIfNeeded()
-    }
-}
-
 // MARK: - Diffable Data Source
 extension BreadViewController {
-    struct WordItem: Hashable {
-        let identifier = UUID()
+    struct WordItem: Identifiable {
+        let id: Int
         let word: String
         var isFiltered: Bool = false
         var isPeeking: Bool = false
         var filterColor: UIColor?
   
-        init(word: String) {
+        init(id: Int, word: String) {
+            self.id = id
             self.word = word
-        }
-        
-        init(_ item: Self) {
-            self.word = item.word
-            self.isFiltered = item.isFiltered
-            self.isPeeking = item.isPeeking
-            self.filterColor = item.filterColor
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(identifier)
-        }
-        
-        static func ==(lhs: Self, rhs: Self) -> Bool {
-            return lhs.identifier == rhs.identifier
         }
     }
     
     private func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<WordCell, WordItem> {
-            [weak self] cell, indexPath, item in
+        let cellRegistration = UICollectionView.CellRegistration<WordCell, Int> {
+            [weak self] cell, indexPath, id in
             guard let self = self else { return }
+            
+            if self.isEditing {
+                let editItem = self.editingItems[id]
+                cell.label.text = editItem.word
+                cell.overlayView.backgroundColor = editItem.filterColor?.withAlphaComponent(0.5) ?? .clear
+                return
+            }
+            
+            let item = self.wordItems[id]
             cell.label.text = item.word
             
-            if self.isEditing == true {
-                cell.overlayView.backgroundColor = item.filterColor?.withAlphaComponent(0.5)
-                return
-            }
-            
             if item.isFiltered {
-                cell.overlayView.backgroundColor = item.isPeeking ? item.filterColor?.withAlphaComponent(0.5) : item.filterColor
-                return
+                cell.overlayView.backgroundColor = item.isPeeking ? (item.filterColor?.withAlphaComponent(0.5)) : (item.filterColor)
+            } else {
+                cell.overlayView.backgroundColor = .clear
             }
-            
-            cell.overlayView.backgroundColor = .clear
         }
         
         let headerRegistration = UICollectionView.SupplementaryRegistration
@@ -337,40 +238,39 @@ extension BreadViewController {
             supplementaryView.label.isUserInteractionEnabled = true
         }
         
-        dataSource = UICollectionViewDiffableDataSource<Section, WordItem>(collectionView: collectionView) { collectionView, indexPath, item in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+        dataSource = UICollectionViewDiffableDataSource<Section, Int>(collectionView: collectionView) { collectionView, indexPath, id in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: id)
         }
         
         dataSource.supplementaryViewProvider = { [weak self] (view, kind, index) in
             return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, WordItem>()
+        applyNewItems(wordItems)
+    }
+    
+    private func applyNewItems(_ newItems: [WordItem]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(wordItems, toSection: .main)
+        snapshot.appendItems(wordItems.map{ $0.id }, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
-    private func applyNewData(_ newItems: [WordItem]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, WordItem>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(newItems, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: false)
-        
-        collectionView.setContentOffset(currentContentOffset, animated: false)
-    }
-    
-    private func reloadDataSource(from oldItems: [WordItem], to newItems: [WordItem]) {
+    private func reconfigureItems() {
+        // wordItems, editingItems가 같은 id를 사용하기 때문에 분기를 타더라도 동작은 동일함.
         var snapshot = dataSource.snapshot()
-        snapshot.deleteItems(oldItems)
-        snapshot.appendItems(newItems, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        if isEditing {
+            snapshot.reconfigureItems(editingItems.map { $0.id })
+            dataSource.apply(snapshot, animatingDifferences: false)
+        } else {
+            snapshot.reconfigureItems(wordItems.map { $0.id })
+            dataSource.apply(snapshot, animatingDifferences: false)
+        }
     }
     
-    private func reloadItem(from oldItem: WordItem, to newItem: WordItem) {
+    private func reconfigureItem(_ item: WordItem) {
         var snapshot = dataSource.snapshot()
-        snapshot.insertItems([newItem], afterItem: oldItem)
-        snapshot.deleteItems([oldItem])
+        snapshot.reconfigureItems([item.id])
         dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
@@ -383,7 +283,7 @@ extension BreadViewController {
                   return [WordItem]()
               }
         
-        var wordItems = separatedContent.map { WordItem(word: $0) }
+        var wordItems = separatedContent.enumerated().map { WordItem(id: $0, word: $1) }
         filterIndexes.enumerated().forEach { (colorValue, wordIndexes) in
             wordIndexes.forEach {
                 wordItems[$0].filterColor = FilterColor(rawValue: colorValue)?.color()
@@ -391,10 +291,6 @@ extension BreadViewController {
         }
         
         return wordItems
-    }
-    
-    private func copy(_ items: [WordItem]) -> [WordItem] {
-        return items.map { WordItem($0) }
     }
     
     private func didCompleteContentEditing(_ newContent: String) {
@@ -406,7 +302,8 @@ extension BreadViewController {
         BreadDAO.default.save()
         
         wordItems = populateData(from: bread)
-        applyNewData(wordItems)
+        applyNewItems(wordItems)
+        reconfigureItems()
         
         toolbarViewController.deselectAllFilter()
         selectedFilters.removeAll()
@@ -420,25 +317,51 @@ extension BreadViewController: UICollectionViewDelegate {
         
         if isEditing {
             highlightedItemIndexForEditing = index
-            updateItemIfNeeded(at: index)
+            updateEditingItemIfNeeded(at: index)
             return
         }
         
         if let colorIndex = FilterColor.colorIndex(for: wordItems[index].filterColor),
            selectedFilters.contains(colorIndex) {
-            var newItem = WordItem(wordItems[index])
-            newItem.isPeeking.toggle()
-            reloadItem(from: wordItems[index], to: newItem)
-            wordItems[index] = newItem
+            wordItems[index].isPeeking.toggle()
+            reconfigureItem(wordItems[index])
         }
     }
     
-    private func removeFilterOf(oldItem: WordItem) -> WordItem {
-        var newItem = WordItem(oldItem)
-        newItem.filterColor = nil
-        newItem.isFiltered = false
-        newItem.isPeeking = false
-        return newItem
+    private func updateEditingItemIfNeeded(at index: Int) {
+        guard isEditing,
+              index < editingItems.count else {
+                  return
+              }
+        
+        var editItem = editingItems[index]
+        if selectedFilterColor == nil { // 편집 중 필터 선택 X
+            if editItem.filterColor != nil {
+                editItem.filterColor = nil
+                editItem.isFiltered = false
+                editItem.isPeeking = false
+                editingItems[index] = editItem
+                reconfigureItem(editItem)
+            }
+            return
+        }
+        
+        // 편집 중 필터 선택 O.
+        if editItem.filterColor == selectedFilterColor {
+            editItem.filterColor = nil
+            editItem.isFiltered = false
+            editItem.isPeeking = false
+            editingItems[index] = editItem
+            reconfigureItem(editItem)
+            return
+        }
+        
+        if let editingFilterIndex = editingFilterIndex {
+            editItem.filterColor = selectedFilterColor
+            editItem.isFiltered = selectedFilters.contains(editingFilterIndex)
+            editingItems[index] = editItem
+            reconfigureItem(editItem)
+        }
     }
 }
 
@@ -471,23 +394,21 @@ extension BreadViewController: ColorFilterToolbarDelegate {
     }
     
     private func updateFilteringWordItems(by filterValue: Int, to isFiltered: Bool) {
-        var newItems = copy(wordItems)
         bread.filterIndexes?[filterValue].forEach {
-            newItems[$0].isFiltered = isFiltered
-            newItems[$0].isPeeking = false
+            wordItems[$0].isFiltered = isFiltered
+            wordItems[$0].isPeeking = false
         }
-        applyNewData(newItems)
-        wordItems = newItems
+        reconfigureItems()
     }
 }
 
 // MARK: - UIGestureRecognizerDelegate
 extension BreadViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if editingFilterIndex != nil {
-            return false
+        if editingFilterIndex == nil {
+            return true
         }
-        return true
+        return false
     }
 }
 
@@ -511,6 +432,41 @@ extension BreadViewController: UIScrollViewDelegate {
                 navigationItem.titleView = nil
             }
             return
+        }
+    }
+}
+
+// MARK: - Gesture
+extension BreadViewController {
+    private func addGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panningWords(_:)))
+        panGesture.maximumNumberOfTouches = 1
+        panGesture.delegate = self
+        collectionView.addGestureRecognizer(panGesture)
+    }
+    
+    @objc
+    private func panningWords(_ sender: UIGestureRecognizer) {
+        guard isEditing,
+        editingFilterIndex != nil else { return }
+        
+        switch sender.state {
+        case .began:
+            isItemsPanned = Array(repeating: false, count: editingItems.count)
+            if let justHighlighted = highlightedItemIndexForEditing {
+                isItemsPanned[justHighlighted] = true
+                highlightedItemIndexForEditing = nil
+            }
+        case .changed:
+            let touchedPoint = sender.location(in: collectionView)
+            if let index = collectionView.indexPathForItem(at: touchedPoint)?.item,
+               index < isItemsPanned.count,
+               isItemsPanned[index] == false {
+                isItemsPanned[index] = true
+                updateEditingItemIfNeeded(at: index)
+            }
+        default:
+            break
         }
     }
 }
@@ -543,5 +499,25 @@ extension BreadViewController {
         var snapshot = dataSource.snapshot()
         snapshot.reloadSections([.main])
         dataSource.apply(snapshot)
+    }
+}
+
+// MARK: - objc methods
+extension BreadViewController {
+    @objc
+    private func showEditContentViewController() {
+        guard isEditing == false,
+              let content = bread.content else { return }
+        
+        let editContentViewController = EditContentViewController(content: content)
+        editContentViewController.didCompleteEditing = didCompleteContentEditing(_:)
+        let nvc = UINavigationController(rootViewController: editContentViewController)
+        navigationController?.present(nvc, animated: true)
+    }
+    
+    @objc
+    private func orientationDidChange(_ notification: Notification) {
+        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
+        updateNaviTitleViewShowingIfNeeded()
     }
 }
