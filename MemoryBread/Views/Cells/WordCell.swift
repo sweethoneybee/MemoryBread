@@ -16,6 +16,8 @@ final class WordCell: UICollectionViewCell {
         $0.textColor = .label
     }
     
+    let overlayView = UIView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -29,10 +31,16 @@ final class WordCell: UICollectionViewCell {
 extension WordCell {
     func configure() {
         contentView.addSubview(label)
+        contentView.addSubview(overlayView)
+        
         label.snp.makeConstraints { make in
             let inset = CGFloat(1)
             make.leading.top.equalToSuperview().offset(inset)
             make.trailing.bottom.equalToSuperview().offset(-inset)
+        }
+        
+        overlayView.snp.makeConstraints { make in
+            make.edges.equalTo(label)
         }
     }
 }

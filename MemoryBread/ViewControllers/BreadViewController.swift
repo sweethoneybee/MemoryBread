@@ -99,14 +99,12 @@ final class BreadViewController: UIViewController {
         if editing {
             editingItems = copy(wordItems)
             applyNewData(editingItems)
-            collectionView.setContentOffset(currentContentOffset, animated: false)
             editContentButtonItem.isEnabled = false
             return
         }
         
         wordItems = copy(editingItems)
         applyNewData(wordItems)
-        collectionView.setContentOffset(currentContentOffset, animated: false)
         editContentButtonItem.isEnabled = true
         
         bread.updateFilterIndexes(with: wordItems)
@@ -311,27 +309,27 @@ extension BreadViewController {
     
     private func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<WordCell, WordItem> {
-            cell, indexPath, item in
+            [weak self] cell, indexPath, item in
+            guard let self = self else { return }
             cell.label.text = item.word
             
             if self.isEditing == true {
-                cell.backgroundColor = item.filterColor?.withAlphaComponent(0.5)
-                cell.label.textColor = .wordCellText
+                cell.overlayView.backgroundColor = item.filterColor?.withAlphaComponent(0.5)
                 return
             }
             
             if item.isFiltered {
-                cell.backgroundColor = item.isPeeking ? item.filterColor?.withAlphaComponent(0.5) : item.filterColor
-                cell.label.textColor = item.isPeeking ? .wordCellText : item.filterColor
+                cell.overlayView.backgroundColor = item.isPeeking ? item.filterColor?.withAlphaComponent(0.5) : item.filterColor
                 return
             }
             
-            cell.backgroundColor = .clear
-            cell.label.textColor = .wordCellText
+            cell.overlayView.backgroundColor = .clear
         }
         
         let headerRegistration = UICollectionView.SupplementaryRegistration
-        <SupplemantaryTitleView>(elementKind: SupplemantaryTitleView.reuseIdentifier) { supplementaryView, elementKind, indexPath in
+        <SupplemantaryTitleView>(elementKind: SupplemantaryTitleView.reuseIdentifier) {
+            [weak self] supplementaryView, elementKind, indexPath in
+            guard let self = self else { return }
             supplementaryView.label.text = self.bread.title
             
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapSupplementaryTitleView(_:)))
@@ -343,8 +341,8 @@ extension BreadViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
         
-        dataSource.supplementaryViewProvider = { (view, kind, index) in
-            return self.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
+        dataSource.supplementaryViewProvider = { [weak self] (view, kind, index) in
+            return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, WordItem>()
@@ -358,6 +356,8 @@ extension BreadViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(newItems, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
+        
+        collectionView.setContentOffset(currentContentOffset, animated: false)
     }
     
     private func reloadDataSource(from oldItems: [WordItem], to newItems: [WordItem]) {
@@ -458,7 +458,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
             return
         }
         selectedFilters.insert(index)
-        filteringWordItems(using: index)
+        updateFilteringWordItems(by: index, to: true)
     }
     
     private func filterDeselected(at index: Int) {
@@ -467,30 +467,16 @@ extension BreadViewController: ColorFilterToolbarDelegate {
             return
         }
         selectedFilters.remove(index)
-        unfilteringWordItems(using: index)
+        updateFilteringWordItems(by: index, to: false)
     }
     
-    private func filteringWordItems(using filterValue: Int) {
-        let oldItems = wordItems
-        var newItems = oldItems
+    private func updateFilteringWordItems(by filterValue: Int, to isFiltered: Bool) {
+        var newItems = copy(wordItems)
         bread.filterIndexes?[filterValue].forEach {
-            newItems[$0] = WordItem(oldItems[$0])
-            newItems[$0].isFiltered = true
+            newItems[$0].isFiltered = isFiltered
             newItems[$0].isPeeking = false
         }
-        reloadDataSource(from: oldItems, to: newItems)
-        wordItems = newItems
-    }
-    
-    private func unfilteringWordItems(using filterValue: Int) {
-        let oldItems = wordItems
-        var newItems = oldItems
-        bread.filterIndexes?[filterValue].forEach {
-            newItems[$0] = WordItem(oldItems[$0])
-            newItems[$0].isFiltered = false
-            newItems[$0].isPeeking = false
-        }
-        reloadDataSource(from: oldItems, to: newItems)
+        applyNewData(newItems)
         wordItems = newItems
     }
 }
