@@ -25,12 +25,12 @@ struct UserDefault<T> {
 @propertyWrapper
 struct AutoIncreaseId {
     @UserDefault<Int64>(key: "breadId", defaultValue: 0)
-    private(set) var projectedValue: Int64
+    private(set) var breadId: Int64
     
     var wrappedValue: Int64 {
         mutating get {
-            let value = projectedValue
-            projectedValue = value + 1
+            let value = breadId
+            breadId = value + 1
             return value
         }
     }

@@ -14,8 +14,6 @@ final class SupplemantaryTitleView: UICollectionReusableView {
     
     let label = UILabel()
     
-    var didLabelTap: ((UILabel) -> (Void))?
-    
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }

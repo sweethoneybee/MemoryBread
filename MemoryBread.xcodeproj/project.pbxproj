@@ -93,6 +93,7 @@
 				40245D05272940EE002E84A8 /* Bread */,
 				40060F8D272D5D5100BA7A34 /* FilterColor.swift */,
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
+				409CC8FD27327311009B9AA1 /* UserManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -102,7 +103,6 @@
 			children = (
 				40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */,
 				40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */,
-				409CC8FD27327311009B9AA1 /* UserManager.swift */,
 				40245D0327293C60002E84A8 /* BreadDAO.swift */,
 			);
 			path = Bread;
