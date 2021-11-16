@@ -76,14 +76,15 @@ final class BreadViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
         
         toolbarViewController.delegate = self
+        toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
         
         sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         if let selectedFilters = bread.selectedFilters {
             toolbarViewController.selectAllFilter(selectedFilters)
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -100,6 +101,8 @@ final class BreadViewController: UIViewController {
             editingItems = wordItems
             reconfigureItems(animatingDifferences: true)
             editContentButtonItem.isEnabled = false
+            
+            toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
             return
         }
         
@@ -113,6 +116,8 @@ final class BreadViewController: UIViewController {
         editingItems.removeAll()
         editingFilterIndex = nil
         highlightedItemIndexForEditing = nil
+        
+        toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
     }
 }
 
@@ -306,6 +311,7 @@ extension BreadViewController {
         reconfigureItems(animatingDifferences: false)
         
         toolbarViewController.deselectAllFilter()
+        toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
         selectedFilters.removeAll()
     }
 }

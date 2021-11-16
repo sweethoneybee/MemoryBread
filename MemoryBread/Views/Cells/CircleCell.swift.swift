@@ -11,6 +11,19 @@ final class CircleCell: UICollectionViewCell {
 
     static let borderWidth: CGFloat = 5
     
+    private let countLabel = UILabel().then {
+        $0.font = .systemFont(ofSize: 12)
+        $0.adjustsFontSizeToFitWidth = true
+        $0.textAlignment = .center
+        $0.textColor = .white
+    }
+    
+    var text: String = "" {
+        didSet {
+            countLabel.text = self.text.count < 3 ? self.text : "99+"
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
@@ -20,6 +33,14 @@ final class CircleCell: UICollectionViewCell {
         layer.cornerRadius = bounds.width / 2
         layer.borderColor = UIColor.circleCellLayer.cgColor
         setBorderWidth(isSelected: isSelected)
+        
+        contentView.addSubview(countLabel)
+        
+        countLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalToSuperview().dividedBy(2)
+        }
     }
     
     override var isSelected: Bool {

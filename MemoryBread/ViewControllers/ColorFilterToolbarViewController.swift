@@ -19,7 +19,9 @@ final class ColorFilterToolbarViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
     
     private weak var collectionView: UICollectionView!
-    private var selectedItems: [IndexPath]?
+    private var selectedFilters: [IndexPath]?
+    
+    private var numberOfEachFilterIndexes: [Int] = Array(repeating: 0, count: FilterColor.count)
     
     required init?(coder: NSCoder) {
         fatalError("not implemented")
@@ -45,7 +47,7 @@ final class ColorFilterToolbarViewController: UIViewController {
         super.setEditing(editing, animated: animated)
         
         if editing {
-            selectedItems = collectionView.indexPathsForSelectedItems
+            selectedFilters = collectionView.indexPathsForSelectedItems
             collectionView.deselectAll(animated: animated)
             collectionView.allowsMultipleSelection = !editing
             return
@@ -53,8 +55,8 @@ final class ColorFilterToolbarViewController: UIViewController {
         
         collectionView.allowsMultipleSelection = !editing
         collectionView.deselectAll(animated: animated)
-        collectionView.selectAll(selectedItems, animated: animated)
-        selectedItems = nil
+        collectionView.selectAll(selectedFilters, animated: animated)
+        selectedFilters = nil
     }
     
     func selectAllFilter(_ selectedIndexes: [Int]) {
@@ -67,6 +69,16 @@ final class ColorFilterToolbarViewController: UIViewController {
     func deselectAllFilter() {
         collectionView.deselectAll(animated: true)
     }
+    
+    func showNumberOfFilterIndexes(using filterIndexes: [[Int]]?) {
+        if let filterIndexes = filterIndexes {
+            numberOfEachFilterIndexes = filterIndexes.map { $0.count }
+        } else {
+            numberOfEachFilterIndexes = Array(repeating: 0, count: numberOfEachFilterIndexes.count)
+        }
+        
+        reconfigureItems(Array(0..<numberOfEachFilterIndexes.count))
+    }
 }
 
 // MARK: - DataSource
@@ -77,8 +89,16 @@ extension ColorFilterToolbarViewController {
     
     private func configureDataSource() {
         let count = FilterColor.count
-        let cellRegistration = UICollectionView.CellRegistration<CircleCell, Int>() { cell, _, item in
+        let cellRegistration = UICollectionView.CellRegistration<CircleCell, Int>() { [weak self] cell, _, item in
+            guard let self = self else { return }
             cell.backgroundColor = FilterColor(rawValue: item % count)?.color()
+            
+            if self.isEditing {
+                cell.text = "편집"
+            } else {
+                let text = self.numberOfEachFilterIndexes[item % count] == 0 ? "" : "\(self.numberOfEachFilterIndexes[item % count])"
+                cell.text = text
+            }
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, Int>(collectionView: collectionView, cellProvider: {
@@ -86,14 +106,20 @@ extension ColorFilterToolbarViewController {
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         })
         
-        reloadDataSource(numberOfItems: count)
+        apply(numberOfItems: count)
     }
     
-    func reloadDataSource(numberOfItems: Int) {
+    private func apply(numberOfItems: Int) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
         snapshot.appendSections([.main])
         snapshot.appendItems(Array(0..<numberOfItems)) // Color Values
         dataSource.apply(snapshot)
+    }
+    
+    private func reconfigureItems(_ items: [Int]) {
+        var snapshot = dataSource.snapshot()
+        snapshot.reconfigureItems(items)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
