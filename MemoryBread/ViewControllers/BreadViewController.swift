@@ -99,7 +99,7 @@ final class BreadViewController: UIViewController {
         
         if editing {
             editingItems = wordItems
-            reconfigureItems(animatingDifferences: true)
+            reconfigure(items: editingItems, animatingDifferences: true)
             editContentButtonItem.isEnabled = false
             
             toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
@@ -107,7 +107,7 @@ final class BreadViewController: UIViewController {
         }
         
         wordItems = editingItems
-        reconfigureItems(animatingDifferences: true)
+        reconfigure(items: wordItems, animatingDifferences: true)
         editContentButtonItem.isEnabled = true
         
         bread.updateFilterIndexes(with: wordItems)
@@ -251,31 +251,19 @@ extension BreadViewController {
             return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
-        applyNewItems(wordItems)
+        apply(items: wordItems)
     }
     
-    private func applyNewItems(_ newItems: [WordItem]) {
+    private func apply(items: [WordItem]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(wordItems.map{ $0.id }, toSection: .main)
+        snapshot.appendItems(items.map{ $0.id }, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
-    private func reconfigureItems(animatingDifferences: Bool) {
-        // wordItems, editingItems가 같은 id를 사용하기 때문에 분기를 타더라도 동작은 동일함.
+    private func reconfigure(items: [WordItem], animatingDifferences: Bool) {
         var snapshot = dataSource.snapshot()
-        if isEditing {
-            snapshot.reconfigureItems(editingItems.map { $0.id })
-            dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
-        } else {
-            snapshot.reconfigureItems(wordItems.map { $0.id })
-            dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
-        }
-    }
-    
-    private func reconfigureItem(_ item: WordItem, animatingDifferences: Bool) {
-        var snapshot = dataSource.snapshot()
-        snapshot.reconfigureItems([item.id])
+        snapshot.reconfigureItems(items.map { $0.id })
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }
@@ -307,8 +295,8 @@ extension BreadViewController {
         BreadDAO.default.save()
         
         wordItems = populateData(from: bread)
-        applyNewItems(wordItems)
-        reconfigureItems(animatingDifferences: false)
+        apply(items: wordItems)
+        reconfigure(items: wordItems, animatingDifferences: false)
         
         toolbarViewController.deselectAllFilter()
         toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
@@ -330,7 +318,7 @@ extension BreadViewController: UICollectionViewDelegate {
         if let colorIndex = FilterColor.colorIndex(for: wordItems[index].filterColor),
            selectedFilters.contains(colorIndex) {
             wordItems[index].isPeeking.toggle()
-            reconfigureItem(wordItems[index], animatingDifferences: true)
+            reconfigure(items: [wordItems[index]], animatingDifferences: true)
         }
     }
     
@@ -347,7 +335,7 @@ extension BreadViewController: UICollectionViewDelegate {
                 editItem.isFiltered = false
                 editItem.isPeeking = false
                 editingItems[index] = editItem
-                reconfigureItem(editItem, animatingDifferences: true)
+                reconfigure(items: [editItem], animatingDifferences: true)
             }
             return
         }
@@ -358,7 +346,7 @@ extension BreadViewController: UICollectionViewDelegate {
             editItem.isFiltered = false
             editItem.isPeeking = false
             editingItems[index] = editItem
-            reconfigureItem(editItem, animatingDifferences: true)
+            reconfigure(items: [editItem], animatingDifferences: true)
             return
         }
         
@@ -366,7 +354,7 @@ extension BreadViewController: UICollectionViewDelegate {
             editItem.filterColor = selectedFilterColor
             editItem.isFiltered = selectedFilters.contains(editingFilterIndex)
             editingItems[index] = editItem
-            reconfigureItem(editItem, animatingDifferences: true)
+            reconfigure(items: [editItem], animatingDifferences: true)
         }
     }
 }
@@ -404,7 +392,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
             wordItems[$0].isFiltered = isFiltered
             wordItems[$0].isPeeking = false
         }
-        reconfigureItems(animatingDifferences: true)
+        reconfigure(items: wordItems, animatingDifferences: true)
     }
 }
 
