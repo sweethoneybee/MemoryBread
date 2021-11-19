@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 final class EditContentViewController: UIViewController {
     struct UIConstants {
@@ -19,6 +20,8 @@ final class EditContentViewController: UIViewController {
     private var contentTextField: UITextView!
     private var bottomConstraint: Constraint?
     private var keyboardShown = false
+    
+    private var cancellableBag: [AnyCancellable] = []
     
     required init?(coder: NSCoder) {
         fatalError("not implemented")
@@ -36,8 +39,44 @@ final class EditContentViewController: UIViewController {
         configureHierarchy()
         configureNavigation()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        let keyboardShownCancellable = NotificationCenter.default
+            .publisher(for: UIResponder.keyboardWillShowNotification, object: nil)
+            .sink { [weak self] notification in
+                guard let self = self,
+                      let keyboardFrameEnd = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+                let keyboardFrameEndRect = keyboardFrameEnd.cgRectValue
+                let keyboardHeightWithoutSafeLayoutInset = keyboardFrameEndRect.height - self.view.safeAreaInsets.bottom
+                if !(self.keyboardShown) {
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0,
+                                   options: .curveEaseInOut,
+                                   animations: {
+                        self.bottomConstraint?.update(offset: -keyboardHeightWithoutSafeLayoutInset)
+                        self.view.layoutIfNeeded()
+                    })
+                }
+                self.keyboardShown = true
+            }
+        
+        let keyboardHideCancellable = NotificationCenter.default
+            .publisher(for: UIResponder.keyboardWillHideNotification, object: nil)
+            .sink { [weak self] notification in
+                guard let self = self else { return }
+                if self.keyboardShown {
+                    UIView.animate(withDuration: 0.3,
+                                   delay: 0,
+                                   options: .curveEaseInOut,
+                                   animations: {
+                        self.bottomConstraint?.update(offset: 0)
+                        self.view.layoutIfNeeded()
+                    })
+                }
+                self.keyboardShown = false
+            }
+        
+        cancellableBag.append(keyboardShownCancellable)
+        cancellableBag.append(keyboardHideCancellable)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -94,40 +133,5 @@ extension EditContentViewController {
     private func completeEditing() {
         didCompleteEditing?(contentTextField.text)
         dismiss(animated: true)
-    }
-}
-
-// MARK: - Keyboard Show, Hide
-extension EditContentViewController {
-    // refer to sendbird SDK example
-    @objc
-    private func keyboardWillShow(_ notification: Notification) {
-        guard let keyboardFrameEnd = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-        let keyboardFrameEndRect = keyboardFrameEnd.cgRectValue
-        let keyboardHeightWithoutSafeLayoutInset = keyboardFrameEndRect.height - view.safeAreaInsets.bottom
-        if !keyboardShown {
-            UIView.animate(withDuration: 0.3,
-                           delay: 0,
-                           options: .curveEaseInOut,
-                           animations: {
-                self.bottomConstraint?.update(offset: -keyboardHeightWithoutSafeLayoutInset)
-                self.view.layoutIfNeeded()
-            })
-        }
-        keyboardShown = true
-    }
-    
-    @objc
-    private func keyboardWillHide(_ notification: Notification) {
-        if keyboardShown {
-            UIView.animate(withDuration: 0.3,
-                           delay: 0,
-                           options: .curveEaseInOut,
-                           animations: {
-                self.bottomConstraint?.update(offset: 0)
-                self.view.layoutIfNeeded()
-            })
-        }
-        keyboardShown = false
     }
 }

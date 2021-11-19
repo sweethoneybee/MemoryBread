@@ -78,8 +78,7 @@ extension BreadListViewController {
     func addBread() {
         guard isAdding == false else { return }
         isAdding = true
-        let bread = BreadDAO.default.create()
-        let breadViewController = BreadViewController(bread: bread)
+        let breadViewController = BreadViewController(bread: breadListController.createBread())
         navigationController?.pushViewController(breadViewController, animated: true)
         isAdding = false
     }
@@ -113,14 +112,17 @@ extension BreadListViewController {
             cell.contentConfiguration = content
             return cell
         }
+        
+        dataSource.deleteBlock = { [weak self] indexPath in
+            self?.breadListController.deleteBread(at: indexPath)
+        }
     }
 }
 
 // MARK: - TableView Delegate
 extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let bread = BreadDAO.default.bread(at: indexPath)
-        let breadViewController = BreadViewController(bread: bread)
+        let breadViewController = BreadViewController(bread: breadListController.bread(at: indexPath))
         navigationController?.pushViewController(breadViewController, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -132,13 +134,14 @@ extension BreadListViewController: UITableViewDelegate {
 
 extension BreadListViewController {
     class DataSource: UITableViewDiffableDataSource<Section, BreadListController.BreadItem> {
+        var deleteBlock: ((IndexPath) -> (Void))?
         override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
             return true
         }
         
         override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
             if editingStyle == .delete {
-                BreadDAO.default.delete(at: indexPath)
+                deleteBlock?(indexPath)
             }
         }
     }

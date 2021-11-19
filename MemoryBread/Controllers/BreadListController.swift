@@ -34,16 +34,12 @@ final class BreadListController {
 }
 
 extension BreadListController {
-    func breadItem(at index: Int) -> BreadItem? {
-        guard items.count > 0 && index < items.count else { return nil }
-        return items[index]
+    func createBread() -> Bread {
+        return BreadDAO.default.create()
     }
     
-    func newBreadItem() -> BreadItem {
-        let newBread = BreadDAO.default.create()
-        return BreadItem(title: newBread.title ?? "",
-                         date: Date.now,
-                         body: newBread.content ?? "")
+    func bread(at indexPath: IndexPath) -> Bread {
+        return BreadDAO.default.bread(at: indexPath)
     }
     
     @discardableResult

@@ -22,6 +22,7 @@ enum FilterColor: Int, CaseIterable {
         }
     }
     
+    /// complexity O(n); n is number of enum cases.
     static var count: Int {
         FilterColor.allCases.count
     }

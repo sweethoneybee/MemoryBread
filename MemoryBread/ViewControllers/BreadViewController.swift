@@ -59,7 +59,7 @@ final class BreadViewController: UIViewController {
     init(bread: Bread) {
         self.bread = bread
         super.init(nibName: nil, bundle: nil)
-        self.wordItems = self.populateData(from: self.bread)
+        self.wordItems = self.populateWordItems(from: self.bread)
     }
     
     override func viewDidLoad() {
@@ -81,7 +81,7 @@ final class BreadViewController: UIViewController {
         sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
         
         if let selectedFilters = bread.selectedFilters {
-            toolbarViewController.selectAllFilter(selectedFilters)
+            toolbarViewController.select(selectedFilters)
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
@@ -270,7 +270,7 @@ extension BreadViewController {
 
 // MARK: - Data Modifier
 extension BreadViewController {
-    private func populateData(from bread: Bread) -> [WordItem] {
+    private func populateWordItems(from bread: Bread) -> [WordItem] {
         guard let separatedContent = bread.separatedContent,
               let filterIndexes = bread.filterIndexes else {
                   return [WordItem]()
@@ -294,7 +294,7 @@ extension BreadViewController {
         bread.selectedFilters?.removeAll()
         BreadDAO.default.save()
         
-        wordItems = populateData(from: bread)
+        wordItems = populateWordItems(from: bread)
         apply(items: wordItems)
         reconfigure(items: wordItems, animatingDifferences: false)
         
@@ -375,7 +375,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
             return
         }
         selectedFilters.insert(index)
-        updateFilteringWordItems(by: index, to: true)
+        updateFilter(index, setFilter: true)
     }
     
     private func filterDeselected(at index: Int) {
@@ -384,10 +384,10 @@ extension BreadViewController: ColorFilterToolbarDelegate {
             return
         }
         selectedFilters.remove(index)
-        updateFilteringWordItems(by: index, to: false)
+        updateFilter(index, setFilter: false)
     }
     
-    private func updateFilteringWordItems(by filterValue: Int, to isFiltered: Bool) {
+    private func updateFilter(_ filterValue: Int, setFilter isFiltered: Bool) {
         bread.filterIndexes?[filterValue].forEach {
             wordItems[$0].isFiltered = isFiltered
             wordItems[$0].isPeeking = false
@@ -467,7 +467,8 @@ extension BreadViewController {
 
 // MARK: - Alert
 extension BreadViewController {
-    @objc private func didTapSupplementaryTitleView(_ sender: UITapGestureRecognizer) {
+    @objc
+    private func didTapSupplementaryTitleView(_ sender: UITapGestureRecognizer) {
         let titleEditAlert = UIAlertController(title: "제목 변경", message: nil, preferredStyle: .alert)
         titleEditAlert.addTextField { [weak self] textField in
             textField.clearButtonMode = .always
@@ -481,14 +482,14 @@ extension BreadViewController {
             if let inputText = titleEditAlert.textFields?.first?.text {
                 self.bread.updateTitle(inputText)
                 BreadDAO.default.save()
-                self.updateTitleViews(using: inputText)
+                self.updateNaviTitleView(using: inputText)
             }
         })
         
         present(titleEditAlert, animated: true)
     }
     
-    private func updateTitleViews(using title: String) {
+    private func updateNaviTitleView(using title: String) {
         naviTitleView.text = bread.title
         var snapshot = dataSource.snapshot()
         snapshot.reloadSections([.main])

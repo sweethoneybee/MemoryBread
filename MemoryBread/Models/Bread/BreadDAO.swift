@@ -40,17 +40,12 @@ final class BreadDAO: NSObject {
         return [Bread]()
     }
     
-    private func Log(title: String, error: Error) {
-        NSLog("\(title) failed. Error=\(error)")
-    }
-    
     @discardableResult
     func save() -> Bool {
         do {
             try context.save()
         } catch {
-            Log(title: "save()", error: error)
-            return false
+            fatalError("context save failed")
         }
         return true
     }

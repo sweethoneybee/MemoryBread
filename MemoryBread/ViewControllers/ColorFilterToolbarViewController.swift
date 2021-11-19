@@ -59,7 +59,7 @@ final class ColorFilterToolbarViewController: UIViewController {
         selectedFilters = nil
     }
     
-    func selectAllFilter(_ selectedIndexes: [Int]) {
+    func select(_ selectedIndexes: [Int]) {
         selectedIndexes.forEach {
             collectionView.selectItem(at: IndexPath(row: $0, section: 0), animated: false, scrollPosition: [])
             delegate?.colorFilterToolbar(didSelectColorIndex: $0)
