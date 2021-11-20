@@ -20,18 +20,16 @@ final class BreadViewController: UIViewController {
         case main
     }
     
-    private var toolbarViewController: ColorFilterToolbarViewController!
-    
-    private var collectionView: UICollectionView!
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Int>!
-    
-    private var bread: Bread
-    
     private var naviTitleView: ScrollableTitleView!
     private var editContentButtonItem: UIBarButtonItem!
+    private var toolbarViewController: ColorFilterToolbarViewController!
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, UUID>!
     
-    private var wordItems: [WordItem] = []
-    private var editingItems: [WordItem] = []
+    private var bread: Bread
+    private var model: WordItemModel
+    private var editModel: WordItemModel
+    
     private var isItemsPanned: [Bool] = []
     private var selectedFilters: Set<Int> = []
     private var editingFilterIndex: Int?
@@ -41,7 +39,7 @@ final class BreadViewController: UIViewController {
     private var currentContentOffset: CGPoint = .zero
     private var sectionTitleViewHeight: CGFloat = 0
     
-    private var selectedFilterColor: UIColor? {
+    private var editingFilterColor: UIColor? {
         if let editingFilterIndex = editingFilterIndex {
             return FilterColor(rawValue: editingFilterIndex)?.color()
         }
@@ -58,8 +56,9 @@ final class BreadViewController: UIViewController {
     
     init(bread: Bread) {
         self.bread = bread
+        self.model = WordItemModel(bread: bread)
+        self.editModel = WordItemModel(bread: bread)
         super.init(nibName: nil, bundle: nil)
-        self.wordItems = self.populateWordItems(from: self.bread)
     }
     
     override func viewDidLoad() {
@@ -98,26 +97,29 @@ final class BreadViewController: UIViewController {
         toolbarViewController.setEditing(editing, animated: animated)
         
         if editing {
-            editingItems = wordItems
-            reconfigure(items: editingItems, animatingDifferences: true)
+            editModel = WordItemModel(model)
+            dataSource.reconfigure(editModel.idsHavingFilter(), animatingDifferences: true)
             editContentButtonItem.isEnabled = false
-            
             toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
             return
         }
         
-        wordItems = editingItems
-        reconfigure(items: wordItems, animatingDifferences: true)
+        model = WordItemModel(editModel)
+        model.updateBreadFilterIndexes()
+
+        dataSource.reconfigure(model.idsHavingFilter(), animatingDifferences: true)
         editContentButtonItem.isEnabled = true
         
-        bread.updateFilterIndexes(with: wordItems)
-        BreadDAO.default.save()
-        
-        editingItems.removeAll()
         editingFilterIndex = nil
         highlightedItemIndexForEditing = nil
         
         toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
+    }
+    
+    @objc
+    private func orientationDidChange(_ notification: Notification) {
+        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
+        updateNaviTitleViewShowingIfNeeded()
     }
 }
 
@@ -197,32 +199,25 @@ extension BreadViewController {
 
 // MARK: - Diffable Data Source
 extension BreadViewController {
-    struct WordItem: Identifiable {
-        let id: Int
-        let word: String
-        var isFiltered: Bool = false
-        var isPeeking: Bool = false
-        var filterColor: UIColor?
-  
-        init(id: Int, word: String) {
-            self.id = id
-            self.word = word
-        }
-    }
-    
     private func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration<WordCell, Int> {
+        let cellRegistration = UICollectionView.CellRegistration<WordCell, UUID> {
             [weak self] cell, indexPath, id in
-            guard let self = self else { return }
-            
-            if self.isEditing {
-                let editItem = self.editingItems[id]
-                cell.label.text = editItem.word
-                cell.overlayView.backgroundColor = editItem.filterColor?.withAlphaComponent(0.5) ?? .clear
+            guard let self = self else {
                 return
             }
             
-            let item = self.wordItems[id]
+            if self.isEditing {
+                guard let item = self.editModel.item(forKey: id) else {
+                    return
+                }
+                cell.label.text = item.word
+                cell.overlayView.backgroundColor = item.filterColor?.withAlphaComponent(0.5) ?? .clear
+                return
+            }
+            
+            guard let item = self.model.item(forKey: id) else {
+                return
+            }
             cell.label.text = item.word
             
             if item.isFiltered {
@@ -243,7 +238,7 @@ extension BreadViewController {
             supplementaryView.label.isUserInteractionEnabled = true
         }
         
-        dataSource = UICollectionViewDiffableDataSource<Section, Int>(collectionView: collectionView) { collectionView, indexPath, id in
+        dataSource = UICollectionViewDiffableDataSource<Section, UUID>(collectionView: collectionView) { collectionView, indexPath, id in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: id)
         }
         
@@ -251,110 +246,68 @@ extension BreadViewController {
             return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
-        apply(items: wordItems)
+        applyNewData(model.ids())
     }
     
-    private func apply(items: [WordItem]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
+    private func applyNewData(_ identifiers: [UUID]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, UUID>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(items.map{ $0.id }, toSection: .main)
+        snapshot.appendItems(identifiers, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
-    }
-    
-    private func reconfigure(items: [WordItem], animatingDifferences: Bool) {
-        var snapshot = dataSource.snapshot()
-        snapshot.reconfigureItems(items.map { $0.id })
-        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
-    }
-}
-
-// MARK: - Data Modifier
-extension BreadViewController {
-    private func populateWordItems(from bread: Bread) -> [WordItem] {
-        guard let separatedContent = bread.separatedContent,
-              let filterIndexes = bread.filterIndexes else {
-                  return [WordItem]()
-              }
-        
-        var wordItems = separatedContent.enumerated().map { WordItem(id: $0, word: $1) }
-        filterIndexes.enumerated().forEach { (colorValue, wordIndexes) in
-            wordIndexes.forEach {
-                wordItems[$0].filterColor = FilterColor(rawValue: colorValue)?.color()
-            }
-        }
-        
-        return wordItems
-    }
-    
-    private func didCompleteContentEditing(_ newContent: String) {
-        let newContent = newContent.trimmingCharacters(in: [" "])
-        guard bread.content != newContent else { return }
-        
-        bread.updateContent(newContent)
-        bread.selectedFilters?.removeAll()
-        BreadDAO.default.save()
-        
-        wordItems = populateWordItems(from: bread)
-        apply(items: wordItems)
-        reconfigure(items: wordItems, animatingDifferences: false)
-        
-        toolbarViewController.deselectAllFilter()
-        toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
-        selectedFilters.removeAll()
     }
 }
 
 // MARK: - UICollectionView Delegate
 extension BreadViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        let index = indexPath.item
+        guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
         
         if isEditing {
-            highlightedItemIndexForEditing = index
-            updateEditingItemIfNeeded(at: index)
+            highlightedItemIndexForEditing = indexPath.item
+            updateEditModelIfNeeded(forID: id)
             return
         }
         
-        if let colorIndex = FilterColor.colorIndex(for: wordItems[index].filterColor),
+        guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
+        if let colorIndex = model.ColorIndex(forKey: id),
            selectedFilters.contains(colorIndex) {
-            wordItems[index].isPeeking.toggle()
-            reconfigure(items: [wordItems[index]], animatingDifferences: true)
+            model.togglePeek(forKey: id)
+            dataSource.reconfigure([id], animatingDifferences: true)
         }
     }
     
-    private func updateEditingItemIfNeeded(at index: Int) {
-        guard isEditing,
-              index < editingItems.count else {
-                  return
-              }
+    private func updateEditModelIfNeeded(at index: Int) {
+        guard let id = dataSource.itemIdentifier(for: IndexPath(row: index, section: 0)) else {
+            return
+        }
+        updateEditModelIfNeeded(forID: id)
+    }
+    
+    private func updateEditModelIfNeeded(forID id: UUID) {
+        guard isEditing else {
+            return
+        }
         
-        var editItem = editingItems[index]
-        if selectedFilterColor == nil { // 편집 중 필터 선택 X
-            if editItem.filterColor != nil {
-                editItem.filterColor = nil
-                editItem.isFiltered = false
-                editItem.isPeeking = false
-                editingItems[index] = editItem
-                reconfigure(items: [editItem], animatingDifferences: true)
+        if editingFilterColor == nil { // 편집용 필터 선택되지 않음
+            if editModel.hasFilter(forKey: id) {
+                editModel.removeFilter(forKey: id)
+                dataSource.reconfigure([id], animatingDifferences: true)
             }
             return
         }
         
-        // 편집 중 필터 선택 O.
-        if editItem.filterColor == selectedFilterColor {
-            editItem.filterColor = nil
-            editItem.isFiltered = false
-            editItem.isPeeking = false
-            editingItems[index] = editItem
-            reconfigure(items: [editItem], animatingDifferences: true)
+        // 편집용 필터 선택됨
+        if editModel.item(forKey: id)?.filterColor == editingFilterColor {
+            editModel.removeFilter(forKey: id)
+            dataSource.reconfigure([id], animatingDifferences: true)
             return
         }
         
         if let editingFilterIndex = editingFilterIndex {
-            editItem.filterColor = selectedFilterColor
-            editItem.isFiltered = selectedFilters.contains(editingFilterIndex)
-            editingItems[index] = editItem
-            reconfigure(items: [editItem], animatingDifferences: true)
+            editModel.setFilter(forKey: id,
+                                to: editingFilterColor,
+                                isFiltered: selectedFilters.contains(editingFilterIndex))
+            dataSource.reconfigure([id], animatingDifferences: true)
         }
     }
 }
@@ -388,11 +341,8 @@ extension BreadViewController: ColorFilterToolbarDelegate {
     }
     
     private func updateFilter(_ filterValue: Int, setFilter isFiltered: Bool) {
-        bread.filterIndexes?[filterValue].forEach {
-            wordItems[$0].isFiltered = isFiltered
-            wordItems[$0].isPeeking = false
-        }
-        reconfigure(items: wordItems, animatingDifferences: true)
+        let updatedKeys = model.updateFilterOfItems(using: filterValue, isFiltered: isFiltered)
+        dataSource.reconfigure(updatedKeys, animatingDifferences: true)
     }
 }
 
@@ -446,7 +396,7 @@ extension BreadViewController {
         
         switch sender.state {
         case .began:
-            isItemsPanned = Array(repeating: false, count: editingItems.count)
+            isItemsPanned = Array(repeating: false, count: editModel.count)
             if let justHighlighted = highlightedItemIndexForEditing {
                 isItemsPanned[justHighlighted] = true
                 highlightedItemIndexForEditing = nil
@@ -457,7 +407,7 @@ extension BreadViewController {
                index < isItemsPanned.count,
                isItemsPanned[index] == false {
                 isItemsPanned[index] = true
-                updateEditingItemIfNeeded(at: index)
+                updateEditModelIfNeeded(at: index)
             }
         default:
             break
@@ -497,7 +447,7 @@ extension BreadViewController {
     }
 }
 
-// MARK: - objc methods
+// MARK: - present
 extension BreadViewController {
     @objc
     private func showEditContentViewController() {
@@ -510,9 +460,23 @@ extension BreadViewController {
         navigationController?.present(nvc, animated: true)
     }
     
-    @objc
-    private func orientationDidChange(_ notification: Notification) {
-        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
-        updateNaviTitleViewShowingIfNeeded()
+    private func didCompleteContentEditing(_ newContent: String) {
+        let newContent = newContent.trimmingCharacters(in: [" "])
+        guard bread.content != newContent else { return }
+
+        model.updateContent(newContent)
+        applyNewData(model.ids())
+        
+        toolbarViewController.deselectAllFilter()
+        toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
+        selectedFilters.removeAll()
+    }
+}
+
+extension UICollectionViewDiffableDataSource {
+    func reconfigure(_ identifiers: [ItemIdentifierType], animatingDifferences: Bool = false) {
+        var snapshot = snapshot()
+        snapshot.reconfigureItems(identifiers)
+        apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }

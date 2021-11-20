@@ -28,7 +28,7 @@ extension Bread {
 }
 
 extension Bread : Identifiable {
-    func updateFilterIndexes(with items: [BreadViewController.WordItem]) {
+    func updateFilterIndexes(with items: [WordItemModel.Item]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
         items.enumerated().forEach { (itemIndex, item) in
             if let colorIndex = FilterColor.colorIndex(for: item.filterColor) {
@@ -44,6 +44,8 @@ extension Bread : Identifiable {
         separatedContent = newContent.components(separatedBy: ["\n", " ", "\t"])
         filterIndexes = Array(repeating: [], count: FilterColor.count)
         touch = Date.now
+        
+        selectedFilters?.removeAll()
     }
     
     func updateTitle(_ newTitle: String) {
