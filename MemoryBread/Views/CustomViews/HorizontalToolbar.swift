@@ -10,8 +10,9 @@ import SnapKit
 
 final class HorizontalToolBar: UIView {
     struct UIConstants {
-        static let groupHeight: CGFloat = 50
         static let inset: CGFloat = 5
+        static let groupHeight: CGFloat = 50
+        static let interSpacing: CGFloat = 5
     }
     
     var collectionView: UICollectionView!
@@ -57,6 +58,7 @@ extension HorizontalToolBar {
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
+        section.interGroupSpacing = UIConstants.interSpacing
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout

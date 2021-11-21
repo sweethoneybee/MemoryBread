@@ -32,9 +32,9 @@ final class WordItemModel {
     private let bread: Bread
 
     /// This items just for ordering; the items' property will not change
-    lazy var items: [Item] = populateItems()
+    private lazy var items: [Item] = populateItems()
     
-    lazy var itemsWithKey: [UUID: Item] = {
+    private lazy var itemsWithKey: [UUID: Item] = {
         return Dictionary(uniqueKeysWithValues: items.map { ($0.id, $0) })
     }()
     

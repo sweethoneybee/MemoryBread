@@ -8,10 +8,6 @@
 import UIKit
 
 extension UIColor {
-    static var wordCellText: UIColor {
-        return .label
-    }
-    
     static var circleCellLayer: UIColor {
         return .black
     }
@@ -22,9 +18,5 @@ extension UIColor {
     
     static var horizontalToolbar: UIColor {
         return .systemGray4
-    }
-    
-    static var breadList: UIColor {
-        return .systemBackground
     }
 }
