@@ -39,4 +39,7 @@ struct AutoIncreaseId {
 final class UserManager {
     @AutoIncreaseId
     static var autoIncreaseId: Int64
+    
+    @UserDefault<Bool>(key: "firstLaunch", defaultValue: true)
+    static var firstLaunch: Bool
 }

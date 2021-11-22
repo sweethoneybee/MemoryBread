@@ -28,6 +28,15 @@ extension Bread {
 }
 
 extension Bread : Identifiable {
+    /// Only use the method for setting tutorial contents
+    func updateFilterIndexesUsing(indexes: [(Int, Int)]) {
+        var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
+        indexes.forEach { (index, colorIndex) in
+            newFilterIndexes[colorIndex].append(index)
+        }
+        filterIndexes = newFilterIndexes
+    }
+    
     func updateFilterIndexes(with items: [WordItemModel.Item]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
         items.enumerated().forEach { (itemIndex, item) in

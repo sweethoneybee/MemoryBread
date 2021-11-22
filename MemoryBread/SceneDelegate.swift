@@ -16,6 +16,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
+        if UserManager.firstLaunch {
+            let tutorial = Tutorial()
+            zip(tutorial.contents, tutorial.filterIndexes).forEach { (breadInfo, indexesInfo) in
+                let (title, body) = breadInfo
+                let tutorialBread = BreadDAO.default.create()
+                tutorialBread.title = title
+                tutorialBread.updateContent(body)
+                tutorialBread.updateFilterIndexesUsing(indexes: indexesInfo)
+            }
+            BreadDAO.default.save()
+            UserManager.firstLaunch = false
+        }
+        
         let breadListViewController = BreadListViewController()
         let nvc = UINavigationController(rootViewController: breadListViewController)
         nvc.navigationBar.prefersLargeTitles = true
