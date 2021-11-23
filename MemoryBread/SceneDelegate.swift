@@ -15,15 +15,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        
+
         if UserManager.firstLaunch {
-            let tutorial = Tutorial()
-            zip(tutorial.contents, tutorial.filterIndexes).forEach { (breadInfo, indexesInfo) in
-                let (title, body) = breadInfo
+            Tutorial().infos.forEach {
                 let tutorialBread = BreadDAO.default.create()
-                tutorialBread.title = title
-                tutorialBread.updateContent(body)
-                tutorialBread.updateFilterIndexesUsing(indexes: indexesInfo)
+                tutorialBread.title = $0.title
+                tutorialBread.updateContent($0.content)
+                tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
             }
             BreadDAO.default.save()
             UserManager.firstLaunch = false

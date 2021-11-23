@@ -29,7 +29,7 @@ extension Bread {
 
 extension Bread : Identifiable {
     /// Only use the method for setting tutorial contents
-    func updateFilterIndexesUsing(indexes: [(Int, Int)]) {
+    func updateFilterIndexes(usingIndexes indexes: [(Int, Int)]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
         indexes.forEach { (index, colorIndex) in
             newFilterIndexes[colorIndex].append(index)
