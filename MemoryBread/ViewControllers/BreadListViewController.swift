@@ -32,7 +32,7 @@ final class BreadListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "암기빵"
+        navigationItem.title = "app_title".localized
         navigationItem.backButtonDisplayMode = .minimal
         configureHierarchy()
         configureDataSource()

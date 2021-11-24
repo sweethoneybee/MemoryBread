@@ -426,8 +426,8 @@ extension BreadViewController {
             textField.text = self?.bread.title
         }
         
-        titleEditAlert.addAction(UIAlertAction(title: "취소", style: .cancel))
-        titleEditAlert.addAction(UIAlertAction(title: "완료", style: .default) { [weak self] _ in
+        titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel))
+        titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.done, style: .default) { [weak self] _ in
             guard let self = self else { return }
             if let inputText = titleEditAlert.textFields?.first?.text {
                 self.bread.updateTitle(inputText)

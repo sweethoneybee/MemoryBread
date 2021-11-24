@@ -5,3 +5,10 @@
   Created by 정성훈 on 2021/11/23.
   
 */
+
+"app_title" = "Memory Bread";
+"cancel" = "Cancel";
+"done" = "Done";
+"edit_content" = "Edit Content";
+
+"fresh_bread" = "Fresh Bread";

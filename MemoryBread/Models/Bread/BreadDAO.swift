@@ -60,7 +60,7 @@ final class BreadDAO: NSObject {
     func create() -> Bread {
         let bread = Bread(touch: Date.now,
                           directoryName: "임시 디렉토리",
-                          title: "새로운 암기빵",
+                          title: LocalizingHelper.freshBread,
                           content: "",
                           separatedContent: [],
                           filterIndexes: Array(repeating: [], count: FilterColor.count),

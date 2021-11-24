@@ -7,26 +7,37 @@
 
 import Foundation
 import Then
+import UIKit
+
+extension Locale {
+    var localeFromIdentifier: Locale {
+        switch languageCode {
+        case "en": return Locale(identifier: "en")
+        case "ko": return Locale(identifier: "ko-KR")
+        default: return Locale(identifier: "en")
+        }
+    }
+}
 
 final class DateHelper {
     private let todayDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
-        $0.locale = Locale(identifier: "ko-KR")
+        $0.locale = Locale.current.localeFromIdentifier
         $0.setLocalizedDateFormatFromTemplate("hm")
     }
     
     private let lastWeekDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
-        $0.locale = Locale(identifier: "ko-KR")
+        $0.locale = Locale.current.localeFromIdentifier
         $0.setLocalizedDateFormatFromTemplate("EEEE")
     }
     
     private let normalDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
-        $0.locale = Locale(identifier: "ko-KR")
+        $0.locale = Locale.current.localeFromIdentifier
         $0.setLocalizedDateFormatFromTemplate("yyyy M d")
     }
     

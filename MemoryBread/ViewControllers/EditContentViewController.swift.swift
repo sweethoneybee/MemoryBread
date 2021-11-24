@@ -107,19 +107,19 @@ extension EditContentViewController {
     }
     
     private func configureNavigation() {
-        let cancelItem = UIBarButtonItem(title: "취소",
+        let cancelItem = UIBarButtonItem(title: LocalizingHelper.cancel,
                                          style: .plain,
                                          target: self,
                                          action: #selector(cancelEditing))
         navigationItem.leftBarButtonItem = cancelItem
         
-        let doneItem = UIBarButtonItem(title: "완료",
+        let doneItem = UIBarButtonItem(title: LocalizingHelper.done,
                                        style: .plain,
                                        target: self,
                                        action: #selector(completeEditing))
         navigationItem.rightBarButtonItem = doneItem
         
-        navigationItem.title = "내용 수정"
+        navigationItem.title = LocalizingHelper.editContent
     }
 }
 
