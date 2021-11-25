@@ -19,6 +19,8 @@ final class BreadListViewController: UIViewController {
     private var tableView: UITableView!
     private var dataSource: BreadListViewController.DataSource!
 
+    private var headerLabel: UILabel!
+    
     private var isAdding = false
     
     private var breadListController = BreadListController()
@@ -27,6 +29,8 @@ final class BreadListViewController: UIViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(items, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: true)
+        
+        headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, items.count)
     }
     
     override func viewDidLoad() {
@@ -46,6 +50,8 @@ final class BreadListViewController: UIViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(breadItems, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
+        
+        headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, breadItems.count)
     }
 }
 
@@ -57,8 +63,17 @@ extension BreadListViewController {
     }
     
     private func configureHierarchy() {
+        headerLabel = UILabel().then {
+            $0.font = .systemFont(ofSize: 14, weight: .light)
+            $0.textAlignment = .center
+            $0.textColor = .black
+            $0.frame.size.height = 30
+        }
+        
         tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        
+        tableView.tableHeaderView = headerLabel
         
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in

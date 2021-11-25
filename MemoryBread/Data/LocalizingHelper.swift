@@ -14,4 +14,6 @@ struct LocalizingHelper {
     static let editContent = "edit_content".localized
     
     static let freshBread = "fresh_bread".localized
+    
+    static let numberOfMemoryBread = "number_of_memory_bread".localized
 }
