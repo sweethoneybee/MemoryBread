@@ -31,7 +31,7 @@ final class WordItemModel {
 
     private let bread: Bread
 
-    /// This items just for ordering; the items' property will not change
+    /// items는 오직 순서를 위해서만 사용함; 값의 최신화를 보장하지 않음.
     private lazy var items: [Item] = populateItems()
     
     private lazy var itemsWithKey: [UUID: Item] = {

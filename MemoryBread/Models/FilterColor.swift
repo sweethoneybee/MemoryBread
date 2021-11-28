@@ -22,7 +22,7 @@ enum FilterColor: Int, CaseIterable {
         }
     }
     
-    /// complexity O(n); n is number of enum cases.
+    /// 복잡도는 O(n); n은 enum case의 개수이다.
     static var count: Int {
         FilterColor.allCases.count
     }

@@ -20,6 +20,7 @@ extension Locale {
 }
 
 final class DateHelper {
+    /// ex) 13시 56분
     private let todayDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
@@ -27,6 +28,7 @@ final class DateHelper {
         $0.setLocalizedDateFormatFromTemplate("hm")
     }
     
+    /// 현재 시각을 기준으로 당일을 제외한 7일 이내; ex) 수요일
     private let lastWeekDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
@@ -34,6 +36,7 @@ final class DateHelper {
         $0.setLocalizedDateFormatFromTemplate("EEEE")
     }
     
+    /// 현재 시각을 기준으로 7일 이후; ex) 2021.11.18
     private let normalDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
@@ -43,7 +46,7 @@ final class DateHelper {
     
     func string(from date: Date) -> String {
         let calendar = Calendar.current
-        let lastWeekDay = calendar.date(byAdding: .day, value: -7, to: date)
+        let lastWeekDay = calendar.date(byAdding: .day, value: -7, to: Date.now)
         
         if calendar.isDateInToday(date) {
             return todayDateFormatter.string(from: date)

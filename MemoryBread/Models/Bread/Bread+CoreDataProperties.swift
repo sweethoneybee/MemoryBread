@@ -28,7 +28,7 @@ extension Bread {
 }
 
 extension Bread : Identifiable {
-    /// Only use the method for setting tutorial contents
+    /// 최초 튜토리얼 세팅에만 사용해야 함.
     func updateFilterIndexes(usingIndexes indexes: [(Int, Int)]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
         indexes.forEach { (index, colorIndex) in
