@@ -22,7 +22,7 @@ final class BreadListController {
         return BreadDAO.default.allBreads
             .map {
                 BreadItem(title: $0.title ?? "",
-                          date: $0.touch ?? Date.now,
+                          date: $0.touch ?? Date(),
                           body: $0.content ?? "")
             }
     }

@@ -45,20 +45,20 @@ extension Bread : Identifiable {
             }
         }
         filterIndexes = newFilterIndexes
-        touch = Date.now
+        touch = Date()
     }
     
     func updateContent(_ newContent: String) {
         content = newContent
         separatedContent = newContent.components(separatedBy: ["\n", " ", "\t"])
         filterIndexes = Array(repeating: [], count: FilterColor.count)
-        touch = Date.now
+        touch = Date()
         
         selectedFilters?.removeAll()
     }
     
     func updateTitle(_ newTitle: String) {
         title = newTitle
-        touch = Date.now
+        touch = Date()
     }
 }

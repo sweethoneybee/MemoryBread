@@ -476,7 +476,12 @@ extension BreadViewController {
 extension UICollectionViewDiffableDataSource {
     func reconfigure(_ identifiers: [ItemIdentifierType], animatingDifferences: Bool = false) {
         var snapshot = snapshot()
-        snapshot.reconfigureItems(identifiers)
-        apply(snapshot, animatingDifferences: animatingDifferences)
+        if #available(iOS 15.0, *) {
+            snapshot.reconfigureItems(identifiers)
+            apply(snapshot, animatingDifferences: animatingDifferences)
+        } else {
+            snapshot.reloadItems(identifiers)
+            apply(snapshot, animatingDifferences: false)
+        }
     }
 }

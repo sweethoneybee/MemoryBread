@@ -46,7 +46,7 @@ final class DateHelper {
     
     func string(from date: Date) -> String {
         let calendar = Calendar.current
-        let lastWeekDay = calendar.date(byAdding: .day, value: -7, to: Date.now)
+        let lastWeekDay = calendar.date(byAdding: .day, value: -7, to: Date())
         
         if calendar.isDateInToday(date) {
             return todayDateFormatter.string(from: date)

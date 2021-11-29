@@ -77,7 +77,7 @@ final class ColorFilterToolbarViewController: UIViewController {
             numberOfEachFilterIndexes = Array(repeating: 0, count: numberOfEachFilterIndexes.count)
         }
         
-        reconfigureItems(Array(0..<numberOfEachFilterIndexes.count))
+        dataSource.reconfigure(Array(0..<numberOfEachFilterIndexes.count), animatingDifferences: false)
     }
 }
 
@@ -114,12 +114,6 @@ extension ColorFilterToolbarViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(Array(0..<numberOfItems)) // Color Values
         dataSource.apply(snapshot)
-    }
-    
-    private func reconfigureItems(_ items: [Int]) {
-        var snapshot = dataSource.snapshot()
-        snapshot.reconfigureItems(items)
-        dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
