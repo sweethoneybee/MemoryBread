@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10523E7040914B5C3967D34F /* libPods-MemoryBread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F35008E123FB08E3688565 /* libPods-MemoryBread.a */; };
 		40060F8C272D5D1800BA7A34 /* EditContentViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */; };
 		40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8D272D5D5100BA7A34 /* FilterColor.swift */; };
 		40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */; };
@@ -20,6 +21,9 @@
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
+		404F0EDB27573D83002FEE82 /* GoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDA27573D83002FEE82 /* GoogleHelper.swift */; };
+		404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDC275743A4002FEE82 /* APIKeys.swift */; };
+		404F0EE0275748ED002FEE82 /* GoogleLoginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDF275748ED002FEE82 /* GoogleLoginTestViewController.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
@@ -56,6 +60,10 @@
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
+		404F0EDA27573D83002FEE82 /* GoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleHelper.swift; sourceTree = "<group>"; };
+		404F0EDC275743A4002FEE82 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
+		404F0EDF275748ED002FEE82 /* GoogleLoginTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginTestViewController.swift; sourceTree = "<group>"; };
+		404F0EE12757570C002FEE82 /* GoogleAPIClientForREST-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoogleAPIClientForREST-Bridging-Header.h"; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
@@ -74,6 +82,9 @@
 		40F92B7F272BD7880085224E /* ScrollableTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTitleView.swift; sourceTree = "<group>"; };
 		40F92B81272BD7B10085224E /* BreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadViewController.swift; sourceTree = "<group>"; };
 		40F92B88272C3E920085224E /* UICollectionView+Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Selection.swift"; sourceTree = "<group>"; };
+		727424C018504B0C7D6E6979 /* Pods-MemoryBread.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryBread.release.xcconfig"; path = "Target Support Files/Pods-MemoryBread/Pods-MemoryBread.release.xcconfig"; sourceTree = "<group>"; };
+		83F35008E123FB08E3688565 /* libPods-MemoryBread.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MemoryBread.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C552DE7FE527EA0BC1D96EA /* Pods-MemoryBread.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryBread.debug.xcconfig"; path = "Target Support Files/Pods-MemoryBread/Pods-MemoryBread.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,12 +94,22 @@
 			files = (
 				40C8DE3D27259F6700B8C5FC /* SnapKit in Frameworks */,
 				40C8DE4027259F7300B8C5FC /* Then in Frameworks */,
+				10523E7040914B5C3967D34F /* libPods-MemoryBread.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04F2A1521BA72F93F09BC605 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9C552DE7FE527EA0BC1D96EA /* Pods-MemoryBread.debug.xcconfig */,
+				727424C018504B0C7D6E6979 /* Pods-MemoryBread.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		40060F91272D99DF00BA7A34 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +123,7 @@
 			children = (
 				4013F5BD274BDB0700E03F5F /* Tutorial.swift.swift */,
 				4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */,
+				404F0EDC275743A4002FEE82 /* APIKeys.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -114,6 +136,7 @@
 				40060F8D272D5D5100BA7A34 /* FilterColor.swift */,
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
 				409CC8FD27327311009B9AA1 /* UserManager.swift */,
+				404F0EDA27573D83002FEE82 /* GoogleHelper.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -141,6 +164,8 @@
 			children = (
 				40C8DE2327259F5300B8C5FC /* MemoryBread */,
 				40C8DE2227259F5300B8C5FC /* Products */,
+				04F2A1521BA72F93F09BC605 /* Pods */,
+				B8A0B48424B9EC5B37DB2C3C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -168,6 +193,7 @@
 				40C8DE3527259F5500B8C5FC /* Info.plist */,
 				40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */,
 				4013F5C3274D143500E03F5F /* Localizable.strings */,
+				404F0EE12757570C002FEE82 /* GoogleAPIClientForREST-Bridging-Header.h */,
 			);
 			path = MemoryBread;
 			sourceTree = "<group>";
@@ -189,6 +215,7 @@
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
 				40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */,
 				40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */,
+				404F0EDF275748ED002FEE82 /* GoogleLoginTestViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -222,6 +249,14 @@
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
+		B8A0B48424B9EC5B37DB2C3C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				83F35008E123FB08E3688565 /* libPods-MemoryBread.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -229,9 +264,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 40C8DE3827259F5500B8C5FC /* Build configuration list for PBXNativeTarget "MemoryBread" */;
 			buildPhases = (
+				913FA0319E701BA31087A7D7 /* [CP] Check Pods Manifest.lock */,
 				40C8DE1D27259F5300B8C5FC /* Sources */,
 				40C8DE1E27259F5300B8C5FC /* Frameworks */,
 				40C8DE1F27259F5300B8C5FC /* Resources */,
+				7E63006958B819CDBF02C872 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -297,6 +334,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7E63006958B819CDBF02C872 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MemoryBread/Pods-MemoryBread-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MemoryBread/Pods-MemoryBread-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MemoryBread/Pods-MemoryBread-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		913FA0319E701BA31087A7D7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MemoryBread-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		40C8DE1D27259F5300B8C5FC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -304,10 +383,13 @@
 			files = (
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
+				404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
+				404F0EDB27573D83002FEE82 /* GoogleHelper.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
+				404F0EE0275748ED002FEE82 /* GoogleLoginTestViewController.swift in Sources */,
 				40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
@@ -475,6 +557,7 @@
 		};
 		40C8DE3927259F5500B8C5FC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C552DE7FE527EA0BC1D96EA /* Pods-MemoryBread.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -500,6 +583,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "MemoryBread/GoogleAPIClientForREST-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -507,6 +591,7 @@
 		};
 		40C8DE3A27259F5500B8C5FC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 727424C018504B0C7D6E6979 /* Pods-MemoryBread.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -532,6 +617,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "MemoryBread/GoogleAPIClientForREST-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

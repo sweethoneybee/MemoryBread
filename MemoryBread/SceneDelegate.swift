@@ -27,8 +27,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             UserManager.firstLaunch = false
         }
         
-        let breadListViewController = BreadListViewController()
-        let nvc = UINavigationController(rootViewController: breadListViewController)
+        // original
+        // let breadListViewController = BreadListViewController()
+        // let nvc = UINavigationController(rootViewController: breadListViewController)
+        
+        // test
+        let googleLoginTestViewController = GoogleLoginTestViewController()
+        let nvc = UINavigationController(rootViewController: googleLoginTestViewController)
+        
         nvc.navigationBar.prefersLargeTitles = true
         nvc.navigationBar.tintColor = .systemPink
         
