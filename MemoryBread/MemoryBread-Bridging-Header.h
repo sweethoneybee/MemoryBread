@@ -10,5 +10,7 @@
 #define GoogleAPIClientForREST_Bridging_Header_h
 
 #import "GTLRDrive.h"
+#import <GTMSessionFetcher/GTMSessionFetcher.h>
+#import <GTMSessionFetcher/GTMSessionFetcherService.h>
 
 #endif /* GoogleAPIClientForREST_Bridging_Header_h */

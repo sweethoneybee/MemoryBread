@@ -26,11 +26,6 @@ final class BreadListController {
                           body: $0.content ?? "")
             }
     }
-    
-    var breadItemsDidChange: (([BreadItem]) -> (Void))?
-    init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(breadObjectDidChange), name: .breadObjectsDidChange, object: nil)
-    }
 }
 
 extension BreadListController {
@@ -45,12 +40,5 @@ extension BreadListController {
     @discardableResult
     func deleteBread(at indexPath: IndexPath) -> Bool {
         return BreadDAO.default.delete(at: indexPath)
-    }
-}
-
-extension BreadListController {
-    @objc
-    func breadObjectDidChange() {
-        breadItemsDidChange?(items)
     }
 }

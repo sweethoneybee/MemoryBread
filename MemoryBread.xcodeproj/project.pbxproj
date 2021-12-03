@@ -21,9 +21,7 @@
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
-		404F0EDB27573D83002FEE82 /* GoogleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDA27573D83002FEE82 /* GoogleHelper.swift */; };
 		404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDC275743A4002FEE82 /* APIKeys.swift */; };
-		404F0EE0275748ED002FEE82 /* GoogleLoginTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDF275748ED002FEE82 /* GoogleLoginTestViewController.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
@@ -60,10 +58,8 @@
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
-		404F0EDA27573D83002FEE82 /* GoogleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleHelper.swift; sourceTree = "<group>"; };
 		404F0EDC275743A4002FEE82 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
-		404F0EDF275748ED002FEE82 /* GoogleLoginTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginTestViewController.swift; sourceTree = "<group>"; };
-		404F0EE12757570C002FEE82 /* GoogleAPIClientForREST-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GoogleAPIClientForREST-Bridging-Header.h"; sourceTree = "<group>"; };
+		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
@@ -123,7 +119,6 @@
 			children = (
 				4013F5BD274BDB0700E03F5F /* Tutorial.swift.swift */,
 				4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */,
-				404F0EDC275743A4002FEE82 /* APIKeys.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -136,7 +131,6 @@
 				40060F8D272D5D5100BA7A34 /* FilterColor.swift */,
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
 				409CC8FD27327311009B9AA1 /* UserManager.swift */,
-				404F0EDA27573D83002FEE82 /* GoogleHelper.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -188,12 +182,13 @@
 				40245CFE27293547002E84A8 /* Models */,
 				40C8DE2427259F5300B8C5FC /* AppDelegate.swift */,
 				40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */,
+				404F0EDC275743A4002FEE82 /* APIKeys.swift */,
+				404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */,
 				40C8DE3027259F5500B8C5FC /* Assets.xcassets */,
 				40C8DE3227259F5500B8C5FC /* LaunchScreen.storyboard */,
 				40C8DE3527259F5500B8C5FC /* Info.plist */,
 				40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */,
 				4013F5C3274D143500E03F5F /* Localizable.strings */,
-				404F0EE12757570C002FEE82 /* GoogleAPIClientForREST-Bridging-Header.h */,
 			);
 			path = MemoryBread;
 			sourceTree = "<group>";
@@ -215,7 +210,6 @@
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
 				40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */,
 				40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */,
-				404F0EDF275748ED002FEE82 /* GoogleLoginTestViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -387,9 +381,7 @@
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
-				404F0EDB27573D83002FEE82 /* GoogleHelper.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
-				404F0EE0275748ED002FEE82 /* GoogleLoginTestViewController.swift in Sources */,
 				40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
@@ -583,7 +575,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "MemoryBread/GoogleAPIClientForREST-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread/MemoryBread-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -617,7 +609,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "MemoryBread/GoogleAPIClientForREST-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread/MemoryBread-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

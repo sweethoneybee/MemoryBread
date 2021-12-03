@@ -24,14 +24,6 @@ final class BreadListViewController: UIViewController {
     private var isAdding = false
     
     private var breadListController = BreadListController()
-    private func breadItemsDidChange(_ items: [BreadListController.BreadItem]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(items, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: true)
-        
-        headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, items.count)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +35,7 @@ final class BreadListViewController: UIViewController {
         addToolbar()
         
         tableView.delegate = self
-        breadListController.breadItemsDidChange = breadItemsDidChange(_:)
-        
+
         let breadItems = breadListController.items
         var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
         snapshot.appendSections([.main])
@@ -52,6 +43,20 @@ final class BreadListViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: false)
         
         headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, breadItems.count)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(breadObjectsDidChange), name: .breadObjectsDidChange, object: nil)
+    }
+    
+    @objc
+    private func breadObjectsDidChange() {
+        let items = breadListController.items
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(items, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: true)
+        
+        headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, items.count)
     }
 }
 
