@@ -206,24 +206,15 @@ extension BreadViewController {
                 return
             }
             
+            let item: WordItemModel.Item?
             if self.isEditing {
-                guard let item = self.editModel.item(forKey: id) else {
-                    return
-                }
-                cell.label.text = item.word
-                cell.overlayView.backgroundColor = item.filterColor?.withAlphaComponent(0.5) ?? .clear
-                return
-            }
-            
-            guard let item = self.model.item(forKey: id) else {
-                return
-            }
-            cell.label.text = item.word
-            
-            if item.isFiltered {
-                cell.overlayView.backgroundColor = item.isPeeking ? (item.filterColor?.withAlphaComponent(0.5)) : (item.filterColor)
+                item = self.editModel.item(forKey: id)
             } else {
-                cell.overlayView.backgroundColor = .clear
+                item = self.model.item(forKey: id)
+            }
+            
+            if let item = item {
+                cell.configure(using: item, isEditing: self.isEditing)
             }
         }
         
@@ -231,11 +222,8 @@ extension BreadViewController {
         <SupplemantaryTitleView>(elementKind: SupplemantaryTitleView.reuseIdentifier) {
             [weak self] supplementaryView, elementKind, indexPath in
             guard let self = self else { return }
-            supplementaryView.label.text = self.bread.title
-            
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapSupplementaryTitleView(_:)))
-            supplementaryView.label.addGestureRecognizer(tapGesture)
-            supplementaryView.label.isUserInteractionEnabled = true
+            supplementaryView.configure(using: self.bread.title)
+            supplementaryView.delegate = self
         }
         
         dataSource = UICollectionViewDiffableDataSource<Section, UUID>(collectionView: collectionView) { collectionView, indexPath, id in
@@ -415,10 +403,9 @@ extension BreadViewController {
     }
 }
 
-// MARK: - Alert
-extension BreadViewController {
-    @objc
-    private func didTapSupplementaryTitleView(_ sender: UITapGestureRecognizer) {
+// MARK: - SupplemantaryTitleViewDelegate
+extension BreadViewController: SupplemantaryTitleViewDelegate {
+    func didTapTitleView(_ view: UICollectionReusableView) {
         let titleEditAlert = UIAlertController(title: "제목 변경", message: nil, preferredStyle: .alert)
         titleEditAlert.addTextField { [weak self] textField in
             textField.clearButtonMode = .always

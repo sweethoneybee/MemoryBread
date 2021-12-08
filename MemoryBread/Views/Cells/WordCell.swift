@@ -29,7 +29,7 @@ final class WordCell: UICollectionViewCell {
 }
 
 extension WordCell {
-    func configure() {
+    private func configure() {
         contentView.addSubview(label)
         contentView.addSubview(overlayView)
         
@@ -41,6 +41,21 @@ extension WordCell {
         
         overlayView.snp.makeConstraints { make in
             make.edges.equalTo(label)
+        }
+    }
+    
+    func configure(using item: WordItemModel.Item, isEditing: Bool) {
+        if isEditing {
+            label.text = item.word
+            overlayView.backgroundColor = item.filterColor?.withAlphaComponent(0.5) ?? .clear
+            return
+        }
+        
+        label.text = item.word
+        if item.isFiltered {
+            overlayView.backgroundColor = item.isPeeking ? (item.filterColor?.withAlphaComponent(0.5)) : (item.filterColor)
+        } else {
+            overlayView.backgroundColor = .clear
         }
     }
 }

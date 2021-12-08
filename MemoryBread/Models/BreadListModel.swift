@@ -1,5 +1,5 @@
 //
-//  BreadListController.swift
+//  BreadListModel.swift
 //  MemoryBread
 //
 //  Created by 정성훈 on 2021/10/31.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class BreadListController {
+final class BreadListModel {
     struct BreadItem: Hashable {
         let title: String
         let date: Date
@@ -28,7 +28,7 @@ final class BreadListController {
     }
 }
 
-extension BreadListController {
+extension BreadListModel {
     func createBread() -> Bread {
         return BreadDAO.default.create()
     }

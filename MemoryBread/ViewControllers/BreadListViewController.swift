@@ -23,7 +23,7 @@ final class BreadListViewController: UIViewController {
     
     private var isAdding = false
     
-    private var breadListController = BreadListController()
+    private var breadListController = BreadListModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +37,7 @@ final class BreadListViewController: UIViewController {
         tableView.delegate = self
 
         let breadItems = breadListController.items
-        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListModel.BreadItem>()
         snapshot.appendSections([.main])
         snapshot.appendItems(breadItems, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
@@ -51,7 +51,7 @@ final class BreadListViewController: UIViewController {
     private func breadObjectsDidChange() {
         let items = breadListController.items
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListController.BreadItem>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, BreadListModel.BreadItem>()
         snapshot.appendSections([.main])
         snapshot.appendItems(items, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: true)
@@ -153,7 +153,7 @@ extension BreadListViewController: UITableViewDelegate {
 }
 
 extension BreadListViewController {
-    class DataSource: UITableViewDiffableDataSource<Section, BreadListController.BreadItem> {
+    class DataSource: UITableViewDiffableDataSource<Section, BreadListModel.BreadItem> {
         var deleteBlock: ((IndexPath) -> (Void))?
         override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
             return true
