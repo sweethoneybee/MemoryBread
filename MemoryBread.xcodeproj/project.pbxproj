@@ -22,6 +22,7 @@
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
 		404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDC275743A4002FEE82 /* APIKeys.swift */; };
+		405EC1782764D5C60031C19D /* GDDownloader.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
@@ -60,6 +61,7 @@
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
 		404F0EDC275743A4002FEE82 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
+		405EC1772764D5C60031C19D /* GDDownloader.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 			children = (
 				40245D05272940EE002E84A8 /* Bread+CoreData */,
 				4013F5BA2748B55100E03F5F /* WordItemModel.swift */,
+				405EC1772764D5C60031C19D /* GDDownloader.swift.swift */,
 				40060F8D272D5D5100BA7A34 /* FilterColor.swift */,
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
 				409CC8FD27327311009B9AA1 /* UserManager.swift */,
@@ -391,6 +394,7 @@
 				4013F5BE274BDB0700E03F5F /* Tutorial.swift.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */,
 				40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */,
+				405EC1782764D5C60031C19D /* GDDownloader.swift.swift in Sources */,
 				409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */,
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
 				40060F97272DA18100BA7A34 /* BreadListModel.swift in Sources */,
