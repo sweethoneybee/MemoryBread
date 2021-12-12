@@ -8,21 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		10523E7040914B5C3967D34F /* libPods-MemoryBread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F35008E123FB08E3688565 /* libPods-MemoryBread.a */; };
-		40060F8C272D5D1800BA7A34 /* EditContentViewController.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */; };
+		40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8B272D5D1800BA7A34 /* EditContentViewController.swift */; };
 		40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8D272D5D5100BA7A34 /* FilterColor.swift */; };
 		40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */; };
 		40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F92272D9A3200BA7A34 /* BreadListCell.swift */; };
 		40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */; };
 		40060F97272DA18100BA7A34 /* BreadListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F96272DA18100BA7A34 /* BreadListModel.swift */; };
 		4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5BA2748B55100E03F5F /* WordItemModel.swift */; };
-		4013F5BE274BDB0700E03F5F /* Tutorial.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5BD274BDB0700E03F5F /* Tutorial.swift.swift */; };
+		4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5BD274BDB0700E03F5F /* Tutorial.swift */; };
 		4013F5C1274D143500E03F5F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4013F5C3274D143500E03F5F /* Localizable.strings */; };
 		4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */; };
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
 		404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDC275743A4002FEE82 /* APIKeys.swift */; };
-		405EC1782764D5C60031C19D /* GDDownloader.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift.swift */; };
+		405EC1782764D5C60031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
+		405EC17A2766086E0031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
+		405EC17E27661E200031C19D /* ExcelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC17D27661E200031C19D /* ExcelReader.swift */; };
+		405EC18127661E8E0031C19D /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 405EC18027661E8E0031C19D /* CoreXLSX */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
@@ -44,14 +47,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContentViewController.swift.swift; sourceTree = "<group>"; };
+		40060F8B272D5D1800BA7A34 /* EditContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContentViewController.swift; sourceTree = "<group>"; };
 		40060F8D272D5D5100BA7A34 /* FilterColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterColor.swift; sourceTree = "<group>"; };
 		40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+CustomColor.swift"; sourceTree = "<group>"; };
 		40060F92272D9A3200BA7A34 /* BreadListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListCell.swift; sourceTree = "<group>"; };
 		40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListViewController.swift; sourceTree = "<group>"; };
 		40060F96272DA18100BA7A34 /* BreadListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListModel.swift; sourceTree = "<group>"; };
 		4013F5BA2748B55100E03F5F /* WordItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordItemModel.swift; sourceTree = "<group>"; };
-		4013F5BD274BDB0700E03F5F /* Tutorial.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutorial.swift.swift; sourceTree = "<group>"; };
+		4013F5BD274BDB0700E03F5F /* Tutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutorial.swift; sourceTree = "<group>"; };
 		4013F5C2274D143500E03F5F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4013F5C4274D145B00E03F5F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4013F5C5274D145B00E03F5F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -61,7 +64,9 @@
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
 		404F0EDC275743A4002FEE82 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
-		405EC1772764D5C60031C19D /* GDDownloader.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift.swift; sourceTree = "<group>"; };
+		405EC1772764D5C60031C19D /* GDDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift; sourceTree = "<group>"; };
+		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
+		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
@@ -90,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				405EC18127661E8E0031C19D /* CoreXLSX in Frameworks */,
 				40C8DE3D27259F6700B8C5FC /* SnapKit in Frameworks */,
 				40C8DE4027259F7300B8C5FC /* Then in Frameworks */,
 				10523E7040914B5C3967D34F /* libPods-MemoryBread.a in Frameworks */,
@@ -111,8 +117,8 @@
 		4013F5BC274BDAFC00E03F5F /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				4013F5BD274BDB0700E03F5F /* Tutorial.swift.swift */,
-				4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */,
+				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
+				40245D0327293C60002E84A8 /* BreadDAO.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -120,14 +126,12 @@
 		40245CFE27293547002E84A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4013F5BC274BDAFC00E03F5F /* Data */,
+				405EC18327661EB00031C19D /* Network */,
+				405EC18227661E9C0031C19D /* Helper */,
 				40245D05272940EE002E84A8 /* Bread+CoreData */,
 				4013F5BA2748B55100E03F5F /* WordItemModel.swift */,
-				405EC1772764D5C60031C19D /* GDDownloader.swift.swift */,
-				40060F8D272D5D5100BA7A34 /* FilterColor.swift */,
-				40F1D609273E65020053AB73 /* DateHelper.swift */,
-				409CC8FD27327311009B9AA1 /* UserManager.swift */,
 				40060F96272DA18100BA7A34 /* BreadListModel.swift */,
-				40245D0327293C60002E84A8 /* BreadDAO.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -139,6 +143,27 @@
 				40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */,
 			);
 			path = "Bread+CoreData";
+			sourceTree = "<group>";
+		};
+		405EC18227661E9C0031C19D /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */,
+				40060F8D272D5D5100BA7A34 /* FilterColor.swift */,
+				40F1D609273E65020053AB73 /* DateHelper.swift */,
+				405EC17D27661E200031C19D /* ExcelReader.swift */,
+				409CC8FD27327311009B9AA1 /* UserManager.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		405EC18327661EB00031C19D /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				405EC1772764D5C60031C19D /* GDDownloader.swift */,
+				405EC1792766086E0031C19D /* FileObject.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		409F1584273AA8CA00011DC6 /* SupplementaryViews */ = {
@@ -170,7 +195,6 @@
 		40C8DE2327259F5300B8C5FC /* MemoryBread */ = {
 			isa = PBXGroup;
 			children = (
-				4013F5BC274BDAFC00E03F5F /* Data */,
 				40F92B87272C3E7D0085224E /* Extensions */,
 				40F92B83272BD7B80085224E /* ViewControllers */,
 				40F7589B272AF8ED000ADD4F /* Views */,
@@ -203,7 +227,7 @@
 			children = (
 				40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */,
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
-				40060F8B272D5D1800BA7A34 /* EditContentViewController.swift.swift */,
+				40060F8B272D5D1800BA7A34 /* EditContentViewController.swift */,
 				40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */,
 			);
 			path = ViewControllers;
@@ -267,6 +291,7 @@
 			packageProductDependencies = (
 				40C8DE3C27259F6700B8C5FC /* SnapKit */,
 				40C8DE3F27259F7300B8C5FC /* Then */,
+				405EC18027661E8E0031C19D /* CoreXLSX */,
 			);
 			productName = MemoryBread;
 			productReference = 40C8DE2127259F5300B8C5FC /* MemoryBread.app */;
@@ -300,6 +325,7 @@
 			packageReferences = (
 				40C8DE3B27259F6700B8C5FC /* XCRemoteSwiftPackageReference "SnapKit" */,
 				40C8DE3E27259F7300B8C5FC /* XCRemoteSwiftPackageReference "Then" */,
+				405EC17F27661E8E0031C19D /* XCRemoteSwiftPackageReference "CoreXLSX" */,
 			);
 			productRefGroup = 40C8DE2227259F5300B8C5FC /* Products */;
 			projectDirPath = "";
@@ -374,6 +400,7 @@
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
+				405EC17A2766086E0031C19D /* FileObject.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
@@ -382,19 +409,20 @@
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,
-				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift.swift in Sources */,
+				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
 				4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */,
 				409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */,
 				40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */,
+				405EC17E27661E200031C19D /* ExcelReader.swift in Sources */,
 				40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */,
 				40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
-				4013F5BE274BDB0700E03F5F /* Tutorial.swift.swift in Sources */,
+				4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */,
 				40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */,
-				405EC1782764D5C60031C19D /* GDDownloader.swift.swift in Sources */,
+				405EC1782764D5C60031C19D /* GDDownloader.swift in Sources */,
 				409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */,
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
 				40060F97272DA18100BA7A34 /* BreadListModel.swift in Sources */,
@@ -635,6 +663,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		405EC17F27661E8E0031C19D /* XCRemoteSwiftPackageReference "CoreXLSX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CoreOffice/CoreXLSX";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.1;
+			};
+		};
 		40C8DE3B27259F6700B8C5FC /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -654,6 +690,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		405EC18027661E8E0031C19D /* CoreXLSX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 405EC17F27661E8E0031C19D /* XCRemoteSwiftPackageReference "CoreXLSX" */;
+			productName = CoreXLSX;
+		};
 		40C8DE3C27259F6700B8C5FC /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 40C8DE3B27259F6700B8C5FC /* XCRemoteSwiftPackageReference "SnapKit" */;
