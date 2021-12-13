@@ -14,17 +14,13 @@ protocol GDDownloaderDelegate: AnyObject {
 
 /// Google Drive Downloader
 final class GDDownloader {
-    private init() {
-        service = GTLRDriveService()
-        service.isRetryEnabled = true
+    init(service: GTLRDriveService) {
+        self.service = service
     }
     
-    static let shared = GDDownloader()
-        
-    /// Dictionary for guarding duplicate fetching
-    /// Key is a GTLRDrive_File.id. Refer to
-    /// [here](https://developers.google.com/drive/api/v3/reference/files)
-    var activeFetchers: [String: GTMSessionFetcher] = [:]
+    deinit {
+        fileListTicket?.cancel()
+    }
     
     /// Inject authorizer using GIDGoogleUser.authentication.fetcherAuthorizer()
     var authorizer: GTMFetcherAuthorizationProtocol? {
@@ -74,7 +70,7 @@ final class GDDownloader {
     }
   
     func fetch(_ file: FileObject) {
-        guard activeFetchers[file.id] == nil else {
+        guard ActiveFetchers.GTMSessionFetchers[file.id] == nil else {
             return
         }
         
@@ -88,10 +84,10 @@ final class GDDownloader {
             self.delegate?.downloadProgress(file, totalBytesWritten: totalBytesWritten)
         }
         
-        activeFetchers[file.id] = fetcher
+        ActiveFetchers.GTMSessionFetchers[file.id] = fetcher
         fetcher.beginFetch { data, error in
             defer {
-                self.activeFetchers.removeValue(forKey: file.id)
+                ActiveFetchers.GTMSessionFetchers.removeValue(forKey: file.id)
             }
             
             if let error = error {
@@ -103,9 +99,9 @@ final class GDDownloader {
     }
     
     func stopFetching(_ file: FileObject) {
-        if let fetcher = activeFetchers[file.id] {
+        if let fetcher = ActiveFetchers.GTMSessionFetchers[file.id] {
             fetcher.stopFetching()
-            activeFetchers.removeValue(forKey: file.id)
+            ActiveFetchers.GTMSessionFetchers.removeValue(forKey: file.id)
         }
     }
     

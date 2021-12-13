@@ -15,25 +15,24 @@ final class BreadListViewController: UIViewController {
     }
     
     let reuseIdentifier = "reuse-identifier-bread-list-view"
-    
-    private var tableView: UITableView!
-    private var dataSource: BreadListViewController.DataSource!
 
+    // MARK: - Views
+    private var tableView: UITableView!
     private var headerLabel: UILabel!
+    private var addBreadButton: UIButton!
     
+    // MARK: - Properties
+    private var dataSource: BreadListViewController.DataSource!
     private var isAdding = false
-    
+
+    // MARK: - Model
     private var breadListController = BreadListModel()
     
+    // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        navigationItem.title = "app_title".localized
-        navigationItem.backButtonDisplayMode = .minimal
-        configureHierarchy()
+        setViews()
         configureDataSource()
-        addToolbar()
-        
         tableView.delegate = self
 
         let breadItems = breadListController.items
@@ -62,12 +61,11 @@ final class BreadListViewController: UIViewController {
 
 // MARK: - Configure Views
 extension BreadListViewController {
-    private func createLayout() -> UICollectionViewLayout {
-        let config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        return UICollectionViewCompositionalLayout.list(using: config)
-    }
-    
-    private func configureHierarchy() {
+    private func setViews() {
+        view.backgroundColor = .systemBackground
+        navigationItem.title = "app_title".localized
+        navigationItem.backButtonDisplayMode = .minimal
+        
         headerLabel = UILabel().then {
             $0.font = .systemFont(ofSize: 14, weight: .light)
             $0.textAlignment = .center
@@ -77,30 +75,65 @@ extension BreadListViewController {
         
         tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        
         tableView.tableHeaderView = headerLabel
-        
         view.addSubview(tableView)
+        
+        addBreadButton = UIButton().then {
+            $0.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+            $0.tintColor = .systemPink
+            $0.addTarget(self, action: #selector(addBreadButtonTouched), for: .touchUpInside)
+        }
+        view.addSubview(addBreadButton)
+        
+        configureHierarchy()
+        addToolbar()
+    }
+    
+    private func configureHierarchy() {
         tableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        addBreadButton.snp.makeConstraints { make in
+            make.size.equalTo(CGSize(width: 60, height: 60))
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
+        addBreadButton.imageView?.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
     
     private func addToolbar() {
-        let addItem = UIBarButtonItem(image: UIImage(systemName: "plus.app"),
+        let addBreadFromRemoteDriveItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"),
                                       style: .plain,
                                       target: self,
-                                      action: #selector(addBread))
-        navigationItem.rightBarButtonItem = addItem
+                                      action: #selector(addBreadFromRemoteDriveTouched))
+        
+        let settingItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"),
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(settingButtonTouched))
+        navigationItem.rightBarButtonItems = [settingItem, addBreadFromRemoteDriveItem]
     }
     
     @objc
-    func addBread() {
+    func addBreadButtonTouched() {
         guard isAdding == false else { return }
         isAdding = true
         let breadViewController = BreadViewController(bread: breadListController.createBread())
         navigationController?.pushViewController(breadViewController, animated: true)
         isAdding = false
+    }
+    
+    @objc
+    func addBreadFromRemoteDriveTouched() {
+        print("드라이브에서 다운로드 버튼 눌림")
+    }
+    
+    @objc
+    func settingButtonTouched() {
+        print("세팅버튼 눌림")
     }
 }
 

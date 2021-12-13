@@ -13,15 +13,13 @@ import GoogleSignIn
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-          if error != nil || user == nil {
-            print("구글에 로그아웃되어있음")
-          } else {
-              print("구글에 로그인되어있음")
-          }
+            if error != nil || user == nil {
+                print("구글에 로그아웃되어있음")
+            } else {
+                print("구글에 로그인되어있음")
+            }
         }
         
         return true

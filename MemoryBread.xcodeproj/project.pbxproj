@@ -22,10 +22,12 @@
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
 		404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDC275743A4002FEE82 /* APIKeys.swift */; };
-		405EC1782764D5C60031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
-		405EC17A2766086E0031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
 		405EC17E27661E200031C19D /* ExcelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC17D27661E200031C19D /* ExcelReader.swift */; };
 		405EC18127661E8E0031C19D /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 405EC18027661E8E0031C19D /* CoreXLSX */; };
+		405EC184276738C40031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
+		405EC185276738C60031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
+		405EC1872767402C0031C19D /* ActiveFetchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1862767402C0031C19D /* ActiveFetchers.swift */; };
+		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
@@ -67,6 +69,8 @@
 		405EC1772764D5C60031C19D /* GDDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift; sourceTree = "<group>"; };
 		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
+		405EC1862767402C0031C19D /* ActiveFetchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveFetchers.swift; sourceTree = "<group>"; };
+		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				405EC1772764D5C60031C19D /* GDDownloader.swift */,
+				405EC1862767402C0031C19D /* ActiveFetchers.swift */,
 				405EC1792766086E0031C19D /* FileObject.swift */,
 			);
 			path = Network;
@@ -229,6 +234,7 @@
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
 				40060F8B272D5D1800BA7A34 /* EditContentViewController.swift */,
 				40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */,
+				405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -400,7 +406,6 @@
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
-				405EC17A2766086E0031C19D /* FileObject.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
@@ -421,11 +426,14 @@
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
 				4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */,
+				405EC185276738C60031C19D /* FileObject.swift in Sources */,
+				405EC184276738C40031C19D /* GDDownloader.swift in Sources */,
 				40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */,
-				405EC1782764D5C60031C19D /* GDDownloader.swift in Sources */,
 				409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */,
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
+				405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */,
 				40060F97272DA18100BA7A34 /* BreadListModel.swift in Sources */,
+				405EC1872767402C0031C19D /* ActiveFetchers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -600,6 +608,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread/MemoryBread-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -634,6 +643,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread/MemoryBread-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -59,7 +59,7 @@ final class BreadDAO: NSObject {
     
     func create() -> Bread {
         let bread = Bread(touch: Date(),
-                          directoryName: "임시 디렉토리",
+                          directoryName: "기본",
                           title: LocalizingHelper.freshBread,
                           content: "",
                           separatedContent: [],
