@@ -9,23 +9,19 @@ import UIKit
 import SnapKit
 
 final class RemoteDriveAuthViewController: UIViewController {
-    required init?(coder: NSCoder) {
-        fatalError("not imeplemented")
-    }
-    
     // MARK: - Views
     private var tableView: UITableView!
     
     // MARK: - States
-    private var googleDriveAuth = AuthInfo(isAvailable: false, user: nil)
+    private var googleAuthInfo = DriveAuthInfo(domain: .googleDrive, isSignIn: true, userEmail: "jsjphone8@gmail.com")
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
         
-        tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(RemoteDriveCell.self, forCellReuseIdentifier: RemoteDriveCell.reuseIdentifier)
     }
 }
 
@@ -42,32 +38,51 @@ extension RemoteDriveAuthViewController {
     
     private func configureLayouts() {
         tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
 
-// MARK: - Definitions
+// MARK: - Update Views
 extension RemoteDriveAuthViewController {
-    struct AuthInfo {
-        var isAvailable: Bool
-        var user: String?
+    private func reloadCell(at indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
 }
 
 // MARK: - UITableViewDataSource
 extension RemoteDriveAuthViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RemoteDriveCell.reuseIdentifier, for: indexPath) as? RemoteDriveCell else {
+            return UITableViewCell()
+        }
+        
+        cell.configure(using: googleAuthInfo)
+        cell.delegate = self
+        return cell
     }
 }
 
-// MARK: - UITableViewDelegate
-extension RemoteDriveAuthViewController: UITableViewDelegate {
+// MARK: - RemoteDriveCellDelegate
+extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
+    func signInButtonTapped(_ cell: RemoteDriveCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            googleAuthInfo.isSignIn = true
+            reloadCell(at: indexPath)
+        }
+    }
     
+    func signOutButtonTapped(_ cell: RemoteDriveCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            googleAuthInfo.isSignIn = false
+            reloadCell(at: indexPath)
+        }
+    }
+    
+
 }
 

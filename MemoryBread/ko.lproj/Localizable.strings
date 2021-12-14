@@ -14,3 +14,6 @@
 "fresh_bread" = "새로운 암기빵";
 
 "number_of_memory_bread" = "%d개의 암기빵";
+
+"sign_in" = "로그인";
+"sign_out" = "로그아웃";

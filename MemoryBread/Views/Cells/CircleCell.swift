@@ -1,5 +1,5 @@
 //
-//  CircleCell.swift.swift
+//  CircleCell.swift
 //  MemoryBread
 //
 //  Created by 정성훈 on 2021/10/29.

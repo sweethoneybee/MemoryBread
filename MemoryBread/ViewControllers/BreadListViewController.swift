@@ -134,6 +134,8 @@ extension BreadListViewController {
     @objc
     func settingButtonTouched() {
         print("세팅버튼 눌림")
+        let vc = RemoteDriveAuthViewController()
+        present(vc, animated: true)
     }
 }
 

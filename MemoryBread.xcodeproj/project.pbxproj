@@ -21,6 +21,8 @@
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
+		403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */; };
+		403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F32768903400B787A4 /* DriveAuthInfo.swift */; };
 		404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDC275743A4002FEE82 /* APIKeys.swift */; };
 		405EC17E27661E200031C19D /* ExcelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC17D27661E200031C19D /* ExcelReader.swift */; };
 		405EC18127661E8E0031C19D /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 405EC18027661E8E0031C19D /* CoreXLSX */; };
@@ -41,7 +43,7 @@
 		40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE4127259F8500B8C5FC /* WordCell.swift */; };
 		40F1D608273D70320053AB73 /* String+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D607273D70320053AB73 /* String+Helper.swift */; };
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
-		40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift.swift */; };
+		40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift */; };
 		40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */; };
 		40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B7F272BD7880085224E /* ScrollableTitleView.swift */; };
 		40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B81272BD7B10085224E /* BreadViewController.swift */; };
@@ -64,6 +66,8 @@
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
+		403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveCell.swift; sourceTree = "<group>"; };
+		403E63F32768903400B787A4 /* DriveAuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthInfo.swift; sourceTree = "<group>"; };
 		404F0EDC275743A4002FEE82 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
 		405EC1772764D5C60031C19D /* GDDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift; sourceTree = "<group>"; };
@@ -84,7 +88,7 @@
 		40C8DE4127259F8500B8C5FC /* WordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCell.swift; sourceTree = "<group>"; };
 		40F1D607273D70320053AB73 /* String+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Helper.swift"; sourceTree = "<group>"; };
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
-		40F7589D272AFA5A000ADD4F /* CircleCell.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift.swift; sourceTree = "<group>"; };
+		40F7589D272AFA5A000ADD4F /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
 		40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorFilterToolbarViewController.swift; sourceTree = "<group>"; };
 		40F92B7F272BD7880085224E /* ScrollableTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTitleView.swift; sourceTree = "<group>"; };
 		40F92B81272BD7B10085224E /* BreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadViewController.swift; sourceTree = "<group>"; };
@@ -167,6 +171,7 @@
 				405EC1772764D5C60031C19D /* GDDownloader.swift */,
 				405EC1862767402C0031C19D /* ActiveFetchers.swift */,
 				405EC1792766086E0031C19D /* FileObject.swift */,
+				403E63F32768903400B787A4 /* DriveAuthInfo.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -242,9 +247,10 @@
 		40F92B84272BD7D30085224E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				40F7589D272AFA5A000ADD4F /* CircleCell.swift.swift */,
+				40F7589D272AFA5A000ADD4F /* CircleCell.swift */,
 				40C8DE4127259F8500B8C5FC /* WordCell.swift */,
 				40060F92272D9A3200BA7A34 /* BreadListCell.swift */,
+				403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -405,6 +411,7 @@
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */,
+				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
@@ -425,7 +432,7 @@
 				40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
 				4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */,
-				40F7589E272AFA5A000ADD4F /* CircleCell.swift.swift in Sources */,
+				40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */,
 				405EC185276738C60031C19D /* FileObject.swift in Sources */,
 				405EC184276738C40031C19D /* GDDownloader.swift in Sources */,
 				40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */,
@@ -433,6 +440,7 @@
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
 				405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */,
 				40060F97272DA18100BA7A34 /* BreadListModel.swift in Sources */,
+				403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */,
 				405EC1872767402C0031C19D /* ActiveFetchers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

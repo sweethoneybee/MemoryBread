@@ -14,3 +14,6 @@
 "fresh_bread" = "Fresh Bread";
 
 "number_of_memory_bread" = "%d of memory bread";
+
+"sign_in" = "Sign in";
+"sign_out" = "Sign out";

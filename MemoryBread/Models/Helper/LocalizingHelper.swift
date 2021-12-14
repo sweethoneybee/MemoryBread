@@ -16,4 +16,7 @@ struct LocalizingHelper {
     static let freshBread = "fresh_bread".localized
     
     static let numberOfMemoryBread = "number_of_memory_bread".localized
+    
+    static let signIn = "sign_in".localized
+    static let signOut = "sign_out".localized
 }
