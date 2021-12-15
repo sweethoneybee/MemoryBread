@@ -20,7 +20,6 @@ struct DriveAuthInfo {
         var image: UIImage? {
             switch self {
             case .googleDrive: return UIImage(named: "logo_drive")
-//            case .googleDrive: return UIImage(systemName: "pencil")
             }
         }
     }

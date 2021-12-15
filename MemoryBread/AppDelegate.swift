@@ -22,6 +22,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        if UserManager.firstLaunch {
+            Tutorial().infos.forEach {
+                let tutorialBread = BreadDAO.default.create()
+                tutorialBread.title = $0.title
+                tutorialBread.updateContent($0.content)
+                tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
+            }
+            BreadDAO.default.save()
+            UserManager.firstLaunch = false
+        }
+        
         return true
     }
 

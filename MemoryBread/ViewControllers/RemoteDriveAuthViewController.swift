@@ -82,7 +82,5 @@ extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
             reloadCell(at: indexPath)
         }
     }
-    
-
 }
 
