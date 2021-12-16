@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 protocol RemoteDriveCellDelegate: AnyObject {
-    func signInButtonTapped(_ cell: RemoteDriveCell)
     func signOutButtonTapped(_ cell: RemoteDriveCell)
 }
 
@@ -53,23 +52,13 @@ final class RemoteDriveCell: UITableViewCell {
         $0.numberOfLines = 1
         $0.lineBreakMode = .byTruncatingTail
     }
-    
-    private static func makeSignButton() -> UIButton {
-        return UIButton().then {
-            $0.tintColor = .white
-            $0.backgroundColor = .systemPink
-            $0.layer.cornerRadius = 5
-            $0.isHidden = true
-            $0.contentEdgeInsets = UIConstants.buttonInsets
-        }
-    }
-    
-    private var signInButton = RemoteDriveCell.makeSignButton().then {
-        $0.setTitle(LocalizingHelper.signIn, for: .normal)
-        $0.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
-    }
 
-    private var signOutButton = RemoteDriveCell.makeSignButton().then {
+    private var signOutButton = UIButton().then {
+        $0.tintColor = .white
+        $0.backgroundColor = .systemPink
+        $0.layer.cornerRadius = 5
+        $0.isHidden = true
+        $0.contentEdgeInsets = UIConstants.buttonInsets
         $0.setTitle(LocalizingHelper.signOut, for: .normal)
         $0.addTarget(self, action: #selector(signOutButtonTapped), for: .touchUpInside)
     }
@@ -81,7 +70,6 @@ final class RemoteDriveCell: UITableViewCell {
 
         mainContainerView.addArrangedSubview(iconImageView)
         mainContainerView.addArrangedSubview(titleContainerView)
-        mainContainerView.addArrangedSubview(signInButton)
         mainContainerView.addArrangedSubview(signOutButton)
         
         titleContainerView.addArrangedSubview(domainNameLabel)
@@ -111,13 +99,7 @@ extension RemoteDriveCell {
         domainNameLabel.text = auth.domain.name
         userEmailLabel.text = auth.userEmail
         
-        signInButton.isHidden = auth.isSignIn
         signOutButton.isHidden = !auth.isSignIn
-    }
-    
-    @objc
-    func signInButtonTapped() {
-        delegate?.signInButtonTapped(self)
     }
     
     @objc

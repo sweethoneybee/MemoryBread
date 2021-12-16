@@ -75,13 +75,6 @@ extension RemoteDriveAuthViewController: UITableViewDataSource {
 
 // MARK: - RemoteDriveCellDelegate
 extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
-    func signInButtonTapped(_ cell: RemoteDriveCell) {
-        if let indexPath = tableView.indexPath(for: cell) {
-            // Sign In
-            reloadCell(at: indexPath)
-        }
-    }
-    
     func signOutButtonTapped(_ cell: RemoteDriveCell) {
         if let indexPath = tableView.indexPath(for: cell) {
             // Sign Out
