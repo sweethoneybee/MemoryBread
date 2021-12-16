@@ -23,7 +23,6 @@
 		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
 		403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */; };
 		403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F32768903400B787A4 /* DriveAuthInfo.swift */; };
-		404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404F0EDC275743A4002FEE82 /* APIKeys.swift */; };
 		405EC17E27661E200031C19D /* ExcelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC17D27661E200031C19D /* ExcelReader.swift */; };
 		405EC18127661E8E0031C19D /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 405EC18027661E8E0031C19D /* CoreXLSX */; };
 		405EC184276738C40031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
@@ -32,6 +31,8 @@
 		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
+		409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9663276B12DC00EB8220 /* APIKeys.swift */; };
+		409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9666276B152300EB8220 /* DriveAuthModel.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
 		40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2427259F5300B8C5FC /* AppDelegate.swift */; };
 		40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */; };
@@ -68,7 +69,6 @@
 		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
 		403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveCell.swift; sourceTree = "<group>"; };
 		403E63F32768903400B787A4 /* DriveAuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthInfo.swift; sourceTree = "<group>"; };
-		404F0EDC275743A4002FEE82 /* APIKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
 		405EC1772764D5C60031C19D /* GDDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift; sourceTree = "<group>"; };
 		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
@@ -77,6 +77,8 @@
 		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		409D9663276B12DC00EB8220 /* APIKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
+		409D9666276B152300EB8220 /* DriveAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthModel.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
 		40C8DE2127259F5300B8C5FC /* MemoryBread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryBread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40C8DE2427259F5300B8C5FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		40245CFE27293547002E84A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				409D9665276B14F100EB8220 /* RemoteDriveAuthorization */,
 				4013F5BC274BDAFC00E03F5F /* Data */,
 				405EC18327661EB00031C19D /* Network */,
 				405EC18227661E9C0031C19D /* Helper */,
@@ -171,9 +174,17 @@
 				405EC1772764D5C60031C19D /* GDDownloader.swift */,
 				405EC1862767402C0031C19D /* ActiveFetchers.swift */,
 				405EC1792766086E0031C19D /* FileObject.swift */,
-				403E63F32768903400B787A4 /* DriveAuthInfo.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		409D9665276B14F100EB8220 /* RemoteDriveAuthorization */ = {
+			isa = PBXGroup;
+			children = (
+				409D9666276B152300EB8220 /* DriveAuthModel.swift */,
+				403E63F32768903400B787A4 /* DriveAuthInfo.swift */,
+			);
+			path = RemoteDriveAuthorization;
 			sourceTree = "<group>";
 		};
 		409F1584273AA8CA00011DC6 /* SupplementaryViews */ = {
@@ -211,7 +222,7 @@
 				40245CFE27293547002E84A8 /* Models */,
 				40C8DE2427259F5300B8C5FC /* AppDelegate.swift */,
 				40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */,
-				404F0EDC275743A4002FEE82 /* APIKeys.swift */,
+				409D9663276B12DC00EB8220 /* APIKeys.swift */,
 				404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */,
 				40C8DE3027259F5500B8C5FC /* Assets.xcassets */,
 				40C8DE3227259F5500B8C5FC /* LaunchScreen.storyboard */,
@@ -410,7 +421,6 @@
 			files = (
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
-				404F0EDD275743A4002FEE82 /* APIKeys.swift in Sources */,
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
@@ -418,12 +428,14 @@
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
 				40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
+				409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */,
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,
 				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
+				409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */,
 				4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */,
 				409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */,
 				40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */,

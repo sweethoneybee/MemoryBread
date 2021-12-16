@@ -7,8 +7,13 @@
 
 import Foundation
 
+final class DriveAuthStorage: NSObject {
+    static var shared = DriveAuthStorage()
+    @objc dynamic var googleDrive: GTMFetcherAuthorizationProtocol?
+}
+
 struct DriveAuthInfo {
-    enum Domain {
+    enum Domain: Int {
         case googleDrive
         
         var name: String {
@@ -28,3 +33,4 @@ struct DriveAuthInfo {
     var isSignIn: Bool
     var userEmail: String?
 }
+

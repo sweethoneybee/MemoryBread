@@ -12,16 +12,21 @@ final class RemoteDriveAuthViewController: UIViewController {
     // MARK: - Views
     private var tableView: UITableView!
     
-    // MARK: - States
-    private var googleAuthInfo = DriveAuthInfo(domain: .googleDrive, isSignIn: true, userEmail: "jsjphone8@gmail.com")
+    // MARK: - Model
+    private var model = DriveAuthModel()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
         
+        tableView.delegate = self
         tableView.dataSource = self
         tableView.register(RemoteDriveCell.self, forCellReuseIdentifier: RemoteDriveCell.reuseIdentifier)
+
+        model.changedDatasource = { [weak self] in
+            self?.tableView.reloadData()
+        }
     }
 }
 
@@ -61,7 +66,8 @@ extension RemoteDriveAuthViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        cell.configure(using: googleAuthInfo)
+        let authInfo = model.authInfo(at: indexPath.item)
+        cell.configure(using: authInfo)
         cell.delegate = self
         return cell
     }
@@ -71,16 +77,48 @@ extension RemoteDriveAuthViewController: UITableViewDataSource {
 extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
     func signInButtonTapped(_ cell: RemoteDriveCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            googleAuthInfo.isSignIn = true
+            // Sign In
             reloadCell(at: indexPath)
         }
     }
     
     func signOutButtonTapped(_ cell: RemoteDriveCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            googleAuthInfo.isSignIn = false
+            // Sign Out
+            model.signOut(at: indexPath.item)
             reloadCell(at: indexPath)
         }
     }
 }
 
+// MARK: - UITableViewDelegate
+extension RemoteDriveAuthViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        defer {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+        
+        let index = indexPath.item
+        if model.isSignIn(at: index) {
+            print("로그인 되어있음!")
+            return
+        }
+        
+        model.signIn(at: index, modalView: self) { error in
+            if let error = error {
+//                switch error {
+//                case press cancel:
+//                    show alert "you press cancel"
+//                case error while signing:
+//                    show alert "error whilte sign"
+//                case sign error:
+//                    show alert "google sign error"
+//                }
+                print("로그인실패에러=\(error)")
+                return
+            }
+            
+            // present driveList view
+        }
+    }
+}
