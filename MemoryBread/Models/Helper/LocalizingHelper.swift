@@ -19,4 +19,6 @@ struct LocalizingHelper {
     
     static let signIn = "sign_in".localized
     static let signOut = "sign_out".localized
+    
+    static let `import` = "import".localized
 }

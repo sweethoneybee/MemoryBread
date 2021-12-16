@@ -34,7 +34,7 @@ final class RemoteDriveAuthViewController: UIViewController {
 extension RemoteDriveAuthViewController {
     private func setViews() {
         view.backgroundColor = .systemBackground
-        
+        navigationItem.title = LocalizingHelper.import
         tableView = UITableView()
         view.addSubview(tableView)
         

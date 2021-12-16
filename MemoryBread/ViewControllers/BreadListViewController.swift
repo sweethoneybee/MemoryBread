@@ -105,16 +105,11 @@ extension BreadListViewController {
     }
     
     private func addToolbar() {
-        let addBreadFromRemoteDriveItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"),
-                                      style: .plain,
-                                      target: self,
-                                      action: #selector(addBreadFromRemoteDriveTouched))
-        
-        let settingItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"),
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(settingButtonTouched))
-        navigationItem.rightBarButtonItems = [settingItem, addBreadFromRemoteDriveItem]
+        let remoteDriveItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"),
+                                              style: .plain,
+                                              target: self,
+                                              action: #selector(remoteDriveItemTouched))
+        navigationItem.rightBarButtonItem = remoteDriveItem
     }
     
     @objc
@@ -127,15 +122,10 @@ extension BreadListViewController {
     }
     
     @objc
-    func addBreadFromRemoteDriveTouched() {
-        print("드라이브에서 다운로드 버튼 눌림")
-    }
-    
-    @objc
-    func settingButtonTouched() {
-        print("세팅버튼 눌림")
-        let vc = RemoteDriveAuthViewController()
-        present(vc, animated: true)
+    func remoteDriveItemTouched() {
+        let rdaVC = RemoteDriveAuthViewController()
+        let nvc = UINavigationController(rootViewController: rdaVC)
+        present(nvc, animated: true)
     }
 }
 
