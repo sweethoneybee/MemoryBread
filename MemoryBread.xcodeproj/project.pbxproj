@@ -136,7 +136,7 @@
 		40245CFE27293547002E84A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				409D9665276B14F100EB8220 /* RemoteDriveAuthorization */,
+				409D9665276B14F100EB8220 /* DriveAuthorization */,
 				4013F5BC274BDAFC00E03F5F /* Data */,
 				405EC18327661EB00031C19D /* Network */,
 				405EC18227661E9C0031C19D /* Helper */,
@@ -178,13 +178,13 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		409D9665276B14F100EB8220 /* RemoteDriveAuthorization */ = {
+		409D9665276B14F100EB8220 /* DriveAuthorization */ = {
 			isa = PBXGroup;
 			children = (
 				409D9666276B152300EB8220 /* DriveAuthModel.swift */,
 				403E63F32768903400B787A4 /* DriveAuthInfo.swift */,
 			);
-			path = RemoteDriveAuthorization;
+			path = DriveAuthorization;
 			sourceTree = "<group>";
 		};
 		409F1584273AA8CA00011DC6 /* SupplementaryViews */ = {

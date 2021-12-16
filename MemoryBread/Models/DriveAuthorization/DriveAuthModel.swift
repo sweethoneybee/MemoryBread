@@ -59,8 +59,9 @@ final class DriveAuthModel {
     }
     
     func signIn(at index: Int, modalView: UIViewController, completionHandler: @escaping (Error?) -> ()) {
-        switch index {
-        case 0:
+        let domain = authInfos[index].domain
+        switch domain {
+        case .googleDrive:
             let configure = GIDConfiguration(clientID: APIKeys.googleDriveClientID)
             GIDSignIn.sharedInstance.signIn(with: configure, additionalScopes: [kGTLRAuthScopeDriveReadonly], presenting: modalView) { user, error in
                 if error != nil {
@@ -70,13 +71,15 @@ final class DriveAuthModel {
                 DriveAuthStorage.shared.googleDrive = user?.authentication.fetcherAuthorizer()
                 completionHandler(nil)
             }
-        default:
-            break
         }
     }
     
     func signOut(at index: Int) {
-        GIDSignIn.sharedInstance.signOut()
-        DriveAuthStorage.shared.googleDrive = nil
+        let domain = authInfos[index].domain
+        switch domain {
+        case .googleDrive:
+            GIDSignIn.sharedInstance.signOut()
+            DriveAuthStorage.shared.googleDrive = nil
+        }
     }
 }
