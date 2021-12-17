@@ -19,3 +19,7 @@
 "sign_out" = "Sign out";
 
 "import" = "Import";
+
+"confirm" = "Confirm";
+
+"sign_out_google_drive" = "Sign out Google Drive.";

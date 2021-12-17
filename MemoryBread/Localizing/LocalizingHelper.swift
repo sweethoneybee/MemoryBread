@@ -21,4 +21,8 @@ struct LocalizingHelper {
     static let signOut = "sign_out".localized
     
     static let `import` = "import".localized
+    
+    static let confirm = "confirm".localized
+    
+    static let signOutGoogleDrive = "sign_out_google_drive".localized
 }

@@ -19,3 +19,7 @@
 "sign_out" = "로그아웃";
 
 "import" = "가져오기";
+
+"confirm" = "확인";
+
+"sign_out_google_drive" = "구글 드라이브를 로그아웃합니다.";
