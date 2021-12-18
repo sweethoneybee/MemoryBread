@@ -76,7 +76,6 @@ final class RemoteDriveCell: UITableViewCell {
         titleContainerView.addArrangedSubview(userEmailLabel)
         
         // MARK: - layouts
-        titleContainerView.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         domainNameLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         userEmailLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         iconImageView.snp.makeConstraints { make in

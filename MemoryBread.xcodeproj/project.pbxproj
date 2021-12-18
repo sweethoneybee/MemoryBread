@@ -27,7 +27,6 @@
 		405EC18127661E8E0031C19D /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 405EC18027661E8E0031C19D /* CoreXLSX */; };
 		405EC184276738C40031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
 		405EC185276738C60031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
-		405EC1872767402C0031C19D /* ActiveFetchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1862767402C0031C19D /* ActiveFetchers.swift */; };
 		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
@@ -43,6 +42,8 @@
 		40C8DE3D27259F6700B8C5FC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3C27259F6700B8C5FC /* SnapKit */; };
 		40C8DE4027259F7300B8C5FC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3F27259F7300B8C5FC /* Then */; };
 		40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE4127259F8500B8C5FC /* WordCell.swift */; };
+		40D65711276DEA210059A595 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65710276DEA210059A595 /* FileListCell.swift */; };
+		40D65713276DFC470059A595 /* GDDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65712276DFC470059A595 /* GDDownload.swift */; };
 		40F1D608273D70320053AB73 /* String+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D607273D70320053AB73 /* String+Helper.swift */; };
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
 		40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift */; };
@@ -74,7 +75,6 @@
 		405EC1772764D5C60031C19D /* GDDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift; sourceTree = "<group>"; };
 		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
-		405EC1862767402C0031C19D /* ActiveFetchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveFetchers.swift; sourceTree = "<group>"; };
 		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -90,6 +90,8 @@
 		40C8DE3327259F5500B8C5FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		40C8DE3527259F5500B8C5FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40C8DE4127259F8500B8C5FC /* WordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCell.swift; sourceTree = "<group>"; };
+		40D65710276DEA210059A595 /* FileListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListCell.swift; sourceTree = "<group>"; };
+		40D65712276DFC470059A595 /* GDDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownload.swift; sourceTree = "<group>"; };
 		40F1D607273D70320053AB73 /* String+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Helper.swift"; sourceTree = "<group>"; };
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		40F7589D272AFA5A000ADD4F /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
@@ -173,7 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				405EC1772764D5C60031C19D /* GDDownloader.swift */,
-				405EC1862767402C0031C19D /* ActiveFetchers.swift */,
+				40D65712276DFC470059A595 /* GDDownload.swift */,
 				405EC1792766086E0031C19D /* FileObject.swift */,
 			);
 			path = Network;
@@ -281,6 +283,7 @@
 				40C8DE4127259F8500B8C5FC /* WordCell.swift */,
 				40060F92272D9A3200BA7A34 /* BreadListCell.swift */,
 				403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */,
+				40D65710276DEA210059A595 /* FileListCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -439,6 +442,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
+				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
@@ -452,6 +456,7 @@
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,
 				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */,
+				40D65711276DEA210059A595 /* FileListCell.swift in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
 				409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */,
@@ -473,7 +478,6 @@
 				405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */,
 				40060F97272DA18100BA7A34 /* BreadListModel.swift in Sources */,
 				403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */,
-				405EC1872767402C0031C19D /* ActiveFetchers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
