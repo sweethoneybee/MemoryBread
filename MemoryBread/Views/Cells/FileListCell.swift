@@ -19,6 +19,8 @@ final class FileListCell: UITableViewCell {
         static let contentViewInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         static let contentViewSpacing = CGFloat(5)
         static let buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        static let iconImageSize = CGSize(width: 30, height: 30)
+        static let folderIndicatorSize = CGSize(width: 15, height: 15)
     }
 
     static let reuseIdentifier = "file-list-cell"
@@ -41,10 +43,11 @@ final class FileListCell: UITableViewCell {
     private var fileContainerView = UIStackView().then {
         $0.axis = .vertical
         $0.alignment = .fill
+        $0.spacing = UIConstants.contentViewSpacing
     }
     
     private var fileNameLabel = UILabel().then {
-        $0.font = .preferredFont(forTextStyle: .title3)
+        $0.font = .preferredFont(forTextStyle: .body)
         $0.textAlignment = .left
         $0.numberOfLines = 1
         $0.lineBreakMode = .byTruncatingTail
@@ -67,39 +70,37 @@ final class FileListCell: UITableViewCell {
             $0.tintColor = .white
             $0.backgroundColor = .systemPink
             $0.layer.cornerRadius = 5
-            $0.isHidden = true
             $0.contentEdgeInsets = UIConstants.buttonInsets
+            $0.titleLabel?.font = .preferredFont(forTextStyle: .title3)
         }
     }
     
     private var downloadButton = FileListCell.makeButton().then {
-        $0.setTitle("다운", for: .normal)
+        $0.setTitle(LocalizingHelper.download, for: .normal)
         $0.addTarget(self, action: #selector(downloadButtonTapped), for: .touchUpInside)
     }
     
-    private var cancelContainer = UIStackView().then {
-        $0.axis = .vertical
-        $0.distribution = .fill
-        $0.alignment = .center
-        $0.isHidden = true
-    }
-    
     private var cancelButton = FileListCell.makeButton().then {
-        $0.setTitle("취소", for: .normal)
+        $0.setTitle(LocalizingHelper.cancel, for: .normal)
         $0.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     
     private var progressFileSizeLabel = UILabel().then {
         $0.font = .preferredFont(forTextStyle: .caption2)
-        $0.textAlignment = .center
+        $0.textAlignment = .left
         $0.numberOfLines = 1
         $0.lineBreakMode = .byTruncatingTail
-        $0.isHidden = true
     }
     
     private var openButton = FileListCell.makeButton().then {
-        $0.setTitle("열기", for: .normal)
+        $0.setTitle(LocalizingHelper.open, for: .normal)
         $0.addTarget(self, action: #selector(openButtonTapped), for: .touchUpInside)
+    }
+
+    private var folderIndicator = UIImageView().then {
+        $0.tintColor = .systemTeal
+        $0.image = UIImage(systemName: "chevron.right")
+        $0.isHidden = true
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -110,27 +111,32 @@ final class FileListCell: UITableViewCell {
         mainContainerView.addArrangedSubview(iconImageView)
         mainContainerView.addArrangedSubview(fileContainerView)
         mainContainerView.addArrangedSubview(downloadButton)
-        mainContainerView.addArrangedSubview(cancelContainer)
+        mainContainerView.addArrangedSubview(cancelButton)
         mainContainerView.addArrangedSubview(openButton)
+        mainContainerView.addArrangedSubview(folderIndicator)
         
         fileContainerView.addArrangedSubview(fileNameLabel)
         fileContainerView.addArrangedSubview(fileSizeLabel)
         fileContainerView.addArrangedSubview(progressView)
-        
-        cancelContainer.addArrangedSubview(cancelButton)
-        cancelContainer.addArrangedSubview(progressFileSizeLabel)
+        fileContainerView.addArrangedSubview(progressFileSizeLabel)
+
         
         // MARK: - layouts
         fileNameLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         fileSizeLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         progressView.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
+        progressFileSizeLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         
         iconImageView.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 40, height: 40))
+            make.size.equalTo(UIConstants.iconImageSize)
         }
         
         mainContainerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        
+        folderIndicator.snp.makeConstraints { make in
+            make.size.equalTo(UIConstants.folderIndicatorSize)
         }
     }
     
@@ -142,23 +148,27 @@ final class FileListCell: UITableViewCell {
 extension FileListCell {
     func configure(using file: FileObject, download: GDDownload?, isExist: Bool) {
         iconImageView.image = file.mimeType.image
-        
+        iconImageView.tintColor = file.mimeType == .folder ? .systemTeal : .systemGreen
         fileNameLabel.text = file.name
         
         let isDownloading = download != nil ? true : false
-        fileSizeLabel.isHidden = isDownloading
+        fileSizeLabel.isHidden = (file.mimeType == .folder) || isDownloading
+        downloadButton.isHidden = (file.mimeType == .folder) || isDownloading || isExist
         progressView.isHidden = !isDownloading
-        downloadButton.isHidden = isDownloading || isExist
-        cancelContainer.isHidden = !isDownloading
+        progressFileSizeLabel.isHidden = !isDownloading
+        cancelButton.isHidden = !isDownloading
         openButton.isHidden = isDownloading || !isExist
         
+        folderIndicator.isHidden = file.mimeType != .folder
+        
         let formatter = ByteCountFormatter()
+        formatter.zeroPadsFractionDigits = true
         formatter.countStyle = .binary
         fileSizeLabel.text = formatter.string(fromByteCount: file.size)
         
         if let download = download {
             progressView.progress = download.progress
-            progressFileSizeLabel.text = String(format: "%@/%@",
+            progressFileSizeLabel.text = String(format: "%@ / %@",
                                                 formatter.string(fromByteCount: download.totalBytesWritten),
                                                 formatter.string(fromByteCount: file.size))
         }
@@ -184,8 +194,9 @@ extension FileListCell {
     func updateProgress(_ progress: Float, totalBytesWritten: Int64, totalSize: Int64) {
         progressView.progress = progress
         let formatter = ByteCountFormatter()
+        formatter.zeroPadsFractionDigits = true
         formatter.countStyle = .binary
-        progressFileSizeLabel.text = String(format: "%@/%@",
+        progressFileSizeLabel.text = String(format: "%@ / %@",
                                             formatter.string(fromByteCount: totalBytesWritten),
                                             formatter.string(fromByteCount: totalSize))
     }

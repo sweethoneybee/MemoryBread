@@ -40,7 +40,7 @@ final class DriveAuthModel {
     
     init() {
         observers.append(DriveAuthStorage.shared.observe(\.googleDrive, options: [.new]) { _, change in
-            let index = DriveAuthInfo.Domain.googleDrive.rawValue
+            let index = DriveDomain.googleDrive.rawValue
             if let newValue = change.newValue,
                let auth = newValue {
                 self.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: true, userEmail: auth.userEmail)
@@ -81,5 +81,9 @@ final class DriveAuthModel {
             GIDSignIn.sharedInstance.signOut()
             DriveAuthStorage.shared.googleDrive = nil
         }
+    }
+    
+    func drive(at index: Int) -> DriveDomain {
+        return authInfos[index].domain
     }
 }

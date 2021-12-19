@@ -23,3 +23,10 @@
 "confirm" = "Confirm";
 
 "sign_out_google_drive" = "Sign out Google Drive.";
+
+"error" = "Error";
+"failed_to_get_file_list" = "Failed to get file list.";
+"no_files_are_here" = "😅 no folders or files are here.";
+
+"download" = "Download";
+"open" = "Open";

@@ -14,5 +14,11 @@ final class BasicAlert {
         alert.addAction(UIAlertAction(title: LocalizingHelper.confirm, style: .default, handler: confirmCallback))
         return alert
     }
+    
+    static func makeErrorAlert(message: String?, completionHandler: ((UIAlertAction) -> Void)? = nil) -> UIAlertController {
+        let alert = UIAlertController(title: LocalizingHelper.error, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: LocalizingHelper.confirm, style: .default, handler: completionHandler))
+        return alert
+    }
 }
 

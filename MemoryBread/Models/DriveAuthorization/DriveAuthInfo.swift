@@ -12,24 +12,24 @@ final class DriveAuthStorage: NSObject {
     @objc dynamic var googleDrive: GTMFetcherAuthorizationProtocol?
 }
 
-struct DriveAuthInfo {
-    enum Domain: Int {
-        case googleDrive
-        
-        var name: String {
-            switch self {
-            case .googleDrive: return "Google Drive"
-            }
-        }
-        
-        var image: UIImage? {
-            switch self {
-            case .googleDrive: return UIImage(named: "logo_drive")
-            }
+enum DriveDomain: Int {
+    case googleDrive
+    
+    var name: String {
+        switch self {
+        case .googleDrive: return "Google Drive"
         }
     }
     
-    var domain: Domain
+    var image: UIImage? {
+        switch self {
+        case .googleDrive: return UIImage(named: "logo_drive")
+        }
+    }
+}
+
+struct DriveAuthInfo {
+    var domain: DriveDomain
     var isSignIn: Bool
     var userEmail: String?
 }

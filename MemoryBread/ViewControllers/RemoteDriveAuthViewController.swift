@@ -95,11 +95,16 @@ extension RemoteDriveAuthViewController: UITableViewDelegate {
         
         let index = indexPath.item
         if model.isSignIn(at: index) {
-            print("로그인 되어있음!")
+            presentFileListViewController(of: model.drive(at: index))
             return
         }
         
-        model.signIn(at: index, modalView: self) { error in
+        model.signIn(at: index, modalView: self) { [weak self] error in
+            guard let self = self else {
+                return
+            }
+            
+            // TODO: 로그인 에러 선언하여 처리 필요
             if let error = error {
 //                switch error {
 //                case press cancel:
@@ -113,7 +118,20 @@ extension RemoteDriveAuthViewController: UITableViewDelegate {
                 return
             }
             
-            // present driveList view
+            self.presentFileListViewController(of: self.model.drive(at: index))
         }
+    }
+}
+
+// MARK: - Presenting VC
+extension RemoteDriveAuthViewController {
+    func presentFileListViewController(of domain: DriveDomain) {
+        let fileListVC: UIViewController
+        switch domain {
+        case .googleDrive:
+            GDDownloader.shared.authorizer = DriveAuthStorage.shared.googleDrive
+            fileListVC = DriveFileListViewController(dirID: "root", dirName: nil)
+        }
+        navigationController?.pushViewController(fileListVC, animated: true)
     }
 }

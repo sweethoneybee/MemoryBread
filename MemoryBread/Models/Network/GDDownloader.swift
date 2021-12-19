@@ -8,8 +8,8 @@
 import Foundation
 
 protocol GDDownloaderDelegate: AnyObject {
-    func finishedDownload(_ fileObject: FileObject, error: Error?)
-    func downloadProgress(_ fileOjbect: FileObject, totalBytesWritten: Int64)
+    func finishedDownload(_ file: FileObject, error: Error?)
+    func downloadProgress(_ file: FileObject, totalBytesWritten: Int64)
 }
 
 /// Google Drive Downloader
@@ -42,7 +42,7 @@ final class GDDownloader {
         return drivePath.appendingPathComponent(id)
     }
     
-    private func isExistFile(_ file: FileObject) -> Bool {
+    func isExist(_ file: FileObject) -> Bool {
         let destinationURL = self.localPath(for: file.id)
         return FileManager.default.fileExists(atPath: destinationURL.path)
     }
@@ -50,7 +50,7 @@ final class GDDownloader {
 
 // MARK: - File List Fetching
 extension GDDownloader {
-    func fetchFileList(at root: String,
+    func fetchFileList(at root: String?,
                        usingToken nextPageToken: String? = nil,
                        onCompleted: ((String?, [GTLRDrive_File]?, Error?)->Void)? = nil) {
         let query = GTLRDriveQuery_FilesList.query()
@@ -59,11 +59,12 @@ extension GDDownloader {
         query.fields = "nextPageToken,files(mimeType,id,name,size)"
         
         let mimeType = "mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or mimeType = 'application/vnd.google-apps.folder' or mimeType = 'application/pdf'"
-        let path = "'\(root)' in parents"
+        let path = "'\(root ?? "root")' in parents"
         let trashed = "trashed = false"
         query.q = "(\(mimeType)) and \(path) and \(trashed)"
         query.orderBy = "folder, name"
         
+        // TODO: 에러처리 개선 필요
         fileListTicket = service.executeQuery(query) { ticket, result, error in
             if let error = error {
                 onCompleted?(nil, nil, error)
@@ -97,26 +98,30 @@ extension GDDownloader {
         let download = GDDownload(file: file, fetcher: fetcher)
         download.destinationFileURL = self.localPath(for: id)
         download.progressBlock = { _, totalBytesWritten, _ in
+            download.totalBytesWritten = totalBytesWritten
             self.delegate?.downloadProgress(file, totalBytesWritten: totalBytesWritten)
         }
         activeDownload[file.id] = download
+        // TODO: 에러처리 개선 필요
         download.beginFetch { data, error in
-            defer {
-                self.activeDownload.removeValue(forKey: file.id)
-            }
-
             if let error = error {
+                self.activeDownload.removeValue(forKey: file.id)
                 self.delegate?.finishedDownload(file, error: error)
             }
 
+            self.activeDownload.removeValue(forKey: file.id)
             self.delegate?.finishedDownload(file, error: nil)
         }
     }
     
     func stopFetching(_ file: FileObject) {
         if let download = activeDownload[file.id] {
-            download.stopFetching()
             activeDownload.removeValue(forKey: file.id)
+            download.stopFetching()
         }
+    }
+    
+    func activeDownload(forKey fileId: String) -> GDDownload? {
+        return activeDownload[fileId]
     }
 }

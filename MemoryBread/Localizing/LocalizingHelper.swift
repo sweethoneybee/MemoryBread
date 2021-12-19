@@ -25,4 +25,12 @@ struct LocalizingHelper {
     static let confirm = "confirm".localized
     
     static let signOutGoogleDrive = "sign_out_google_drive".localized
+    
+    static let error = "error".localized
+    static let failedToGetFileList = "failed_to_get_file_list".localized
+    static let noFilesAreHere = "no_files_are_here".localized
+    
+    static let download = "download".localized
+    static let open = "open".localized
+    
 }

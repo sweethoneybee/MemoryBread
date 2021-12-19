@@ -16,7 +16,7 @@ final class GDDownload {
     }
     var totalBytesWritten: Int64 = 0
     var progress: Float {
-        return totalBytesWritten / file.size
+        return Float(totalBytesWritten) / Float(file.size)
     }
     
     var progressBlock: ((Int64, Int64, Int64)->())? {
