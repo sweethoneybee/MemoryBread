@@ -135,7 +135,7 @@ extension DriveFileListViewController {
             if let error = error {
                 print("파일 리스트 불러오는 중 에러=\(error)")
                 let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
-                    self?.dismiss(animated: true)
+                    self?.navigationController?.popViewController(animated: true)
                 }
                 self.present(alert, animated: true)
                 return
@@ -144,7 +144,7 @@ extension DriveFileListViewController {
             guard let fileList = fetchedFileList else {
                 print("파일리스트 받은 게 없음")
                 let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
-                    self?.dismiss(animated: true)
+                    self?.navigationController?.popViewController(animated: true)
                 }
                 self.present(alert, animated: true)
                 return
@@ -172,14 +172,18 @@ extension DriveFileListViewController {
             
             if let error = error {
                 print("파일 리스트 불러오는 중 에러=\(error)")
-                let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList)
+                let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
                 self.present(alert, animated: true)
                 return
             }
             
             guard let fileList = fetchedFileList else {
                 print("파일리스트 받은 게 없음")
-                let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList)
+                let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
                 self.present(alert, animated: true)
                 return
             }

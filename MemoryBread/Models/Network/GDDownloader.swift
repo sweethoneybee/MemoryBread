@@ -29,7 +29,7 @@ final class GDDownloader {
         return $0
     }(GTLRDriveService())
     
-    private let queryPageSize = 20
+    private let queryPageSize = 50
     
     private weak var fileListTicket: GTLRServiceTicket?
     private let drivePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
