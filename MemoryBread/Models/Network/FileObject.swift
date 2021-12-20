@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FileObject {
+struct FileObject: Identifiable {
     enum MimeType {
         case folder
         case file

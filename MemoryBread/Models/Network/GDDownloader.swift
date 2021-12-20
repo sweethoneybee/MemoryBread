@@ -17,17 +17,19 @@ final class GDDownloader {
     static let shared = GDDownloader()
     weak var delegate: GDDownloaderDelegate?
     
+    /// Inject authorizer using GIDGoogleUser.authentication.fetcherAuthorizer()
+    var authorizer: GTMFetcherAuthorizationProtocol? {
+        get { return service.authorizer }
+        set { service.authorizer = newValue }
+    }
+    
     private lazy var service: GTLRDriveService = {
         $0.shouldFetchNextPages = false
         $0.isRetryEnabled = true
         return $0
     }(GTLRDriveService())
     
-    /// Inject authorizer using GIDGoogleUser.authentication.fetcherAuthorizer()
-    var authorizer: GTMFetcherAuthorizationProtocol? {
-        get { return service.authorizer }
-        set { service.authorizer = newValue }
-    }
+    private let queryPageSize = 20
     
     private weak var fileListTicket: GTLRServiceTicket?
     private let drivePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -54,7 +56,7 @@ extension GDDownloader {
                        usingToken nextPageToken: String? = nil,
                        onCompleted: ((String?, [GTLRDrive_File]?, Error?)->Void)? = nil) {
         let query = GTLRDriveQuery_FilesList.query()
-        query.pageSize = 50
+        query.pageSize = queryPageSize
         query.pageToken = nextPageToken
         query.fields = "nextPageToken,files(mimeType,id,name,size)"
         

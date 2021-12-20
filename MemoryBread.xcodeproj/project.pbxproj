@@ -45,6 +45,7 @@
 		40D65711276DEA210059A595 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65710276DEA210059A595 /* FileListCell.swift */; };
 		40D65713276DFC470059A595 /* GDDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65712276DFC470059A595 /* GDDownload.swift */; };
 		40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65715276E3FA20059A595 /* DriveFileListViewController.swift */; };
+		40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D91BEE27708DDF002E588D /* OrderedDictionary.swift */; };
 		40F1D608273D70320053AB73 /* String+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D607273D70320053AB73 /* String+Helper.swift */; };
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
 		40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift */; };
@@ -94,6 +95,7 @@
 		40D65710276DEA210059A595 /* FileListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListCell.swift; sourceTree = "<group>"; };
 		40D65712276DFC470059A595 /* GDDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownload.swift; sourceTree = "<group>"; };
 		40D65715276E3FA20059A595 /* DriveFileListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileListViewController.swift; sourceTree = "<group>"; };
+		40D91BEE27708DDF002E588D /* OrderedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedDictionary.swift; sourceTree = "<group>"; };
 		40F1D607273D70320053AB73 /* String+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Helper.swift"; sourceTree = "<group>"; };
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		40F7589D272AFA5A000ADD4F /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
@@ -133,7 +135,6 @@
 		4013F5BC274BDAFC00E03F5F /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
 				40245D0327293C60002E84A8 /* BreadDAO.swift */,
 			);
 			path = Data;
@@ -142,11 +143,13 @@
 		40245CFE27293547002E84A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				40D91BF027709E41002E588D /* DataStructure */,
 				409D9665276B14F100EB8220 /* DriveAuthorization */,
 				4013F5BC274BDAFC00E03F5F /* Data */,
 				405EC18327661EB00031C19D /* Network */,
 				405EC18227661E9C0031C19D /* Helper */,
 				40245D05272940EE002E84A8 /* Bread+CoreData */,
+				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
 				4013F5BA2748B55100E03F5F /* WordItemModel.swift */,
 				40060F96272DA18100BA7A34 /* BreadListModel.swift */,
 			);
@@ -253,6 +256,14 @@
 				40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */,
 			);
 			path = MemoryBread;
+			sourceTree = "<group>";
+		};
+		40D91BF027709E41002E588D /* DataStructure */ = {
+			isa = PBXGroup;
+			children = (
+				40D91BEE27708DDF002E588D /* OrderedDictionary.swift */,
+			);
+			path = DataStructure;
 			sourceTree = "<group>";
 		};
 		40F7589B272AF8ED000ADD4F /* Views */ = {
@@ -459,6 +470,7 @@
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,
 				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */,
+				40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */,
 				40D65711276DEA210059A595 /* FileListCell.swift in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,

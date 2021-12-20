@@ -14,10 +14,12 @@ final class GDDownload {
     var size: Int64 {
         return file.size
     }
-    var totalBytesWritten: Int64 = 0
-    var progress: Float {
-        return Float(totalBytesWritten) / Float(file.size)
+    var totalBytesWritten: Int64 = 0 {
+        didSet {
+            progress = Float(totalBytesWritten) / Float(file.size)
+        }
     }
+    var progress: Float = 0
     
     var progressBlock: ((Int64, Int64, Int64)->())? {
         get { return fetcher.downloadProgressBlock }

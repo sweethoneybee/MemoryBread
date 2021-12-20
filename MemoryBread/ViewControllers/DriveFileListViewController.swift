@@ -29,7 +29,7 @@ final class DriveFileListViewController: UIViewController {
     
     // MARK: - Model
     var currentDirId: String
-    private var files: [FileObject] = []
+    private var files = OrderedDictionary<String, FileObject>()
     private var nextPageToken: String?
 
     // MARK: - Life Cycle
@@ -151,7 +151,7 @@ extension DriveFileListViewController {
             }
             
             self.nextPageToken = nextPageToken
-            self.files = FileObject.makeFileObjects(fileList)
+            self.files = OrderedDictionary<String, FileObject>.makeContainer(base: FileObject.makeFileObjects(fileList))
             self.updateUI(isFileExist: self.files.count != 0)
         }
     }
@@ -198,11 +198,11 @@ extension DriveFileListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: FileListCell.reuseIdentifier, for: indexPath) as? FileListCell else {
-            return UITableViewCell()
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: FileListCell.reuseIdentifier, for: indexPath) as? FileListCell,
+              let file = files.value(at: indexPath.item) else {
+                  return UITableViewCell()
+              }
         
-        let file = files[indexPath.item]
         let download = GDDownloader.shared.activeDownload(forKey: file.id)
         let isExist = GDDownloader.shared.isExist(file)
         cell.configure(using: file, download: download, isExist: isExist)
@@ -218,13 +218,14 @@ extension DriveFileListViewController: UITableViewDelegate {
             tableView.deselectRow(at: indexPath, animated: true)
         }
         
-        let file = files[indexPath.item]
-        switch file.mimeType {
-        case .file:
-            break
-        case .folder:
-            let dflVC = DriveFileListViewController(dirID: file.id, dirName: file.name)
-            navigationController?.pushViewController(dflVC, animated: true)
+        if let file = files.value(at: indexPath.item) {
+            switch file.mimeType {
+            case .file:
+                break
+            case .folder:
+                let dflVC = DriveFileListViewController(dirID: file.id, dirName: file.name)
+                navigationController?.pushViewController(dflVC, animated: true)
+            }
         }
     }
 }
@@ -232,16 +233,16 @@ extension DriveFileListViewController: UITableViewDelegate {
 // MARK: - FileListCellDelegate
 extension DriveFileListViewController: FileListCellDelegate {
     func downloadButtonTapped(_ cell: UITableViewCell) {
-        if let indexPath = tableView.indexPath(for: cell) {
-            let file = files[indexPath.item]
+        if let indexPath = tableView.indexPath(for: cell),
+           let file = files.value(at: indexPath.item) {
             GDDownloader.shared.fetch(file)
             reload(at: indexPath.item)
         }
     }
     
     func cancelButtonTapped(_ cell: UITableViewCell) {
-        if let indexPath = tableView.indexPath(for: cell) {
-            let file = files[indexPath.item]
+        if let indexPath = tableView.indexPath(for: cell),
+           let file = files.value(at: indexPath.item) {
             GDDownloader.shared.stopFetching(file)
             reload(at: indexPath.item)
         }
@@ -257,19 +258,15 @@ extension DriveFileListViewController: FileListCellDelegate {
 // MARK: - GDDownloaderDelegate
 extension DriveFileListViewController: GDDownloaderDelegate {
     func finishedDownload(_ file: FileObject, error: Error?) {
-        // TODO: indexing 방식 개선 필요
-        if let index = files.firstIndex(where: { $0.id == file.id }) {
+        if let index = files.index(forKey: file.id) {
             reload(at: index)
         }
     }
     
     func downloadProgress(_ file: FileObject, totalBytesWritten: Int64) {
-        // TODO: indexing 방식 개선 필요
-        if let index = files.firstIndex(where: { $0.id == file.id }),
-        let download = GDDownloader.shared.activeDownload(forKey: file.id) {
-            if let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? FileListCell {
-                cell.updateProgress(download.progress, totalBytesWritten: totalBytesWritten, totalSize: file.size)
-            }
+        if let index = files.index(forKey: file.id),
+           let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? FileListCell {
+            cell.updateProgress(Float(totalBytesWritten) / Float(file.size), totalBytesWritten: totalBytesWritten, totalSize: file.size)
         }
     }
 }
