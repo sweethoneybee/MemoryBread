@@ -12,19 +12,19 @@ final class DriveFileHelper {
 
     static let shared = DriveFileHelper()
 
-    private let drivePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        .first!
+    private let fileManager = FileManager.default
     
     func localPath(of fileId: String, domain: DriveDomain) -> URL {
+        let tmpPath = URL(fileURLWithPath: NSTemporaryDirectory())
         switch domain {
         case .googleDrive:
-            return drivePath.appendingPathComponent("googleDrive", isDirectory: true).appendingPathComponent(fileId)
+            return tmpPath.appendingPathComponent("googleDrive", isDirectory: true).appendingPathComponent(fileId)
         }
     }
     
     func fileExists(forId fileId: String, domain: DriveDomain) -> Bool {
         let fileURL = localPath(of: fileId, domain: domain)
-        return FileManager.default.fileExists(atPath: fileURL.path)
+        return fileManager.fileExists(atPath: fileURL.path)
     }
 }
 

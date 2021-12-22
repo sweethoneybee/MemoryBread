@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 protocol FileListCellDelegate: AnyObject {
-    func downloadButtonTapped(_ cell: UITableViewCell)
     func cancelButtonTapped(_ cell: UITableViewCell)
     func openButtonTapped(_ cell: UITableViewCell)
 }
@@ -75,11 +74,6 @@ final class FileListCell: UITableViewCell {
         }
     }
     
-    private var downloadButton = FileListCell.makeButton().then {
-        $0.setTitle(LocalizingHelper.download, for: .normal)
-        $0.addTarget(self, action: #selector(downloadButtonTapped), for: .touchUpInside)
-    }
-    
     private var cancelButton = FileListCell.makeButton().then {
         $0.setTitle(LocalizingHelper.cancel, for: .normal)
         $0.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
@@ -110,7 +104,6 @@ final class FileListCell: UITableViewCell {
         
         mainContainerView.addArrangedSubview(iconImageView)
         mainContainerView.addArrangedSubview(fileContainerView)
-        mainContainerView.addArrangedSubview(downloadButton)
         mainContainerView.addArrangedSubview(cancelButton)
         mainContainerView.addArrangedSubview(openButton)
         mainContainerView.addArrangedSubview(folderIndicator)
@@ -153,7 +146,6 @@ extension FileListCell {
         
         let isDownloading = download != nil ? true : false
         fileSizeLabel.isHidden = (file.mimeType == .folder) || isDownloading
-        downloadButton.isHidden = (file.mimeType == .folder) || isDownloading || isExist
         progressView.isHidden = !isDownloading
         progressFileSizeLabel.isHidden = !isDownloading
         cancelButton.isHidden = !isDownloading
@@ -176,11 +168,6 @@ extension FileListCell {
 }
 
 extension FileListCell {
-    @objc
-    private func downloadButtonTapped() {
-        delegate?.downloadButtonTapped(self)
-    }
-    
     @objc
     private func cancelButtonTapped() {
         delegate?.cancelButtonTapped(self)
