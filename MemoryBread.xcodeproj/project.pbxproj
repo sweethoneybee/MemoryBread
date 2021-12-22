@@ -46,6 +46,7 @@
 		40D65713276DFC470059A595 /* GDDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65712276DFC470059A595 /* GDDownload.swift */; };
 		40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65715276E3FA20059A595 /* DriveFileListViewController.swift */; };
 		40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D91BEE27708DDF002E588D /* OrderedDictionary.swift */; };
+		40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D91BF12773474A002E588D /* DriveFileHelper.swift */; };
 		40F1D608273D70320053AB73 /* String+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D607273D70320053AB73 /* String+Helper.swift */; };
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
 		40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift */; };
@@ -96,6 +97,7 @@
 		40D65712276DFC470059A595 /* GDDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownload.swift; sourceTree = "<group>"; };
 		40D65715276E3FA20059A595 /* DriveFileListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileListViewController.swift; sourceTree = "<group>"; };
 		40D91BEE27708DDF002E588D /* OrderedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedDictionary.swift; sourceTree = "<group>"; };
+		40D91BF12773474A002E588D /* DriveFileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileHelper.swift; sourceTree = "<group>"; };
 		40F1D607273D70320053AB73 /* String+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Helper.swift"; sourceTree = "<group>"; };
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		40F7589D272AFA5A000ADD4F /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				40060F8D272D5D5100BA7A34 /* FilterColor.swift */,
+				40D91BF12773474A002E588D /* DriveFileHelper.swift */,
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
 				405EC17D27661E200031C19D /* ExcelReader.swift */,
 				409CC8FD27327311009B9AA1 /* UserManager.swift */,
@@ -465,6 +468,7 @@
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
 				40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
+				40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */,
 				409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */,
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,

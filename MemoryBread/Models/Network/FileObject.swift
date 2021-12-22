@@ -24,6 +24,7 @@ struct FileObject: Identifiable {
     var name: String
     var size: Int64
     var mimeType: MimeType
+    var domain: DriveDomain
     
     static func makeFileObjects(_ fileList: [GTLRDrive_File]) -> [Self] {
         return fileList.enumerated().map {
@@ -31,7 +32,8 @@ struct FileObject: Identifiable {
                 id: $1.identifier ?? "",
                 name: $1.name ?? "",
                 size: $1.size?.int64Value ?? 0,
-                mimeType: ($1.mimeType == "application/vnd.google-apps.folder") ? .folder : .file
+                mimeType: ($1.mimeType == "application/vnd.google-apps.folder") ? .folder : .file,
+                domain: .googleDrive
             )
         }
     }

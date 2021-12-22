@@ -208,7 +208,7 @@ extension DriveFileListViewController: UITableViewDataSource {
               }
         
         let download = GDDownloader.shared.activeDownload(forKey: file.id)
-        let isExist = GDDownloader.shared.isExist(file)
+        let isExist = DriveFileHelper.shared.fileExists(forId: file.id, domain: file.domain)
         cell.configure(using: file, download: download, isExist: isExist)
         cell.delegate = self
         return cell
@@ -254,7 +254,6 @@ extension DriveFileListViewController: FileListCellDelegate {
     
     func openButtonTapped(_ cell: UITableViewCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            print("오픈버튼 눌림")
         }
     }
 }

@@ -30,24 +30,12 @@ final class GDDownloader {
     }(GTLRDriveService())
     
     private let queryPageSize = 50
-    
     private weak var fileListTicket: GTLRServiceTicket?
-    private let drivePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        .first!.appendingPathComponent("googleDrive", isDirectory: true)
     
     /// Dictionary for guarding duplicate fetching
     /// Key is a GTLRDrive_File.id. Refer to
     /// [here](https://developers.google.com/drive/api/v3/reference/files)
     private var activeDownload: [String: GDDownload] = [:]
-    
-    private func localPath(for id: String) -> URL {
-        return drivePath.appendingPathComponent(id)
-    }
-    
-    func isExist(_ file: FileObject) -> Bool {
-        let destinationURL = self.localPath(for: file.id)
-        return FileManager.default.fileExists(atPath: destinationURL.path)
-    }
 }
 
 // MARK: - File List Fetching
@@ -98,7 +86,7 @@ extension GDDownloader {
         let fetcher = service.fetcherService.fetcher(with: downloadRequest as URLRequest)
         
         let download = GDDownload(file: file, fetcher: fetcher)
-        download.destinationFileURL = self.localPath(for: id)
+        download.destinationFileURL = DriveFileHelper.shared.localPath(of: id, domain: .googleDrive)
         download.progressBlock = { _, totalBytesWritten, _ in
             download.totalBytesWritten = totalBytesWritten
             self.delegate?.downloadProgress(file, totalBytesWritten: totalBytesWritten)
