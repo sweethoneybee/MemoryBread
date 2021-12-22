@@ -253,7 +253,26 @@ extension DriveFileListViewController: FileListCellDelegate {
     }
     
     func openButtonTapped(_ cell: UITableViewCell) {
-        if let indexPath = tableView.indexPath(for: cell) {
+        if let indexPath = tableView.indexPath(for: cell),
+           let file = files.value(at: indexPath.item ){
+            let filePath = DriveFileHelper.shared.localPath(of: file.id, domain: file.domain)
+            ExcelReader.readXLSXFile(at: filePath) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .failure(let error):
+                    switch error {
+                    case .failToReadXLSXFile:
+                        print("데이터 읽기 실패")
+                    case .XLSXFileIsNotVaild:
+                        print("워크시트 파싱 실패")
+                    case .XLSXFileIsEmpty:
+                        print("XLSX 파일이 비어있음")
+                    }
+                case .success(let rows):
+                    let alert = BasicAlert.makeConfirmAlert(title: "암기빵 생성", message: "총 \(rows.count)개의 암기빵을 생성합니다")
+                    self.present(alert, animated: true)
+                }
+            }
         }
     }
 }
