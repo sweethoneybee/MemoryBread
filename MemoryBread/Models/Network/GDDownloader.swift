@@ -14,7 +14,20 @@ protocol GDDownloaderDelegate: AnyObject {
 
 /// Google Drive Downloader
 final class GDDownloader {
-    static let shared = GDDownloader()
+    deinit {
+        stopFetchingFileList()
+        activeDownload.values.forEach {
+            $0.stopFetching()
+        }
+        DispatchQueue.global(qos: .background).async { [filesToBeDeleted] in
+            let fileHelper = DriveFileHelper()
+            filesToBeDeleted.forEach { file in
+                let url = fileHelper.localPath(of: file)
+                try? FileManager.default.removeItem(at: url)
+            }
+        }
+    }
+    
     weak var delegate: GDDownloaderDelegate?
     
     /// Inject authorizer using GIDGoogleUser.authentication.fetcherAuthorizer()
@@ -36,6 +49,8 @@ final class GDDownloader {
     /// Key is a GTLRDrive_File.id. Refer to
     /// [here](https://developers.google.com/drive/api/v3/reference/files)
     private var activeDownload: [String: GDDownload] = [:]
+    
+    private var filesToBeDeleted: Set<FileObject> = []
 }
 
 // MARK: - File List Fetching
@@ -75,7 +90,7 @@ extension GDDownloader {
 
 // MARK: - File Fetching
 extension GDDownloader {
-    func fetch(_ file: FileObject) {
+    func fetch(_ file: FileObject, to destinationURL: URL) {
         guard activeDownload[file.id] == nil else {
             return
         }
@@ -86,21 +101,22 @@ extension GDDownloader {
         let fetcher = service.fetcherService.fetcher(with: downloadRequest as URLRequest)
         
         let download = GDDownload(file: file, fetcher: fetcher)
-        download.destinationFileURL = DriveFileHelper.shared.localPath(of: id, domain: .googleDrive)
-        download.progressBlock = { _, totalBytesWritten, _ in
+        download.destinationFileURL = destinationURL
+        download.progressBlock = { [weak self] _, totalBytesWritten, _ in
             download.totalBytesWritten = totalBytesWritten
-            self.delegate?.downloadProgress(file, totalBytesWritten: totalBytesWritten)
+            self?.delegate?.downloadProgress(file, totalBytesWritten: totalBytesWritten)
         }
         activeDownload[file.id] = download
         // TODO: 에러처리 개선 필요
-        download.beginFetch { data, error in
+        download.beginFetch { [weak self] data, error in
             if let error = error {
-                self.activeDownload.removeValue(forKey: file.id)
-                self.delegate?.finishedDownload(file, error: error)
+                self?.activeDownload.removeValue(forKey: file.id)
+                self?.delegate?.finishedDownload(file, error: error)
             }
-
-            self.activeDownload.removeValue(forKey: file.id)
-            self.delegate?.finishedDownload(file, error: nil)
+            
+            self?.activeDownload.removeValue(forKey: file.id)
+            self?.filesToBeDeleted.insert(file)
+            self?.delegate?.finishedDownload(file, error: nil)
         }
     }
     
@@ -113,5 +129,13 @@ extension GDDownloader {
     
     func activeDownload(forKey fileId: String) -> GDDownload? {
         return activeDownload[fileId]
+    }
+    
+    func isDownloaded(_ file: FileObject) -> Bool {
+        return filesToBeDeleted.contains(file)
+    }
+    
+    func isDownloading(_ file:FileObject) -> Bool {
+        return activeDownload(forKey: file.id) != nil
     }
 }

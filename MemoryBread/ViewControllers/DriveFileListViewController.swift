@@ -29,11 +29,11 @@ final class DriveFileListViewController: UIViewController {
     private var noFilesHereLabel: UILabel!
     
     // MARK: - Model
+    weak var downloader: GDDownloader?
     var currentDirId: String
     private var files = OrderedDictionary<String, FileObject>()
     private var nextPageToken: String?
-    private var downloader = GDDownloader.shared
-    private var fileHelper = DriveFileHelper.shared
+    private var fileHelper = DriveFileHelper()
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -49,13 +49,13 @@ final class DriveFileListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        downloader.delegate = self
+        downloader?.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isFetching {
-            downloader.stopFetchingFileList()
+            downloader?.stopFetchingFileList()
         }
     }
     
@@ -123,9 +123,10 @@ extension DriveFileListViewController {
 // MARK: - Business Logic
 extension DriveFileListViewController {
     private func fetchFileList() {
-        if isFetching {
-            return
-        }
+        guard isFetching == false,
+              let downloader = downloader else {
+                  return
+              }
         isFetching = true
         downloader.fetchFileList(at: currentDirId) { [weak self] nextPageToken, fetchedFileList, error in
             defer {
@@ -160,9 +161,11 @@ extension DriveFileListViewController {
     }
     
     private func fetchFileList(usingToken nextPageToken: String?) {
-        if isFetching || nextPageToken == nil {
-            return
-        }
+        guard isFetching == false,
+              nextPageToken != nil,
+              let downloader = downloader else {
+                  return
+              }
         
         isFetching = true
         downloader.fetchFileList(at: currentDirId, usingToken: nextPageToken) { [weak self] nextPageToken, fetchedFileList, error in
@@ -210,9 +213,9 @@ extension DriveFileListViewController: UITableViewDataSource {
                   return UITableViewCell()
               }
         
-        let download = downloader.activeDownload(forKey: file.id)
-        let isExist = fileHelper.fileExists(forId: file.id, domain: file.domain)
-        cell.configure(using: file, download: download, isExist: isExist)
+        let download = downloader?.activeDownload(forKey: file.id)
+        let fileExists = downloader?.isDownloaded(file) ?? false
+        cell.configure(using: file, download: download, isExist: fileExists)
         cell.delegate = self
         return cell
     }
@@ -228,12 +231,15 @@ extension DriveFileListViewController: UITableViewDelegate {
         if let file = files.value(at: indexPath.item) {
             switch file.mimeType {
             case .file:
-                if !fileHelper.fileExists(forId: file.id, domain: file.domain) {
-                    downloader.fetch(file)
+                if !(downloader?.isDownloaded(file) ?? false),
+                   !(downloader?.isDownloading(file) ?? false) {
+                    let destinationURL = fileHelper.localPath(of: file)
+                    downloader?.fetch(file, to: destinationURL)
                     reload(at: indexPath.item)
                 }
             case .folder:
                 let dflVC = DriveFileListViewController(dirID: file.id, dirName: file.name)
+                dflVC.downloader = downloader
                 navigationController?.pushViewController(dflVC, animated: true)
             }
         }
@@ -245,7 +251,7 @@ extension DriveFileListViewController: FileListCellDelegate {
     func cancelButtonTapped(_ cell: UITableViewCell) {
         if let indexPath = tableView.indexPath(for: cell),
            let file = files.value(at: indexPath.item) {
-            downloader.stopFetching(file)
+            downloader?.stopFetching(file)
             reload(at: indexPath.item)
         }
     }
@@ -257,7 +263,7 @@ extension DriveFileListViewController: FileListCellDelegate {
         isOpeningFile = true
         if let indexPath = tableView.indexPath(for: cell),
            let file = files.value(at: indexPath.item ) {
-            let filePath = fileHelper.localPath(of: file.id, domain: file.domain)
+            let filePath = fileHelper.localPath(of: file)
             ExcelReader.readXLSXFile(at: filePath) { [weak self] result in
                 guard let self = self else { return }
                 

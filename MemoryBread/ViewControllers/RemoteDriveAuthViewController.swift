@@ -14,6 +14,7 @@ final class RemoteDriveAuthViewController: UIViewController {
     
     // MARK: - Model
     private var model = DriveAuthModel()
+    private var gdDownloader: GDDownloader?
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -27,6 +28,11 @@ final class RemoteDriveAuthViewController: UIViewController {
         model.changedDatasource = { [weak self] in
             self?.tableView.reloadData()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        gdDownloader = nil
     }
 }
 
@@ -129,8 +135,11 @@ extension RemoteDriveAuthViewController {
         let fileListVC: UIViewController
         switch domain {
         case .googleDrive:
-            GDDownloader.shared.authorizer = DriveAuthStorage.shared.googleDrive
-            fileListVC = DriveFileListViewController(dirID: "root", dirName: nil)
+            gdDownloader = GDDownloader()
+            gdDownloader?.authorizer = DriveAuthStorage.shared.googleDrive
+            let vc = DriveFileListViewController(dirID: "root", dirName: nil)
+            vc.downloader = gdDownloader
+            fileListVC = vc
         }
         navigationController?.pushViewController(fileListVC, animated: true)
     }
