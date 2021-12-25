@@ -282,7 +282,7 @@ extension DriveFileListViewController: FileListCellDelegate {
                         print("XLSX 파일이 비어있음")
                     }
                 case .success(let rows):
-                    let alert = BasicAlert.makeConfirmAlert(title: "암기빵 생성", message: "파일 '\(file.name)'에서 총 \(rows.count)개의 암기빵을 생성합니다")
+                    let alert = BasicAlert.makeConfirmAlert(title: LocalizingHelper.creatingBread, message: String(format: LocalizingHelper.creatingBreadFromFile, file.name, rows.count))
                     self.present(alert, animated: true)
                 }
             }

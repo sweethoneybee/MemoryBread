@@ -30,3 +30,6 @@
 
 "download" = "Download";
 "open" = "Open";
+
+"creating_bread" = "Creating bread";
+"creating_bread_from_file" = "From file '%@', creating %d of bread.";

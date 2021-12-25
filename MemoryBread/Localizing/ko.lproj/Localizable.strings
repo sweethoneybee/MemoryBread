@@ -30,3 +30,6 @@
 
 "download" = "다운로드";
 "open" = "열기";
+
+"creating_bread" = "암기빵 생성";
+"creating_bread_from_file" = "'%@' 파일에서 총 %d개의 암기빵을 생성합니다.";
