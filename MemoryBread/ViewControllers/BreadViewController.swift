@@ -26,6 +26,7 @@ final class BreadViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, UUID>!
     
+    private let dao = BreadDAO()
     private var bread: Bread
     private var model: WordItemModel
     private var editModel: WordItemModel
@@ -82,14 +83,12 @@ final class BreadViewController: UIViewController {
         if let selectedFilters = bread.selectedFilters {
             toolbarViewController.select(selectedFilters)
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         bread.selectedFilters = Array(selectedFilters)
-        BreadDAO.default.save()
+        dao.saveIfNeeded()
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -418,7 +417,7 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
             guard let self = self else { return }
             if let inputText = titleEditAlert.textFields?.first?.text {
                 self.bread.updateTitle(inputText)
-                BreadDAO.default.save()
+                self.dao.saveIfNeeded()
                 self.updateNaviTitleView(using: inputText)
             }
         })

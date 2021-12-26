@@ -30,7 +30,8 @@ final class WordItemModel {
     }
 
     private let bread: Bread
-
+    private let dao = BreadDAO()
+    
     /// items는 오직 순서를 위해서만 사용함; 값의 최신화를 보장하지 않음.
     private lazy var items: [Item] = populateItems()
     
@@ -107,12 +108,12 @@ final class WordItemModel {
             item.filterColor = itemsWithKey[$0.id]?.filterColor
             return item
         })
-        BreadDAO.default.save()
+        dao.saveIfNeeded()
     }
     
     func updateContent(_ content: String) {
         bread.updateContent(content)
-        BreadDAO.default.save()
+        dao.saveIfNeeded()
         
         self.items = self.populateItems()
         self.itemsWithKey = Dictionary(uniqueKeysWithValues: self.items.map { ($0.id, $0) })

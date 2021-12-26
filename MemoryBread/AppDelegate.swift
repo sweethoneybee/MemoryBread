@@ -21,13 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if UserManager.firstLaunch {
+            let dao = BreadDAO()
             Tutorial().infos.forEach {
-                let tutorialBread = BreadDAO.default.create()
+                let tutorialBread = dao.create()
                 tutorialBread.title = $0.title
                 tutorialBread.updateContent($0.content)
                 tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
             }
-            BreadDAO.default.save()
+            dao.saveIfNeeded()
             UserManager.firstLaunch = false
         }
         
