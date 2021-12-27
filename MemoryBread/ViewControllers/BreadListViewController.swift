@@ -32,8 +32,6 @@ final class BreadListViewController: UIViewController {
         let fetchRequest = Bread.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
-        fetchRequest.shouldRefreshRefetchedObjects = true
-        fetchRequest.includesPendingChanges = true
         let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                     managedObjectContext: self.managedObjectContext,
                                                     sectionNameKeyPath: nil,
@@ -202,24 +200,23 @@ extension BreadListViewController: NSFetchedResultsControllerDelegate {
         }
 
         var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let currentSnapshot = dataSource.snapshot()
-        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier),
-                  let index = snapshot.indexOfItem(itemIdentifier),
-                  index == currentIndex else {
-                      return nil
-                  }
-
-            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier),
-                  existingObject.isUpdated else {
-                      return nil
-                  }
-            return itemIdentifier
+        let tempIDs = snapshot.itemIdentifiers.filter {
+            $0.isTemporaryID
         }
-        snapshot.reloadItems(reloadIdentifiers)
+        let objectsHavingTempID = tempIDs.compactMap {
+            return try? controller.managedObjectContext.existingObject(with: $0)
+        }
+
+        do {
+            try controller.managedObjectContext.obtainPermanentIDs(for: objectsHavingTempID)
+            zip(tempIDs, objectsHavingTempID.map { $0.objectID }).forEach {
+                snapshot.insertItems([$1], afterItem: $0)
+                snapshot.deleteItems([$0])
+            }
+        } catch { }
 
         let shouldAnimate = tableView.numberOfSections != 0
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
+        dataSource.apply(snapshot, animatingDifferences: shouldAnimate)
         headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)
     }
 }
