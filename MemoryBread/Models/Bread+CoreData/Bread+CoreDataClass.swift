@@ -13,14 +13,14 @@ import UIKit
 @objc(Bread)
 public class Bread: NSManagedObject {
     convenience init(
+        context: NSManagedObjectContext = AppDelegate.viewContext,
         touch: Date?,
         directoryName: String?,
         title: String?,
         content: String?,
         separatedContent: [String]?,
         filterIndexes: [[Int]]?,
-        selectedFilters: [Int]?,
-        context: NSManagedObjectContext = AppDelegate.viewContext
+        selectedFilters: [Int]?
     ) {
         self.init(context: context)
         self.createdTime = Date()

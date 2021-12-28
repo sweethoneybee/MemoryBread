@@ -7,6 +7,7 @@
 
 import UIKit
 import Foundation
+import CoreData
 
 final class WordItemModel {
     struct Item: Identifiable {
@@ -29,22 +30,24 @@ final class WordItemModel {
         }
     }
 
+    // MARK: - Models
     private let bread: Bread
-    private let dao = BreadDAO()
+    private let managedObjectContext: NSManagedObjectContext
     
     /// items는 오직 순서를 위해서만 사용함; 값의 최신화를 보장하지 않음.
     private lazy var items: [Item] = populateItems()
-    
     private lazy var itemsWithKey: [UUID: Item] = {
         return Dictionary(uniqueKeysWithValues: items.map { ($0.id, $0) })
     }()
     
-    init(bread: Bread) {
+    // MARK: - Life Cycle
+    init(context: NSManagedObjectContext, bread: Bread) {
+        self.managedObjectContext = context
         self.bread = bread
     }
     
-    convenience init(_ model: WordItemModel) {
-        self.init(bread: model.bread)
+    convenience init(_ model: WordItemModel, context: NSManagedObjectContext) {
+        self.init(context: context, bread: model.bread)
         self.items = model.items
         self.itemsWithKey = model.itemsWithKey
     }
@@ -108,12 +111,12 @@ final class WordItemModel {
             item.filterColor = itemsWithKey[$0.id]?.filterColor
             return item
         })
-        dao.saveIfNeeded()
+        try? managedObjectContext.save()
     }
     
     func updateContent(_ content: String) {
         bread.updateContent(content)
-        dao.saveIfNeeded()
+        try? managedObjectContext.save()
         
         self.items = self.populateItems()
         self.itemsWithKey = Dictionary(uniqueKeysWithValues: self.items.map { ($0.id, $0) })

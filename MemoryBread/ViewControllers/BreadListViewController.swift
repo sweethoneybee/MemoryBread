@@ -24,10 +24,13 @@ final class BreadListViewController: UIViewController {
     // MARK: - States
     private var diffableDataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
     private var isAdding = false
-    private let managedObjectContext = AppDelegate.viewContext
     
     // MARK: - Models
-    private lazy var dao = BreadDAO(context: managedObjectContext)
+    private let viewContext = AppDelegate.viewContext
+    private let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType).then {
+        $0.parent = AppDelegate.viewContext
+    }
+    
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
@@ -50,6 +53,14 @@ final class BreadListViewController: UIViewController {
         tableView.delegate = self
         
         try? fetchedResultsController.performFetch()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(childContextDidSave(_:)), name: .NSManagedObjectContextDidSave, object: managedObjectContext)
+    }
+    
+    // MARK: - Notification Handlers
+    @objc
+    private func childContextDidSave(_ notification: Notification) {
+        try? viewContext.save()
     }
 }
 
@@ -108,10 +119,14 @@ extension BreadListViewController {
     
     @objc
     func addBreadButtonTouched() {
-        guard isAdding == false else { return }
+        guard isAdding == false else {
+            return
+        }
+        
         isAdding = true
-        let breadViewController = BreadViewController(bread: dao.create())
-        dao.saveIfNeeded()
+        let bread = Bread.makeBasicBread(context: self.managedObjectContext)
+        try? managedObjectContext.save()
+        let breadViewController = BreadViewController(context: managedObjectContext, bread: bread)
         navigationController?.pushViewController(breadViewController, animated: true)
         isAdding = false
     }
@@ -165,7 +180,7 @@ extension BreadListViewController {
 // MARK: - UITableViewDelegate
 extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let breadViewController = BreadViewController(bread: fetchedResultsController.object(at: indexPath))
+        let breadViewController = BreadViewController(context: managedObjectContext, bread: fetchedResultsController.object(at: indexPath))
         navigationController?.pushViewController(breadViewController, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -178,8 +193,8 @@ extension BreadListViewController: UITableViewDelegate {
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] _, _, completionHandler in
             guard let self = self else { return }
             let object = self.fetchedResultsController.object(at: indexPath)
-            self.dao.delete(object)
-            self.dao.saveIfNeeded()
+            self.managedObjectContext.delete(object)
+            try? self.managedObjectContext.save()
             completionHandler(true)
         }
         deleteAction.image = UIImage(systemName: "trash")
@@ -199,24 +214,8 @@ extension BreadListViewController: NSFetchedResultsControllerDelegate {
             return
         }
 
-        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let tempIDs = snapshot.itemIdentifiers.filter {
-            $0.isTemporaryID
-        }
-        let objectsHavingTempID = tempIDs.compactMap {
-            return try? controller.managedObjectContext.existingObject(with: $0)
-        }
-
-        do {
-            try controller.managedObjectContext.obtainPermanentIDs(for: objectsHavingTempID)
-            zip(tempIDs, objectsHavingTempID.map { $0.objectID }).forEach {
-                snapshot.insertItems([$1], afterItem: $0)
-                snapshot.deleteItems([$0])
-            }
-        } catch { }
-
         let shouldAnimate = tableView.numberOfSections != 0
-        dataSource.apply(snapshot, animatingDifferences: shouldAnimate)
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
         headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)
     }
 }

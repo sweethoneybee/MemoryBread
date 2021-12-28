@@ -7,8 +7,14 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 final class BreadViewController: UIViewController {
+    enum Section {
+        case main
+    }
+    
+    // MARK: - Constants
     struct UIConstants {
         static let edgeInset: CGFloat = 20
         static let wordItemSpacing: CGFloat = 5
@@ -16,27 +22,22 @@ final class BreadViewController: UIViewController {
         static let backButtonOffset: CGFloat = -10
     }
     
-    enum Section {
-        case main
+    private var collectionViewContentWidth: CGFloat {
+        return view.safeAreaLayoutGuide.layoutFrame.width - UIConstants.edgeInset * 2
     }
     
+    // MARK: - Views
     private var naviTitleView: ScrollableTitleView!
     private var editContentButtonItem: UIBarButtonItem!
     private var toolbarViewController: ColorFilterToolbarViewController!
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, UUID>!
     
-    private let dao = BreadDAO()
-    private var bread: Bread
-    private var model: WordItemModel
-    private var editModel: WordItemModel
-    
-    private var isItemsPanned: [Bool] = []
+    // MARK: - States
+    private var panGestureCheckerOfItems: [Bool] = []
     private var selectedFilters: Set<Int> = []
     private var editingFilterIndex: Int?
-    
     private var highlightedItemIndexForEditing: Int?
-
     private var currentContentOffset: CGPoint = .zero
     private var sectionTitleViewHeight: CGFloat = 0
     
@@ -47,18 +48,22 @@ final class BreadViewController: UIViewController {
         return nil
     }
     
-    private var collectionViewContentWidth: CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.width - UIConstants.edgeInset * 2
-    }
+    // MARK: - Models
+    private let managedObjectContext: NSManagedObjectContext
+    private var bread: Bread
+    private var model: WordItemModel
+    private var editModel: WordItemModel
     
+    // MARK: - Life Cycle
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
     
-    init(bread: Bread) {
+    init(context: NSManagedObjectContext, bread: Bread) {
+        self.managedObjectContext = context
         self.bread = bread
-        self.model = WordItemModel(bread: bread)
-        self.editModel = WordItemModel(bread: bread)
+        self.model = WordItemModel(context: managedObjectContext, bread: bread)
+        self.editModel = WordItemModel(context: managedObjectContext, bread: bread)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -87,8 +92,13 @@ final class BreadViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        bread.selectedFilters = Array(selectedFilters)
-        dao.saveIfNeeded()
+        
+        let selectedFiltersArray = Array(selectedFilters)
+        if let latestSelectedFilters = bread.selectedFilters,
+        latestSelectedFilters != selectedFiltersArray {
+            bread.selectedFilters = Array(selectedFilters)
+            try? managedObjectContext.save()
+        }
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -96,14 +106,14 @@ final class BreadViewController: UIViewController {
         toolbarViewController.setEditing(editing, animated: animated)
         
         if editing {
-            editModel = WordItemModel(model)
+            editModel = WordItemModel(model, context: managedObjectContext)
             dataSource.reconfigure(editModel.idsHavingFilter(), animatingDifferences: true)
             editContentButtonItem.isEnabled = false
             toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
             return
         }
         
-        model = WordItemModel(editModel)
+        model = WordItemModel(editModel, context: managedObjectContext)
         model.updateBreadFilterIndexes()
 
         dataSource.reconfigure(model.idsHavingFilter(), animatingDifferences: true)
@@ -383,17 +393,17 @@ extension BreadViewController {
         
         switch sender.state {
         case .began:
-            isItemsPanned = Array(repeating: false, count: editModel.count)
+            panGestureCheckerOfItems = Array(repeating: false, count: editModel.count)
             if let justHighlighted = highlightedItemIndexForEditing {
-                isItemsPanned[justHighlighted] = true
+                panGestureCheckerOfItems[justHighlighted] = true
                 highlightedItemIndexForEditing = nil
             }
         case .changed:
             let touchedPoint = sender.location(in: collectionView)
             if let index = collectionView.indexPathForItem(at: touchedPoint)?.item,
-               index < isItemsPanned.count,
-               isItemsPanned[index] == false {
-                isItemsPanned[index] = true
+               index < panGestureCheckerOfItems.count, // check index out of range
+               panGestureCheckerOfItems[index] == false {
+                panGestureCheckerOfItems[index] = true
                 updateEditModelIfNeeded(at: index)
             }
         default:
@@ -417,7 +427,7 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
             guard let self = self else { return }
             if let inputText = titleEditAlert.textFields?.first?.text {
                 self.bread.updateTitle(inputText)
-                self.dao.saveIfNeeded()
+                try? self.managedObjectContext.save()
                 self.updateNaviTitleView(using: inputText)
             }
         })

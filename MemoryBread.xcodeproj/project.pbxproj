@@ -19,7 +19,6 @@
 		4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */; };
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
-		40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0327293C60002E84A8 /* BreadDAO.swift */; };
 		403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */; };
 		403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F32768903400B787A4 /* DriveAuthInfo.swift */; };
 		405EC17E27661E200031C19D /* ExcelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC17D27661E200031C19D /* ExcelReader.swift */; };
@@ -69,7 +68,6 @@
 		4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizingHelper.swift; sourceTree = "<group>"; };
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
-		40245D0327293C60002E84A8 /* BreadDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadDAO.swift; sourceTree = "<group>"; };
 		403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveCell.swift; sourceTree = "<group>"; };
 		403E63F32768903400B787A4 /* DriveAuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthInfo.swift; sourceTree = "<group>"; };
 		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -132,25 +130,16 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		4013F5BC274BDAFC00E03F5F /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				40245D0327293C60002E84A8 /* BreadDAO.swift */,
-			);
-			path = Data;
-			sourceTree = "<group>";
-		};
 		40245CFE27293547002E84A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
+				4013F5BA2748B55100E03F5F /* WordItemModel.swift */,
 				40D91BF027709E41002E588D /* DataStructure */,
 				409D9665276B14F100EB8220 /* DriveAuthorization */,
-				4013F5BC274BDAFC00E03F5F /* Data */,
 				405EC18327661EB00031C19D /* Network */,
 				405EC18227661E9C0031C19D /* Helper */,
 				40245D05272940EE002E84A8 /* Bread+CoreData */,
-				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
-				4013F5BA2748B55100E03F5F /* WordItemModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -241,19 +230,19 @@
 		40C8DE2327259F5300B8C5FC /* MemoryBread */ = {
 			isa = PBXGroup;
 			children = (
-				409D966B276CD2FC00EB8220 /* Localizing */,
-				40F92B87272C3E7D0085224E /* Extensions */,
-				40F92B83272BD7B80085224E /* ViewControllers */,
-				40F7589B272AF8ED000ADD4F /* Views */,
-				40245CFE27293547002E84A8 /* Models */,
 				40C8DE2427259F5300B8C5FC /* AppDelegate.swift */,
 				40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */,
 				409D9663276B12DC00EB8220 /* APIKeys.swift */,
 				404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */,
 				40C8DE3027259F5500B8C5FC /* Assets.xcassets */,
-				40C8DE3227259F5500B8C5FC /* LaunchScreen.storyboard */,
 				40C8DE3527259F5500B8C5FC /* Info.plist */,
 				40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */,
+				409D966B276CD2FC00EB8220 /* Localizing */,
+				40F92B87272C3E7D0085224E /* Extensions */,
+				40F92B83272BD7B80085224E /* ViewControllers */,
+				40F7589B272AF8ED000ADD4F /* Views */,
+				40245CFE27293547002E84A8 /* Models */,
+				40C8DE3227259F5500B8C5FC /* LaunchScreen.storyboard */,
 			);
 			path = MemoryBread;
 			sourceTree = "<group>";
@@ -463,7 +452,6 @@
 				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
-				40245D0427293C60002E84A8 /* BreadDAO.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
 				40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */,
 				409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */,

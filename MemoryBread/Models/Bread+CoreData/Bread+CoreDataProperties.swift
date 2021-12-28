@@ -28,6 +28,19 @@ extension Bread {
 }
 
 extension Bread : Identifiable {
+    static func makeBasicBread(context: NSManagedObjectContext) -> Bread {
+        return Bread(
+            context: context,
+            touch: Date(),
+            directoryName: "기본",
+            title: LocalizingHelper.freshBread,
+            content: "",
+            separatedContent: [],
+            filterIndexes: Array(repeating: [], count: FilterColor.count),
+            selectedFilters: nil
+        )
+    }
+    
     /// 최초 튜토리얼 세팅에만 사용해야 함.
     func updateFilterIndexes(usingIndexes indexes: [(Int, Int)]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
