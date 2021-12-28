@@ -49,12 +49,16 @@ final class BreadListViewController: UIViewController {
         super.viewDidLoad()
         setViews()
         configureDataSource()
-        
         tableView.delegate = self
         
-        try? fetchedResultsController.performFetch()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(childContextDidSave(_:)), name: .NSManagedObjectContextDidSave, object: managedObjectContext)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if isBeingPresented || isMovingToParent {
+            try? fetchedResultsController.performFetch()
+        }
     }
     
     // MARK: - Notification Handlers
@@ -71,17 +75,17 @@ extension BreadListViewController {
         navigationItem.title = "app_title".localized
         navigationItem.backButtonDisplayMode = .minimal
         
+        tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: BreadListViewController.reuseIdentifier)
+        view.addSubview(tableView)
+
         headerLabel = UILabel().then {
             $0.font = .systemFont(ofSize: 14, weight: .light)
             $0.textAlignment = .center
             $0.textColor = .black
             $0.frame.size.height = 30
+            tableView.tableHeaderView = $0
         }
-        
-        tableView = UITableView(frame: .zero, style: .insetGrouped)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: BreadListViewController.reuseIdentifier)
-        tableView.tableHeaderView = headerLabel
-        view.addSubview(tableView)
         
         addBreadButton = UIButton().then {
             $0.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
