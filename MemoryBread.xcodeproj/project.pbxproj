@@ -13,7 +13,7 @@
 		40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */; };
 		40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F92272D9A3200BA7A34 /* BreadListCell.swift */; };
 		40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */; };
-		4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5BA2748B55100E03F5F /* WordItemModel.swift */; };
+		4013F5BB2748B55100E03F5F /* WordPainter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5BA2748B55100E03F5F /* WordPainter.swift */; };
 		4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5BD274BDB0700E03F5F /* Tutorial.swift */; };
 		4013F5C1274D143500E03F5F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4013F5C3274D143500E03F5F /* Localizable.strings */; };
 		4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */; };
@@ -60,7 +60,7 @@
 		40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+CustomColor.swift"; sourceTree = "<group>"; };
 		40060F92272D9A3200BA7A34 /* BreadListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListCell.swift; sourceTree = "<group>"; };
 		40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListViewController.swift; sourceTree = "<group>"; };
-		4013F5BA2748B55100E03F5F /* WordItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordItemModel.swift; sourceTree = "<group>"; };
+		4013F5BA2748B55100E03F5F /* WordPainter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordPainter.swift; sourceTree = "<group>"; };
 		4013F5BD274BDB0700E03F5F /* Tutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutorial.swift; sourceTree = "<group>"; };
 		4013F5C2274D143500E03F5F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4013F5C4274D145B00E03F5F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
-				4013F5BA2748B55100E03F5F /* WordItemModel.swift */,
+				4013F5BA2748B55100E03F5F /* WordPainter.swift */,
 				40D91BF027709E41002E588D /* DataStructure */,
 				409D9665276B14F100EB8220 /* DriveAuthorization */,
 				405EC18327661EB00031C19D /* Network */,
@@ -449,7 +449,7 @@
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
-				4013F5BB2748B55100E03F5F /* WordItemModel.swift in Sources */,
+				4013F5BB2748B55100E03F5F /* WordPainter.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,

@@ -50,7 +50,7 @@ extension Bread : Identifiable {
         filterIndexes = newFilterIndexes
     }
     
-    func updateFilterIndexes(with items: [WordItemModel.Item]) {
+    func updateFilterIndexes(with items: [WordPainter.Item]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)
         items.enumerated().forEach { (itemIndex, item) in
             if let colorIndex = FilterColor.colorIndex(for: item.filterColor) {

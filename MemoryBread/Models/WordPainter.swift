@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 import CoreData
 
-final class WordItemModel {
+final class WordPainter {
     struct Item: Identifiable {
         let id = UUID()
         let word: String
@@ -46,7 +46,7 @@ final class WordItemModel {
         self.bread = bread
     }
     
-    convenience init(_ model: WordItemModel, context: NSManagedObjectContext) {
+    convenience init(_ model: WordPainter, context: NSManagedObjectContext) {
         self.init(context: context, bread: model.bread)
         self.items = model.items
         self.itemsWithKey = model.itemsWithKey
@@ -57,7 +57,7 @@ final class WordItemModel {
         return items.count
     }
     
-    func hasFilter(forKey key: UUID) -> Bool {
+    func itemHasFilter(forKey key: UUID) -> Bool {
         return itemsWithKey[key]?.filterColor != nil ? true : false
     }
     
@@ -82,16 +82,16 @@ final class WordItemModel {
     }
     
     // MARK: - 명령
-    func removeFilter(forKey key: UUID) {
+    func removeFilterOfItem(forKey key: UUID) {
         itemsWithKey[key]?.filterColor = nil
     }
     
-    func setFilter(forKey key: UUID, to filterColor: UIColor?, isFiltered: Bool) {
+    func setFilterOfItem(forKey key: UUID, to filterColor: UIColor?, isFiltered: Bool) {
         itemsWithKey[key]?.filterColor = filterColor
         itemsWithKey[key]?.isFiltered = isFiltered
     }
 
-    func togglePeek(forKey key: UUID) {
+    func togglePeekingOfItem(forKey key: UUID) {
         itemsWithKey[key]?.isPeeking.toggle()
     }
     
@@ -105,7 +105,7 @@ final class WordItemModel {
         return updatedKeys
     }
     
-    func updateBreadFilterIndexes() {
+    func saveBreadFilterIndexes() {
         bread.updateFilterIndexes(with: items.map {
             var item = Item(word: $0.word)
             item.filterColor = itemsWithKey[$0.id]?.filterColor
@@ -114,7 +114,7 @@ final class WordItemModel {
         try? managedObjectContext.save()
     }
     
-    func updateContent(_ content: String) {
+    func updateContent(with content: String) {
         bread.updateContent(content)
         try? managedObjectContext.save()
         

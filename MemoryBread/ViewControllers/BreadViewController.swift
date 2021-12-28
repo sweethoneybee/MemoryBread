@@ -50,9 +50,8 @@ final class BreadViewController: UIViewController {
     
     // MARK: - Models
     private let managedObjectContext: NSManagedObjectContext
-    private var bread: Bread
-    private var model: WordItemModel
-    private var editModel: WordItemModel
+    private let bread: Bread
+    private let wordPainter: WordPainter
     
     // MARK: - Life Cycle
     required init?(coder: NSCoder) {
@@ -62,8 +61,7 @@ final class BreadViewController: UIViewController {
     init(context: NSManagedObjectContext, bread: Bread) {
         self.managedObjectContext = context
         self.bread = bread
-        self.model = WordItemModel(context: managedObjectContext, bread: bread)
-        self.editModel = WordItemModel(context: managedObjectContext, bread: bread)
+        self.wordPainter = WordPainter(context: managedObjectContext, bread: bread)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -106,17 +104,15 @@ final class BreadViewController: UIViewController {
         toolbarViewController.setEditing(editing, animated: animated)
         
         if editing {
-            editModel = WordItemModel(model, context: managedObjectContext)
-            dataSource.reconfigure(editModel.idsHavingFilter(), animatingDifferences: true)
+            dataSource.reconfigure(wordPainter.idsHavingFilter(), animatingDifferences: true)
             editContentButtonItem.isEnabled = false
             toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
             return
         }
         
-        model = WordItemModel(editModel, context: managedObjectContext)
-        model.updateBreadFilterIndexes()
+        wordPainter.saveBreadFilterIndexes()
 
-        dataSource.reconfigure(model.idsHavingFilter(), animatingDifferences: true)
+        dataSource.reconfigure(wordPainter.idsHavingFilter(), animatingDifferences: true)
         editContentButtonItem.isEnabled = true
         
         editingFilterIndex = nil
@@ -215,13 +211,7 @@ extension BreadViewController {
                 return
             }
             
-            let item: WordItemModel.Item?
-            if self.isEditing {
-                item = self.editModel.item(forKey: id)
-            } else {
-                item = self.model.item(forKey: id)
-            }
-            
+            let item = self.wordPainter.item(forKey: id)
             if let item = item {
                 cell.configure(using: item, isEditing: self.isEditing)
             }
@@ -243,7 +233,7 @@ extension BreadViewController {
             return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
-        applyNewData(model.ids())
+        applyNewData(wordPainter.ids())
     }
     
     private func applyNewData(_ identifiers: [UUID]) {
@@ -266,9 +256,9 @@ extension BreadViewController: UICollectionViewDelegate {
         }
         
         guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
-        if let colorIndex = model.ColorIndex(forKey: id),
+        if let colorIndex = wordPainter.ColorIndex(forKey: id),
            selectedFilters.contains(colorIndex) {
-            model.togglePeek(forKey: id)
+            wordPainter.togglePeekingOfItem(forKey: id)
             dataSource.reconfigure([id], animatingDifferences: true)
         }
     }
@@ -286,24 +276,24 @@ extension BreadViewController: UICollectionViewDelegate {
         }
         
         if editingFilterColor == nil { // 편집용 필터 선택되지 않음
-            if editModel.hasFilter(forKey: id) {
-                editModel.removeFilter(forKey: id)
+            if wordPainter.itemHasFilter(forKey: id) {
+                wordPainter.removeFilterOfItem(forKey: id)
                 dataSource.reconfigure([id], animatingDifferences: true)
             }
             return
         }
         
         // 편집용 필터 선택됨
-        if editModel.item(forKey: id)?.filterColor == editingFilterColor {
-            editModel.removeFilter(forKey: id)
+        if wordPainter.item(forKey: id)?.filterColor == editingFilterColor {
+            wordPainter.removeFilterOfItem(forKey: id)
             dataSource.reconfigure([id], animatingDifferences: true)
             return
         }
         
         if let editingFilterIndex = editingFilterIndex {
-            editModel.setFilter(forKey: id,
-                                to: editingFilterColor,
-                                isFiltered: selectedFilters.contains(editingFilterIndex))
+            wordPainter.setFilterOfItem(forKey: id,
+                            to: editingFilterColor,
+                            isFiltered: selectedFilters.contains(editingFilterIndex))
             dataSource.reconfigure([id], animatingDifferences: true)
         }
     }
@@ -338,7 +328,7 @@ extension BreadViewController: ColorFilterToolbarDelegate {
     }
     
     private func updateFilter(_ filterValue: Int, setFilter isFiltered: Bool) {
-        let updatedKeys = model.updateFilterOfItems(using: filterValue, isFiltered: isFiltered)
+        let updatedKeys = wordPainter.updateFilterOfItems(using: filterValue, isFiltered: isFiltered)
         dataSource.reconfigure(updatedKeys, animatingDifferences: true)
     }
 }
@@ -393,7 +383,7 @@ extension BreadViewController {
         
         switch sender.state {
         case .began:
-            panGestureCheckerOfItems = Array(repeating: false, count: editModel.count)
+            panGestureCheckerOfItems = Array(repeating: false, count: wordPainter.count)
             if let justHighlighted = highlightedItemIndexForEditing {
                 panGestureCheckerOfItems[justHighlighted] = true
                 highlightedItemIndexForEditing = nil
@@ -460,8 +450,8 @@ extension BreadViewController {
         let newContent = newContent.trimmingCharacters(in: [" "])
         guard bread.content != newContent else { return }
 
-        model.updateContent(newContent)
-        applyNewData(model.ids())
+        wordPainter.updateContent(with: newContent)
+        applyNewData(wordPainter.ids())
         
         toolbarViewController.deselectAllFilter()
         toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)

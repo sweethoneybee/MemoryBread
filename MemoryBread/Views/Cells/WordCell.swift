@@ -44,7 +44,7 @@ extension WordCell {
         }
     }
     
-    func configure(using item: WordItemModel.Item, isEditing: Bool) {
+    func configure(using item: WordPainter.Item, isEditing: Bool) {
         if isEditing {
             label.text = item.word
             overlayView.backgroundColor = item.filterColor?.withAlphaComponent(0.5) ?? .clear
