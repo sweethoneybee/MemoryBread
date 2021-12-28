@@ -26,10 +26,8 @@ final class BreadListViewController: UIViewController {
     private var isAdding = false
     
     // MARK: - Models
-    private let viewContext = AppDelegate.viewContext
-    private let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType).then {
-        $0.parent = AppDelegate.viewContext
-    }
+    private let coreDataStack: CoreDataStack
+    private let managedObjectContext: NSManagedObjectContext
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
@@ -45,6 +43,16 @@ final class BreadListViewController: UIViewController {
     }()
 
     // MARK: - Life Cycle
+    required init?(coder: NSCoder) {
+        fatalError("not implemented")
+    }
+    
+    init(coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
+        self.managedObjectContext = coreDataStack.makeChildContextOfMainContext()
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
@@ -64,7 +72,7 @@ final class BreadListViewController: UIViewController {
     // MARK: - Notification Handlers
     @objc
     private func childContextDidSave(_ notification: Notification) {
-        try? viewContext.save()
+        coreDataStack.saveContext()
     }
 }
 

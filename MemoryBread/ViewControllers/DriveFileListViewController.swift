@@ -128,7 +128,7 @@ extension DriveFileListViewController {
                   return
               }
         isFetching = true
-        downloader.fetchFileList(at: currentDirId) { [weak self] nextPageToken, fetchedFileList, error in
+        downloader.fetchFileList(atDirectory: currentDirId) { [weak self] nextPageToken, fetchedFileList, error in
             defer {
                 self?.isFetching = false
             }
@@ -168,7 +168,7 @@ extension DriveFileListViewController {
               }
         
         isFetching = true
-        downloader.fetchFileList(at: currentDirId, usingToken: nextPageToken) { [weak self] nextPageToken, fetchedFileList, error in
+        downloader.fetchFileList(atDirectory: currentDirId, usingToken: nextPageToken) { [weak self] nextPageToken, fetchedFileList, error in
             defer {
                 self?.isFetching = false
             }

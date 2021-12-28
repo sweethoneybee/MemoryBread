@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
 
-        let breadListViewController = BreadListViewController()
+        let breadListViewController = BreadListViewController(coreDataStack: AppDelegate.coreDataStack)
         let nvc = UINavigationController(rootViewController: breadListViewController)
         nvc.navigationBar.prefersLargeTitles = true
         nvc.navigationBar.tintColor = .systemPink
@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+        AppDelegate.coreDataStack.saveContext()
     }
 
 

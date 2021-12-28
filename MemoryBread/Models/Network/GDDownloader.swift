@@ -55,7 +55,7 @@ final class GDDownloader {
 
 // MARK: - File List Fetching
 extension GDDownloader {
-    func fetchFileList(at root: String?,
+    func fetchFileList(atDirectory root: String?,
                        usingToken nextPageToken: String? = nil,
                        onCompleted: ((String?, [GTLRDrive_File]?, Error?)->Void)? = nil) {
         let query = GTLRDriveQuery_FilesList.query()

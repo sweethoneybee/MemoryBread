@@ -13,7 +13,7 @@ import UIKit
 @objc(Bread)
 public class Bread: NSManagedObject {
     convenience init(
-        context: NSManagedObjectContext = AppDelegate.viewContext,
+        context: NSManagedObjectContext,
         touch: Date?,
         directoryName: String?,
         title: String?,
