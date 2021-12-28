@@ -114,10 +114,8 @@ final class WordPainter {
         try? managedObjectContext.save()
     }
     
-    func updateContent(with content: String) {
-        bread.updateContent(content)
-        try? managedObjectContext.save()
-        
+    /// Bread's content has changed equally as `newContent`
+    func refreshItems() {
         self.items = self.populateItems()
         self.itemsWithKey = Dictionary(uniqueKeysWithValues: self.items.map { ($0.id, $0) })
     }

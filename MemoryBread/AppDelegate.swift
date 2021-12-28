@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Tutorial().infos.forEach {
                 let tutorialBread = Bread.makeBasicBread(context: context)
                 tutorialBread.title = $0.title
-                tutorialBread.updateContent($0.content)
+                tutorialBread.updateContent(with: $0.content)
                 tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
             }
             try? context.save()

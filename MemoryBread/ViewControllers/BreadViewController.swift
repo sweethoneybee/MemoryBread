@@ -233,10 +233,10 @@ extension BreadViewController {
             return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
-        applyNewData(wordPainter.ids())
+        applyNewIdentifiers(wordPainter.ids())
     }
     
-    private func applyNewData(_ identifiers: [UUID]) {
+    private func applyNewIdentifiers(_ identifiers: [UUID]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, UUID>()
         snapshot.appendSections([.main])
         snapshot.appendItems(identifiers, toSection: .main)
@@ -450,8 +450,11 @@ extension BreadViewController {
         let newContent = newContent.trimmingCharacters(in: [" "])
         guard bread.content != newContent else { return }
 
-        wordPainter.updateContent(with: newContent)
-        applyNewData(wordPainter.ids())
+        bread.updateContent(with: newContent)
+        try? managedObjectContext.save()
+        wordPainter.refreshItems()
+        
+        applyNewIdentifiers(wordPainter.ids())
         
         toolbarViewController.deselectAllFilter()
         toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)

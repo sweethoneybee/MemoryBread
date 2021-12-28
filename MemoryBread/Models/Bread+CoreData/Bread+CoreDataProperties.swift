@@ -61,7 +61,7 @@ extension Bread : Identifiable {
         touch = Date()
     }
     
-    func updateContent(_ newContent: String) {
+    func updateContent(with newContent: String) {
         content = newContent
         separatedContent = newContent.components(separatedBy: ["\n", " ", "\t"])
         filterIndexes = Array(repeating: [], count: FilterColor.count)
