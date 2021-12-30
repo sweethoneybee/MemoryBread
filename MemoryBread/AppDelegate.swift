@@ -26,25 +26,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        _ = coreDataStack.mainContext
-        
         if UserManager.firstLaunch {
-            let context = coreDataStack.mainContext
+            let context = coreDataStack.viewContext
             Tutorial().infos.forEach {
                 let tutorialBread = Bread.makeBasicBread(context: context)
                 tutorialBread.title = $0.title
                 tutorialBread.updateContent(with: $0.content)
                 tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
             }
-            coreDataStack.saveContext()
+            do {
+                try context.save()
+            } catch let nserror as NSError {
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
             UserManager.firstLaunch = false
         }
         
         return true
-    }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        coreDataStack.saveContext()
     }
 
     // MARK: UISceneSession Lifecycle

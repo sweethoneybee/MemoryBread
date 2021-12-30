@@ -24,11 +24,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = nvc
         window?.makeKeyAndVisible()
     }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        AppDelegate.coreDataStack.saveContext()
-    }
-
-
 }
 

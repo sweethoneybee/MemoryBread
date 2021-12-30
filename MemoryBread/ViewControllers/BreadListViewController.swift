@@ -5,15 +5,13 @@
 //  Created by 정성훈 on 2021/10/31.
 //  'ImplementingModernCollectionViews' sample code from Apple.
 //
-//  DiffableDataSource with Core Data codes are mainly refer to
-//  'https://www.avanderlee.com/swift/diffable-data-sources-core-data/'
-// 
 
 import UIKit
 import SnapKit
 import CoreData
 
 final class BreadListViewController: UIViewController {
+    
     static let reuseIdentifier = "reuse-identifier-bread-list-view"
 
     // MARK: - Views
@@ -27,14 +25,14 @@ final class BreadListViewController: UIViewController {
     
     // MARK: - Models
     private let coreDataStack: CoreDataStack
-    private let managedObjectContext: NSManagedObjectContext
+    private let viewContext: NSManagedObjectContext
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
         let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                    managedObjectContext: self.managedObjectContext,
+                                                    managedObjectContext: self.viewContext,
                                                     sectionNameKeyPath: nil,
                                                     cacheName: nil)
         controller.delegate = self
@@ -49,7 +47,7 @@ final class BreadListViewController: UIViewController {
     
     init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
-        self.managedObjectContext = coreDataStack.makeChildContextOfMainContext()
+        self.viewContext = coreDataStack.viewContext
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,7 +57,6 @@ final class BreadListViewController: UIViewController {
         configureDataSource()
         tableView.delegate = self
         
-        NotificationCenter.default.addObserver(self, selector: #selector(childContextDidSave(_:)), name: .NSManagedObjectContextDidSave, object: managedObjectContext)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -67,12 +64,6 @@ final class BreadListViewController: UIViewController {
         if isBeingPresented || isMovingToParent {
             try? fetchedResultsController.performFetch()
         }
-    }
-    
-    // MARK: - Notification Handlers
-    @objc
-    private func childContextDidSave(_ notification: Notification) {
-        coreDataStack.saveContext()
     }
 }
 
@@ -136,9 +127,13 @@ extension BreadListViewController {
         }
         
         isAdding = true
-        let bread = Bread.makeBasicBread(context: self.managedObjectContext)
-        try? managedObjectContext.save()
-        let breadViewController = BreadViewController(context: managedObjectContext, bread: bread)
+        let bread = Bread.makeBasicBread(context: viewContext)
+        do {
+            try viewContext.save()
+        } catch let nserror as NSError {
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+        let breadViewController = BreadViewController(context: viewContext, bread: bread)
         navigationController?.pushViewController(breadViewController, animated: true)
         isAdding = false
     }
@@ -166,7 +161,7 @@ extension BreadListViewController {
         
         let dateHelper = DateHelper()
         diffableDataSource = DataSource(tableView: tableView) { [weak self] tableView, indexPath, objectID in
-            guard let object = try? self?.managedObjectContext.existingObject(with: objectID) as? Bread else {
+            guard let object = try? self?.viewContext.existingObject(with: objectID) as? Bread else {
                 fatalError("Managed object should be available")
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: BreadListViewController.reuseIdentifier, for: indexPath)
@@ -192,8 +187,8 @@ extension BreadListViewController {
 // MARK: - UITableViewDelegate
 extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let breadViewController = BreadViewController(context: managedObjectContext, bread: fetchedResultsController.object(at: indexPath))
-        navigationController?.pushViewController(breadViewController, animated: true)
+        let breadVC = BreadViewController(context: viewContext, bread: fetchedResultsController.object(at: indexPath))
+        navigationController?.pushViewController(breadVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -204,10 +199,8 @@ extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] _, _, completionHandler in
             guard let self = self else { return }
-            let object = self.fetchedResultsController.object(at: indexPath)
-            self.managedObjectContext.delete(object)
-            try? self.managedObjectContext.save()
-            completionHandler(true)
+            let willBeDeletedObjectID = self.fetchedResultsController.object(at: indexPath).objectID
+            self.coreDataStack.deleteObject(with: willBeDeletedObjectID)
         }
         deleteAction.image = UIImage(systemName: "trash")
         deleteAction.backgroundColor = .systemRed
@@ -219,13 +212,11 @@ extension BreadListViewController: UITableViewDelegate {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension BreadListViewController: NSFetchedResultsControllerDelegate {
-    // codes refer to 'https://www.avanderlee.com/swift/diffable-data-sources-core-data/'
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         guard let dataSource = tableView.dataSource as? UITableViewDiffableDataSource<Int, NSManagedObjectID> else {
             assertionFailure("The data source has not implemented snapshot support while it should")
             return
         }
-
         let shouldAnimate = tableView.numberOfSections != 0
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
         headerLabel.text = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)

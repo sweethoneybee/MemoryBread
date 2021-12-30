@@ -13,8 +13,16 @@ final class CoreDataStack {
     
     private let modelName: String
     
-    lazy var mainContext: NSManagedObjectContext = {
-        return self.persistentContainer.viewContext
+    var viewContext: NSManagedObjectContext {
+        return persistentContainer.viewContext
+    }
+    
+    lazy var writeContext: NSManagedObjectContext = {
+        return persistentContainer.newBackgroundContext()
+    }()
+    
+    lazy var deleteContext: NSManagedObjectContext = {
+        return persistentContainer.newBackgroundContext()
     }()
     
     lazy var persistentContainer: NSPersistentContainer = {
@@ -28,27 +36,37 @@ final class CoreDataStack {
         return container
     }()
     
+    private var notificationTokens: [NSObjectProtocol] = []
+    
     init(modelName: String) {
         self.modelName = modelName
+        
+        let writeNotiToken = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: writeContext, queue: nil) { notificaation in
+            self.viewContext.mergeChanges(fromContextDidSave: notificaation)
+        }
+        notificationTokens.append(writeNotiToken)
+        let deleteNotiToken = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: deleteContext, queue: nil) { notificaation in
+            self.viewContext.mergeChanges(fromContextDidSave: notificaation)
+        }
+        notificationTokens.append(deleteNotiToken)
+    }
+    
+    deinit  {
+        notificationTokens.forEach {
+            NotificationCenter.default.removeObserver($0)
+        }
     }
 }
 
 // MARK: - Internal
 extension CoreDataStack {
-    
-    func saveContext() {
-        guard mainContext.hasChanges else { return }
-        
+    func deleteObject(with objectID: NSManagedObjectID) {
+        let object = deleteContext.object(with: objectID)
+        deleteContext.delete(object)
         do {
-            try mainContext.save()
+            try deleteContext.save()
         } catch let nserror as NSError {
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
-    }
-    
-    func makeChildContextOfMainContext() -> NSManagedObjectContext {
-        let childContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        childContext.parent = mainContext
-        return childContext
     }
 }
