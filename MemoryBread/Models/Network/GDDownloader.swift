@@ -63,7 +63,7 @@ extension GDDownloader {
         query.pageToken = nextPageToken
         query.fields = "nextPageToken,files(mimeType,id,name,size)"
         
-        let mimeType = "mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or mimeType = 'application/vnd.google-apps.folder' or mimeType = 'application/pdf'"
+        let mimeType = "mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' or mimeType = 'application/vnd.google-apps.folder'"
         let path = "'\(root ?? "root")' in parents"
         let trashed = "trashed = false"
         query.q = "(\(mimeType)) and \(path) and \(trashed)"

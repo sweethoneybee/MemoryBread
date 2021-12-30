@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 final class RemoteDriveAuthViewController: UIViewController {
     // MARK: - Views
@@ -15,6 +16,7 @@ final class RemoteDriveAuthViewController: UIViewController {
     // MARK: - Model
     private var model = DriveAuthModel()
     private var gdDownloader: GDDownloader?
+    private var writeContext: NSManagedObjectContext
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -33,6 +35,15 @@ final class RemoteDriveAuthViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         gdDownloader = nil
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("not implemented")
+    }
+    
+    init(context: NSManagedObjectContext) {
+        self.writeContext = context
+        super.init(nibName: nil, bundle: nil)
     }
 }
 
@@ -83,7 +94,7 @@ extension RemoteDriveAuthViewController: UITableViewDataSource {
 extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
     func signOutButtonTapped(_ cell: RemoteDriveCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            let alert = BasicAlert.makeConfirmAlert(title: LocalizingHelper.signOut, message: LocalizingHelper.signOutGoogleDrive) { [weak self] _ in
+            let alert = BasicAlert.makeCancelAndConfirmAlert(title: LocalizingHelper.signOut, message: LocalizingHelper.signOutGoogleDrive) { [weak self] _ in
                 self?.model.signOut(at: indexPath.item)
                 self?.reloadCell(at: indexPath)
             }
@@ -137,7 +148,7 @@ extension RemoteDriveAuthViewController {
         case .googleDrive:
             gdDownloader = GDDownloader()
             gdDownloader?.authorizer = DriveAuthStorage.shared.googleDrive
-            let vc = DriveFileListViewController(dirID: "root", dirName: nil)
+            let vc = DriveFileListViewController(context: writeContext, dirID: "root", dirName: nil)
             vc.downloader = gdDownloader
             fileListVC = vc
         }

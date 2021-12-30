@@ -81,7 +81,6 @@ extension BreadListViewController {
         headerLabel = UILabel().then {
             $0.font = .systemFont(ofSize: 14, weight: .light)
             $0.textAlignment = .center
-            $0.textColor = .black
             $0.frame.size.height = 30
             tableView.tableHeaderView = $0
         }
@@ -113,11 +112,24 @@ extension BreadListViewController {
     }
     
     private func addToolbar() {
-        let remoteDriveItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.down"),
-                                              style: .plain,
-                                              target: self,
-                                              action: #selector(remoteDriveItemTouched))
+        let remoteDriveItem = UIBarButtonItem(
+            image: UIImage(systemName: "square.and.arrow.down"),
+            style: .plain,
+            target: self,
+            action: #selector(remoteDriveItemTouched)
+        )
+        
+        #if DEBUG
+        let moresItem = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(moresItemTouched)
+        )
+        navigationItem.rightBarButtonItems = [remoteDriveItem, moresItem]
+        #else
         navigationItem.rightBarButtonItem = remoteDriveItem
+        #endif
     }
     
     @objc
@@ -140,9 +152,16 @@ extension BreadListViewController {
     
     @objc
     func remoteDriveItemTouched() {
-        let rdaVC = RemoteDriveAuthViewController()
+        let rdaVC = RemoteDriveAuthViewController(context: coreDataStack.writeContext)
         let nvc = UINavigationController(rootViewController: rdaVC)
         present(nvc, animated: true)
+    }
+    
+    @objc
+    func moresItemTouched() {
+        fetchedResultsController.fetchedObjects?.forEach {
+            coreDataStack.deleteObject(with: $0.objectID)
+        }
     }
 }
 

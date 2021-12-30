@@ -33,3 +33,11 @@
 
 "creating_bread" = "Creating bread";
 "creating_bread_from_file" = "From file '%@', creating %d of bread.";
+
+"fail_to_read_xlsx_file" = "Failed to read the file.";
+"xlsx_file_is_not_vaild" = "File's format is not valid.";
+"xlsx_file_is_empty" = "There is no content in the file.";
+"rows_are_too_many" = "Rows of the file exceeds %d.";
+
+"importing_done" = "Importing done";
+"created_number_of_bread" = "Created %d of bread successfully.";

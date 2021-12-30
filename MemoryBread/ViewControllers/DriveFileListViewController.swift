@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 final class DriveFileListViewController: UIViewController {
     
@@ -34,6 +35,7 @@ final class DriveFileListViewController: UIViewController {
     private var files = OrderedDictionary<String, FileObject>()
     private var nextPageToken: String?
     private var fileHelper = DriveFileHelper()
+    private var writeContext: NSManagedObjectContext
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -59,7 +61,8 @@ final class DriveFileListViewController: UIViewController {
         }
     }
     
-    init(dirID: String, dirName: String? = nil) {
+    init(context: NSManagedObjectContext, dirID: String, dirName: String? = nil) {
+        self.writeContext = context
         self.currentDirId = dirID
         self.currentDirName = dirName ?? "Google Drive"
         super.init(nibName: nil, bundle: nil)
@@ -238,7 +241,7 @@ extension DriveFileListViewController: UITableViewDelegate {
                     reload(at: indexPath.item)
                 }
             case .folder:
-                let dflVC = DriveFileListViewController(dirID: file.id, dirName: file.name)
+                let dflVC = DriveFileListViewController(context: writeContext, dirID: file.id, dirName: file.name)
                 dflVC.downloader = downloader
                 navigationController?.pushViewController(dflVC, animated: true)
             }
@@ -271,20 +274,46 @@ extension DriveFileListViewController: FileListCellDelegate {
                     self.isOpeningFile = false
                 }
                 
+                let alert: UIAlertController
                 switch result {
                 case .failure(let error):
-                    switch error {
-                    case .failToReadXLSXFile:
-                        print("데이터 읽기 실패")
-                    case .XLSXFileIsNotVaild:
-                        print("워크시트 파싱 실패")
-                    case .XLSXFileIsEmpty:
-                        print("XLSX 파일이 비어있음")
-                    }
+                    let message = error.localizedDescription
+                    alert = BasicAlert.makeErrorAlert(message: message)
                 case .success(let rows):
-                    let alert = BasicAlert.makeConfirmAlert(title: LocalizingHelper.creatingBread, message: String(format: LocalizingHelper.creatingBreadFromFile, file.name, rows.count))
-                    self.present(alert, animated: true)
+                    alert = BasicAlert.makeCancelAndConfirmAlert(
+                        title: LocalizingHelper.creatingBread,
+                        message: String(format: LocalizingHelper.creatingBreadFromFile, file.name, rows.count),
+                        completionHandler: { [weak self] _ in
+                            guard let self = self else { return }
+                            let loadingVC = LoadingViewController()
+                            loadingVC.modalPresentationStyle = .overFullScreen
+                            self.present(loadingVC, animated: false)
+                            
+                            self.writeContext.perform {
+                                for row in rows {
+                                    let title = row.first
+                                    let content = row.last
+                                    _ = Bread.makeBread(context: self.writeContext, title: title ?? LocalizingHelper.freshBread, content: content ?? "")
+                                }
+
+                                do {
+                                    try self.writeContext.save()
+                                } catch let nserror as NSError {
+                                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                                }
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    loadingVC.set(state: .init(isLoading: false))
+                                    let alert = BasicAlert.makeConfirmAlert(
+                                        title: LocalizingHelper.importingDone,
+                                        message: String(format: LocalizingHelper.createdNumberOfBread, rows.count)
+                                    )
+                                    self.present(alert, animated: true)
+                                }
+                            }
+                        })
                 }
+                self.present(alert, animated: true)
             }
         }
     }

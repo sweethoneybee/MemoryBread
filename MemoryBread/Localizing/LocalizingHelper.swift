@@ -34,5 +34,13 @@ struct LocalizingHelper {
     static let open = "open".localized
     
     static let creatingBread = "creating_bread".localized
-    static let creatingBreadFromFile = "creating_bread_from_file".localized    
+    static let creatingBreadFromFile = "creating_bread_from_file".localized
+    
+    static let failToReadXLSXFile = "fail_to_read_xlsx_file".localized
+    static let xlsxFileIsNotVaild = "xlsx_file_is_not_vaild".localized
+    static let xlsxFileIsEmpty = "xlsx_file_is_empty".localized
+    static let rowsAreTooMany = "rows_are_too_many".localized
+    
+    static let importingDone = "importing_done".localized
+    static let createdNumberOfBread = "created_number_of_bread".localized
 }

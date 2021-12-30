@@ -32,6 +32,8 @@
 		409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9666276B152300EB8220 /* DriveAuthModel.swift */; };
 		409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9669276B66C400EB8220 /* BasicAlert.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
+		40B176B7277DD0EB00F0B46B /* ExcelReaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */; };
+		40B176B9277DD65000F0B46B /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B176B8277DD65000F0B46B /* LoadingViewController.swift */; };
 		40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2427259F5300B8C5FC /* AppDelegate.swift */; };
 		40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */; };
 		40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */; };
@@ -82,6 +84,8 @@
 		409D9666276B152300EB8220 /* DriveAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthModel.swift; sourceTree = "<group>"; };
 		409D9669276B66C400EB8220 /* BasicAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAlert.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
+		40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReaderError.swift; sourceTree = "<group>"; };
+		40B176B8277DD65000F0B46B /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		40C8DE2127259F5300B8C5FC /* MemoryBread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryBread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40C8DE2427259F5300B8C5FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 				40D91BF12773474A002E588D /* DriveFileHelper.swift */,
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
 				405EC17D27661E200031C19D /* ExcelReader.swift */,
+				40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */,
 				409CC8FD27327311009B9AA1 /* UserManager.swift */,
 			);
 			path = Helper;
@@ -286,6 +291,7 @@
 				40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */,
 				405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */,
 				40D65715276E3FA20059A595 /* DriveFileListViewController.swift */,
+				40B176B8277DD65000F0B46B /* LoadingViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -494,6 +500,8 @@
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
 				405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */,
 				403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */,
+				40B176B9277DD65000F0B46B /* LoadingViewController.swift in Sources */,
+				40B176B7277DD0EB00F0B46B /* ExcelReaderError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

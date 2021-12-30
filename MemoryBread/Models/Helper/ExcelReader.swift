@@ -8,13 +8,8 @@
 import Foundation
 import CoreXLSX
 
-enum ExcelReaderError: Error {
-    case failToReadXLSXFile
-    case XLSXFileIsNotVaild
-    case XLSXFileIsEmpty
-}
-
 final class ExcelReader {
+    static let maxRowsCount = 500
     static func readXLSXFile(
         at fileURL: URL,
         completionHandler: @escaping (Result<[[String]], ExcelReaderError>)->()
@@ -38,21 +33,28 @@ final class ExcelReader {
                                 if rowCStrings.count == 0 {
                                     continue
                                 }
-                                rows.append(rowCStrings)
+                                rows.append(Array(rowCStrings.prefix(2)))
                             }
                         }
                     }
                 }
             } catch  {
                 DispatchQueue.main.async {
-                    completionHandler(.failure(ExcelReaderError.XLSXFileIsNotVaild))
+                    completionHandler(.failure(ExcelReaderError.xlsxFileIsNotVaild))
                 }
                 return
             }
             
             if rows.count == 0 {
                 DispatchQueue.main.async {
-                    completionHandler(.failure(.XLSXFileIsEmpty))
+                    completionHandler(.failure(.xlsxFileIsEmpty))
+                }
+                return
+            }
+            
+            if rows.count > ExcelReader.maxRowsCount {
+                DispatchQueue.main.async {
+                    completionHandler(.failure(.rowsAreTooMany(ExcelReader.maxRowsCount)))
                 }
                 return
             }
