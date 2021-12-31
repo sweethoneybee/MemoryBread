@@ -41,3 +41,7 @@
 
 "importing_done" = "Importing done";
 "created_number_of_bread" = "Created %d of bread successfully.";
+
+"delete" = "Delete";
+"delete_all" = "Delete All";
+"selected_number_of_items" = "%d Selected";

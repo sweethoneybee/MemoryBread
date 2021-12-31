@@ -43,4 +43,8 @@ struct LocalizingHelper {
     
     static let importingDone = "importing_done".localized
     static let createdNumberOfBread = "created_number_of_bread".localized
+    
+    static let delete = "delete".localized
+    static let deleteAll = "delete_all".localized
+    static let selectedNumberOfItems = "selected_number_of_items".localized
 }

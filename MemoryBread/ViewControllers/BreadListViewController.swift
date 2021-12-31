@@ -19,6 +19,14 @@ final class BreadListViewController: UIViewController {
     private var headerLabel: UILabel!
     private var addBreadButton: UIButton!
     
+    private var remoteDriveItem: UIBarButtonItem!
+    private var moresItem: UIBarButtonItem!
+    private var doneItem: UIBarButtonItem!
+    
+    private var bottomToolbar: BottomToolbar!
+    private var deleteButton: UIButton!
+    private var deleteAllButton: UIButton!
+    
     // MARK: - States
     private var diffableDataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
     private var isAdding = false
@@ -74,7 +82,10 @@ extension BreadListViewController {
         navigationItem.title = "app_title".localized
         navigationItem.backButtonDisplayMode = .minimal
         
-        tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView = UITableView(frame: .zero, style: .insetGrouped).then {
+            $0.allowsMultipleSelectionDuringEditing = true
+            $0.tintColor = .systemPink
+        }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: BreadListViewController.reuseIdentifier)
         view.addSubview(tableView)
 
@@ -92,8 +103,27 @@ extension BreadListViewController {
         }
         view.addSubview(addBreadButton)
         
+        bottomToolbar = BottomToolbar(frame: .init(x: 0, y: 0, width: 200, height: 100)).then {
+            $0.isHidden = true
+        }
+        view.addSubview(bottomToolbar)
+        
+        deleteButton = UIButton(type: .system).then {
+            $0.setTitle(LocalizingHelper.delete, for: .normal)
+            $0.tintColor = .systemPink
+            $0.addTarget(self, action: #selector(deleteButtonTouched), for: .touchUpInside)
+            bottomToolbar.addArrangedSubview($0, to: .right)
+        }
+        
+        deleteAllButton = UIButton(type: .system).then {
+            $0.setTitle(LocalizingHelper.deleteAll, for: .normal)
+            $0.tintColor = .systemPink
+            $0.addTarget(self, action: #selector(deleteAllButtonTouched), for: .touchUpInside)
+            bottomToolbar.addArrangedSubview($0, to: .right)
+        }
+        
         configureHierarchy()
-        addToolbar()
+        setRightButtomItems()
     }
     
     private func configureHierarchy() {
@@ -109,29 +139,40 @@ extension BreadListViewController {
         addBreadButton.imageView?.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        bottomToolbar.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-50)
+            make.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
     }
     
-    private func addToolbar() {
-        let remoteDriveItem = UIBarButtonItem(
+    private func setRightButtomItems() {
+        remoteDriveItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.down"),
             style: .plain,
             target: self,
             action: #selector(remoteDriveItemTouched)
         )
         
-        #if DEBUG
-        let moresItem = UIBarButtonItem(
+        moresItem = UIBarButtonItem(
             image: UIImage(systemName: "ellipsis.circle"),
             style: .plain,
             target: self,
             action: #selector(moresItemTouched)
         )
-        navigationItem.rightBarButtonItems = [remoteDriveItem, moresItem]
-        #else
-        navigationItem.rightBarButtonItem = remoteDriveItem
-        #endif
+        
+        doneItem = UIBarButtonItem(
+            title: LocalizingHelper.done,
+            style: .done,
+            target: self,
+            action: #selector(doneItemTouched)
+        )
+        
+        navigationItem.rightBarButtonItems = [moresItem, remoteDriveItem]
     }
     
+    // MARK: - UIButton Target Actions
     @objc
     func addBreadButtonTouched() {
         guard isAdding == false else {
@@ -159,9 +200,69 @@ extension BreadListViewController {
     
     @objc
     func moresItemTouched() {
-        fetchedResultsController.fetchedObjects?.forEach {
-            coreDataStack.deleteObject(with: $0.objectID)
+        setTableViewEditing(true, animated: true)
+    }
+    
+    @objc
+    func doneItemTouched() {
+        setTableViewEditing(false, animated: true)
+    }
+    
+    @objc
+    func deleteButtonTouched() {
+        if let rows = tableView.indexPathsForSelectedRows {
+            let objectIDs = rows.map {
+                fetchedResultsController.object(at: $0).objectID
+            }
+            coreDataStack.deleteAndSaveObjects(of: objectIDs)
+            setTableViewEditing(false, animated: true)
         }
+    }
+    
+    @objc
+    func deleteAllButtonTouched() {
+        if let objectIDs = fetchedResultsController.fetchedObjects?.map({ $0.objectID }) {
+            coreDataStack.deleteAndSaveObjects(of: objectIDs)
+            setTableViewEditing(false, animated: true)
+        }
+    }
+}
+
+// MARK: - Update Views
+extension BreadListViewController {
+    private func setTableViewEditing(_ editing: Bool, animated: Bool) {
+        tableView.setEditing(editing, animated: animated)
+        updateViewsInEditMode(withCount: 0)
+        if animated {
+            UIView.animate(withDuration: 0.2) {
+                self.updateUI(whenEditing: editing)
+            }
+        } else {
+            updateUI(whenEditing: editing)
+        }
+    }
+    
+    private func updateUI(whenEditing editing: Bool) {
+        bottomToolbar.isHidden = !editing
+        addBreadButton.isHidden = editing
+        navigationItem.hidesBackButton = editing
+        
+        if editing {
+            bottomToolbar.layer.opacity = 1
+            addBreadButton.layer.opacity = 0
+            navigationItem.rightBarButtonItems = [doneItem]
+        } else {
+            bottomToolbar.layer.opacity = 0
+            addBreadButton.layer.opacity = 1
+            navigationItem.rightBarButtonItems = [moresItem, remoteDriveItem]
+        }
+    }
+    
+    private func updateViewsInEditMode(withCount numberOfSelectedRows: Int) {
+        let hasSelectedRows = (numberOfSelectedRows != 0)
+        deleteButton.isHidden = !hasSelectedRows
+        deleteAllButton.isHidden = hasSelectedRows
+        navigationItem.title = hasSelectedRows ? String(format: LocalizingHelper.selectedNumberOfItems, numberOfSelectedRows) : LocalizingHelper.appTitle
     }
 }
 
@@ -206,9 +307,20 @@ extension BreadListViewController {
 // MARK: - UITableViewDelegate
 extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            updateViewsInEditMode(withCount: tableView.indexPathsForSelectedRows?.count ?? 0)
+            return
+        }
         let breadVC = BreadViewController(context: viewContext, bread: fetchedResultsController.object(at: indexPath))
         navigationController?.pushViewController(breadVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            updateViewsInEditMode(withCount: tableView.indexPathsForSelectedRows?.count ?? 0)
+            return
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -219,7 +331,7 @@ extension BreadListViewController: UITableViewDelegate {
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] _, _, completionHandler in
             guard let self = self else { return }
             let willBeDeletedObjectID = self.fetchedResultsController.object(at: indexPath).objectID
-            self.coreDataStack.deleteObject(with: willBeDeletedObjectID)
+            self.coreDataStack.deleteAndSaveObjects(of: [willBeDeletedObjectID])
         }
         deleteAction.image = UIImage(systemName: "trash")
         deleteAction.backgroundColor = .systemRed

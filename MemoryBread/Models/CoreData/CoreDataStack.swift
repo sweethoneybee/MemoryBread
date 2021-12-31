@@ -60,13 +60,18 @@ final class CoreDataStack {
 
 // MARK: - Internal
 extension CoreDataStack {
-    func deleteObject(with objectID: NSManagedObjectID) {
-        let object = deleteContext.object(with: objectID)
-        deleteContext.delete(object)
-        do {
-            try deleteContext.save()
-        } catch let nserror as NSError {
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+    func deleteAndSaveObjects(of objectIDs: [NSManagedObjectID]) {
+        let deleteContext = deleteContext
+        deleteContext.perform {
+            objectIDs.forEach { id in
+                let object = deleteContext.object(with: id)
+                deleteContext.delete(object)
+            }
+            do {
+                try deleteContext.save()
+            } catch let nserror as NSError {
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
         }
     }
 }

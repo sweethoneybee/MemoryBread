@@ -41,3 +41,7 @@
 
 "importing_done" = "불러오기 완료";
 "created_number_of_bread" = "총 %d개의 암기빵을 성공적으로 생성하였습니다.";
+
+"delete" = "삭제";
+"delete_all" = "모두 삭제";
+"selected_number_of_items" = "%d개 선택됨";
