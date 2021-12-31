@@ -180,15 +180,23 @@ extension BreadListViewController {
         }
         
         isAdding = true
-        let bread = Bread.makeBasicBread(context: viewContext)
-        do {
-            try viewContext.save()
-        } catch let nserror as NSError {
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        let writeContext = coreDataStack.writeContext
+        writeContext.perform {
+            let newBread = Bread.makeBasicBread(context: writeContext)
+            do {
+                try writeContext.save()
+            } catch let nserror as NSError {
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+            DispatchQueue.main.async { [weak self] in
+                if let self = self,
+                   let bread = try? self.viewContext.existingObject(with: newBread.objectID) as? Bread {
+                    let breadVC = BreadViewController(context: self.viewContext, bread: bread)
+                    self.navigationController?.pushViewController(breadVC, animated: true)
+                    self.isAdding = false
+                }
+            }
         }
-        let breadViewController = BreadViewController(context: viewContext, bread: bread)
-        navigationController?.pushViewController(breadViewController, animated: true)
-        isAdding = false
     }
     
     @objc
