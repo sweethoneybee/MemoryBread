@@ -60,7 +60,6 @@ final class RemoteDriveCell: UITableViewCell {
         $0.isHidden = true
         $0.contentEdgeInsets = UIConstants.buttonInsets
         $0.setTitle(LocalizingHelper.signOut, for: .normal)
-        $0.addTarget(self, action: #selector(signOutButtonTapped), for: .touchUpInside)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -85,6 +84,9 @@ final class RemoteDriveCell: UITableViewCell {
         mainContainerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        // MARK: - Set target-action
+        signOutButton.addTarget(self, action: #selector(signOutButtonTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {

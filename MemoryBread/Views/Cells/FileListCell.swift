@@ -76,7 +76,6 @@ final class FileListCell: UITableViewCell {
     
     private var cancelButton = FileListCell.makeButton().then {
         $0.setTitle(LocalizingHelper.cancel, for: .normal)
-        $0.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
     
     private var progressFileSizeLabel = UILabel().then {
@@ -88,7 +87,6 @@ final class FileListCell: UITableViewCell {
     
     private var openButton = FileListCell.makeButton().then {
         $0.setTitle(LocalizingHelper.open, for: .normal)
-        $0.addTarget(self, action: #selector(openButtonTapped), for: .touchUpInside)
     }
 
     private var folderIndicator = UIImageView().then {
@@ -131,6 +129,10 @@ final class FileListCell: UITableViewCell {
         folderIndicator.snp.makeConstraints { make in
             make.size.equalTo(UIConstants.folderIndicatorSize)
         }
+        
+        // MARK: - Set target-action
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        openButton.addTarget(self, action: #selector(openButtonTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
