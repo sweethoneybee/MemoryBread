@@ -140,16 +140,11 @@ extension DriveFileListViewController {
             }
             
             if let error = error {
-                print("파일 리스트 불러오는 중 에러=\(error)")
-                let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
-                    self?.navigationController?.popViewController(animated: true)
-                }
-                self.present(alert, animated: true)
+                self.handle(error)
                 return
             }
             
             guard let fileList = fetchedFileList else {
-                print("파일리스트 받은 게 없음")
                 let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
                     self?.navigationController?.popViewController(animated: true)
                 }
@@ -180,16 +175,11 @@ extension DriveFileListViewController {
             }
             
             if let error = error {
-                print("파일 리스트 불러오는 중 에러=\(error)")
-                let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
-                    self?.navigationController?.popViewController(animated: true)
-                }
-                self.present(alert, animated: true)
+                self.handle(error)
                 return
             }
             
             guard let fileList = fetchedFileList else {
-                print("파일리스트 받은 게 없음")
                 let alert = BasicAlert.makeErrorAlert(message: LocalizingHelper.failedToGetFileList) { [weak self] _ in
                     self?.navigationController?.popViewController(animated: true)
                 }
@@ -201,6 +191,29 @@ extension DriveFileListViewController {
             self.files.append(contentsOf: FileObject.makeFileObjects(fileList))
             self.updateUI(isFileExist: self.files.count != 0)
         }
+    }
+    
+    private func handle(_ error: GDDownloaderError) {
+        let errorMessage = error.localizedDescription
+        
+        let errorAlert: UIAlertController
+        switch error {
+        case .notConnectedToTheInternet:
+            errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
+        case .hasNoPermissionToDriveReadOnly:
+            NotificationCenter.default.post(name: .noPermissionToGoogleDriveReadOnly, object: nil)
+            errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
+        case .unknown:
+            errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
+        }
+        
+        present(errorAlert, animated: true)
     }
 }
 

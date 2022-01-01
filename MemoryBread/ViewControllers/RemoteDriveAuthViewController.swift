@@ -27,9 +27,11 @@ final class RemoteDriveAuthViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(RemoteDriveCell.self, forCellReuseIdentifier: RemoteDriveCell.reuseIdentifier)
 
-        model.changedDatasource = { [weak self] in
+        model.driveAuthStorageHasChanged = { [weak self] in
             self?.tableView.reloadData()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(noPermissionToGoogleDriveReadOnly), name: .noPermissionToGoogleDriveReadOnly, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +46,14 @@ final class RemoteDriveAuthViewController: UIViewController {
     init(context: NSManagedObjectContext) {
         self.writeContext = context
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    // Notification Method
+    @objc
+    private func noPermissionToGoogleDriveReadOnly() {
+        let googleDriveIndex = DriveDomain.googleDrive.rawValue
+        model.signOut(at: googleDriveIndex)
+        reloadCell(at: IndexPath(row: googleDriveIndex, section: 0))
     }
 }
 

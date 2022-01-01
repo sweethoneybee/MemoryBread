@@ -57,7 +57,7 @@ final class GDDownloader {
 extension GDDownloader {
     func fetchFileList(atDirectory root: String?,
                        usingToken nextPageToken: String? = nil,
-                       onCompleted: ((String?, [GTLRDrive_File]?, Error?)->Void)? = nil) {
+                       onCompleted: ((String?, [GTLRDrive_File]?, GDDownloaderError?)->Void)? = nil) {
         let query = GTLRDriveQuery_FilesList.query()
         query.pageSize = queryPageSize
         query.pageToken = nextPageToken
@@ -69,10 +69,22 @@ extension GDDownloader {
         query.q = "(\(mimeType)) and \(path) and \(trashed)"
         query.orderBy = "folder, name"
         
-        // TODO: 에러처리 개선 필요
         fileListTicket = service.executeQuery(query) { ticket, result, error in
-            if let error = error {
-                onCompleted?(nil, nil, error)
+            if let urlError = error as? URLError {
+                if urlError.code == .notConnectedToInternet {
+                    onCompleted?(nil, nil, .notConnectedToTheInternet)
+                } else {
+                    onCompleted?(nil, nil, .unknown)
+                }
+                return
+            }
+            
+            if let nserror = error as NSError? {
+                if nserror.code == 403 {
+                    onCompleted?(nil, nil, .hasNoPermissionToDriveReadOnly)
+                } else {
+                    onCompleted?(nil, nil, .unknown)
+                }
                 return
             }
             

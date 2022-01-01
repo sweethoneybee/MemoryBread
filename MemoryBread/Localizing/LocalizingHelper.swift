@@ -47,4 +47,8 @@ struct LocalizingHelper {
     static let delete = "delete".localized
     static let deleteAll = "delete_all".localized
     static let selectedNumberOfItems = "selected_number_of_items".localized
+    
+    static let errorNotConnectedToTheInternet = "error_not_connected_to_the_internet".localized
+    static let errorHasNoPermissionToGoogleDriveReadOnly = "error_has_no_permission_to_google_drive_read_only".localized
+    static let errorUnknown = "error_unknown".localized
 }

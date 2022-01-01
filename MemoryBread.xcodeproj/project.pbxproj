@@ -28,6 +28,8 @@
 		405EC185276738C60031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
 		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
+		409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB152780744C00F00E52 /* GDDownloaderError.swift */; };
+		409BFB1827808FB800F00E52 /* Notification.Name+RemoteDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9663276B12DC00EB8220 /* APIKeys.swift */; };
 		409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9666276B152300EB8220 /* DriveAuthModel.swift */; };
@@ -81,6 +83,8 @@
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
 		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
+		409BFB152780744C00F00E52 /* GDDownloaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloaderError.swift; sourceTree = "<group>"; };
+		409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+RemoteDrive.swift"; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		409D9663276B12DC00EB8220 /* APIKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		409D9666276B152300EB8220 /* DriveAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthModel.swift; sourceTree = "<group>"; };
@@ -141,6 +145,7 @@
 		40245CFE27293547002E84A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				409BFB142780743700F00E52 /* Errors */,
 				40D87E98277B43EB00CCB28D /* CoreData */,
 				40D91BF027709E41002E588D /* DataStructure */,
 				409D9665276B14F100EB8220 /* DriveAuthorization */,
@@ -168,7 +173,6 @@
 				40D91BF12773474A002E588D /* DriveFileHelper.swift */,
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
 				405EC17D27661E200031C19D /* ExcelReader.swift */,
-				40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */,
 				409CC8FD27327311009B9AA1 /* UserManager.swift */,
 			);
 			path = Helper;
@@ -182,6 +186,15 @@
 				405EC1792766086E0031C19D /* FileObject.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		409BFB142780743700F00E52 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */,
+				409BFB152780744C00F00E52 /* GDDownloaderError.swift */,
+			);
+			path = Errors;
 			sourceTree = "<group>";
 		};
 		409D9665276B14F100EB8220 /* DriveAuthorization */ = {
@@ -314,6 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				40F92B88272C3E920085224E /* UICollectionView+Selection.swift */,
+				409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */,
 				40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */,
 				40F1D607273D70320053AB73 /* String+Helper.swift */,
 			);
@@ -466,6 +480,7 @@
 			files = (
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
+				409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
@@ -480,6 +495,7 @@
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,
+				409BFB1827808FB800F00E52 /* Notification.Name+RemoteDrive.swift in Sources */,
 				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */,
 				40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */,
 				40D65711276DEA210059A595 /* FileListCell.swift in Sources */,

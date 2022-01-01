@@ -17,6 +17,7 @@ final class DriveAuthModel {
     private var authInfos: [DriveAuthInfo] = {
         let storage = DriveAuthStorage.shared
 
+        // append DriveAuthInfo manually in code to connect new drive service.
         var arr: [DriveAuthInfo] = []
         arr.append(
             DriveAuthInfo(
@@ -30,12 +31,12 @@ final class DriveAuthModel {
     }() {
         didSet {
             DispatchQueue.main.async {
-                self.changedDatasource?()
+                self.driveAuthStorageHasChanged?()
             }
         }
     }
     
-    var changedDatasource: (() -> ())?
+    var driveAuthStorageHasChanged: (() -> ())?
     var observers: [NSKeyValueObservation] = []
     
     init() {
