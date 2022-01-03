@@ -71,10 +71,13 @@ extension GDDownloader {
         
         fileListTicket = service.executeQuery(query) { ticket, result, error in
             if let urlError = error as? URLError {
-                if urlError.code == .notConnectedToInternet {
+                switch urlError.code {
+                case .notConnectedToInternet:
                     onCompleted?(nil, nil, .notConnectedToTheInternet)
-                } else {
-                    onCompleted?(nil, nil, .unknown)
+                case .dataNotAllowed:
+                    onCompleted?(nil, nil, .dataNotAllowed)
+                default:
+                    onCompleted?(nil, nil, .unknownURLError(urlError))
                 }
                 return
             }
@@ -83,7 +86,7 @@ extension GDDownloader {
                 if nserror.code == 403 {
                     onCompleted?(nil, nil, .hasNoPermissionToDriveReadOnly)
                 } else {
-                    onCompleted?(nil, nil, .unknown)
+                    onCompleted?(nil, nil, .unknown(nserror))
                 }
                 return
             }

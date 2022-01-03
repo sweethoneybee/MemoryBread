@@ -46,6 +46,8 @@
 "delete_all" = "Delete All";
 "selected_number_of_items" = "%d Selected";
 
-"error_not_connected_to_the_internet" = "Not connected to the internet. Please check your internet.";
+"error_not_connected_to_the_internet" = "Not connected to the internet. Please check your internet connection.";
+"data_not_allowed" = "Data connection is not allowed. Please ensure your cellular data is on.";
 "error_has_no_permission_to_google_drive_read_only" = "No permission to Google Drive. Please permit authorization by sign in again.";
-"error_unknown" = "An unknown error occurred. error code=%d";
+"error_unknown_url_error" = "An unknown error occurred during accessing the internet. Error code=%d";
+"error_unknown" = "An unknown error occurred. Error code=%d";

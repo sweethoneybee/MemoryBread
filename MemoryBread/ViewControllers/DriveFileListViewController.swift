@@ -202,8 +202,16 @@ extension DriveFileListViewController {
             errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
                 self?.navigationController?.popToRootViewController(animated: true)
             }
+        case .dataNotAllowed:
+            errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
         case .hasNoPermissionToDriveReadOnly:
             NotificationCenter.default.post(name: .noPermissionToGoogleDriveReadOnly, object: nil)
+            errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
+        case .unknownURLError:
             errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
                 self?.navigationController?.popToRootViewController(animated: true)
             }

@@ -9,8 +9,10 @@ import Foundation
 
 enum GDDownloaderError: Error {
     case notConnectedToTheInternet
+    case dataNotAllowed
     case hasNoPermissionToDriveReadOnly
-    case unknown
+    case unknownURLError(URLError)
+    case unknown(NSError)
 }
 
 extension GDDownloaderError: LocalizedError {
@@ -18,10 +20,14 @@ extension GDDownloaderError: LocalizedError {
         switch self {
         case .notConnectedToTheInternet:
             return LocalizingHelper.errorNotConnectedToTheInternet
+        case .dataNotAllowed:
+            return LocalizingHelper.dataNotAllowed
         case .hasNoPermissionToDriveReadOnly:
             return LocalizingHelper.errorHasNoPermissionToGoogleDriveReadOnly
-        case .unknown:
-            return String(format: LocalizingHelper.errorUnknown, (self as NSError).code)
+        case .unknownURLError(let urlError):
+            return String(format: LocalizingHelper.errorUnknownURLError, urlError.errorCode)
+        case .unknown(let nserror):
+            return String(format: LocalizingHelper.errorUnknown, nserror.code)
         }
     }
 }
