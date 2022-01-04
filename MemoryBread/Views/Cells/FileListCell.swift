@@ -15,7 +15,7 @@ protocol FileListCellDelegate: AnyObject {
 
 final class FileListCell: UITableViewCell {
     struct UIConstants {
-        static let contentViewInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        static let containerViewInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
         static let contentViewSpacing = CGFloat(5)
         static let buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         static let iconImageSize = CGSize(width: 30, height: 30)
@@ -30,7 +30,7 @@ final class FileListCell: UITableViewCell {
         $0.axis = .horizontal
         $0.alignment = .center
         $0.distribution = .fill
-        $0.layoutMargins = UIConstants.contentViewInsets
+        $0.directionalLayoutMargins = UIConstants.containerViewInsets
         $0.spacing = UIConstants.contentViewSpacing
         $0.isLayoutMarginsRelativeArrangement = true
     }
