@@ -83,7 +83,7 @@ extension GDDownloader {
             }
             
             if let nserror = error as NSError? {
-                if nserror.code == 403 {
+                if nserror.code == GTMSessionFetcherStatus.forbidden.rawValue {
                     onCompleted?(nil, nil, .hasNoPermissionToDriveReadOnly)
                 } else {
                     onCompleted?(nil, nil, .unknown(nserror))
