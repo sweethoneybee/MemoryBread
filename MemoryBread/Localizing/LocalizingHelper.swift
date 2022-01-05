@@ -53,4 +53,12 @@ struct LocalizingHelper {
     static let errorHasNoPermissionToGoogleDriveReadOnly = "error_has_no_permission_to_google_drive_read_only".localized
     static let errorUnknownURLError = "error_unknown_url_error".localized
     static let errorUnknown = "error_unknown".localized
+    
+    static let errorSignCanceled = "error_sign_canceled".localized
+    static let errorKeychain = "error_keychain".localized
+    static let errorNoAuthInKeyChain = "error_no_auth_in_keychain".localized
+    static let errorScopesAlreadyGranted = "error_scopes_already_granted".localized
+    static let errorNoCurrentUser = "error_no_current_user".localized
+    static let errorEMM = "error_emm".localized
+    static let errorAccessDenied = "error_access_denied".localized
 }

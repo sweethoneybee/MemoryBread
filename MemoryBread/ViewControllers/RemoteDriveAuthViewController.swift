@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import CoreData
+import GoogleSignIn
 
 final class RemoteDriveAuthViewController: UIViewController {
     // MARK: - Views
@@ -131,22 +132,45 @@ extension RemoteDriveAuthViewController: UITableViewDelegate {
                 return
             }
             
-            // TODO: 로그인 에러 선언하여 처리 필요
-            if let error = error {
-//                switch error {
-//                case press cancel:
-//                    show alert "you press cancel"
-//                case error while signing:
-//                    show alert "error whilte sign"
-//                case sign error:
-//                    show alert "google sign error"
-//                }
-                print("로그인실패에러=\(error)")
+            if let error = error as NSError? {
+                self.handle(error)
                 return
             }
             
             self.presentFileListViewController(of: self.model.drive(at: index))
         }
+    }
+}
+
+// MARK: - Error handling
+extension RemoteDriveAuthViewController {
+    private func handle(_ error: NSError) {
+        
+        let errorMessage: String
+        switch error {
+        case GIDSignInError.canceled:
+            errorMessage = LocalizingHelper.errorSignCanceled
+        case GIDSignInError.keychain:
+            errorMessage = LocalizingHelper.errorKeychain
+        case GIDSignInError.hasNoAuthInKeychain:
+            errorMessage = LocalizingHelper.errorNoAuthInKeyChain
+        case GIDSignInError.scopesAlreadyGranted:
+            errorMessage = LocalizingHelper.errorScopesAlreadyGranted
+        case GIDSignInError.noCurrentUser:
+            errorMessage = LocalizingHelper.errorNoCurrentUser
+        case GIDSignInError.EMM:
+            errorMessage = LocalizingHelper.errorEMM
+        default:
+            /// OIDErrorCodeOAuth.accessDenied
+            if error.code == -1 {
+                errorMessage = LocalizingHelper.errorAccessDenied
+                break
+            }
+            errorMessage = String(format: LocalizingHelper.errorUnknown, error.code)
+        }
+        
+        let alert = BasicAlert.makeErrorAlert(message: errorMessage)
+        present(alert, animated: true)
     }
 }
 

@@ -9,10 +9,6 @@ import Foundation
 import GoogleSignIn
 
 final class DriveAuthModel {
-    enum SignError: Error {
-        case userCancel
-        case thirdPartyError
-    }
     
     private var authInfos: [DriveAuthInfo] = {
         let storage = DriveAuthStorage.shared
@@ -66,7 +62,7 @@ final class DriveAuthModel {
             let configure = GIDConfiguration(clientID: APIKeys.googleDriveClientID)
             GIDSignIn.sharedInstance.signIn(with: configure, additionalScopes: [kGTLRAuthScopeDriveReadonly], presenting: modalView) { user, error in
                 if error != nil {
-                    completionHandler(SignError.userCancel)
+                    completionHandler(error)
                     return
                 }
                 DriveAuthStorage.shared.googleDrive = user?.authentication.fetcherAuthorizer()

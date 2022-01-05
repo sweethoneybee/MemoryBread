@@ -51,3 +51,11 @@
 "error_has_no_permission_to_google_drive_read_only" = "No permission to Google Drive. Please permit authorization by sign in again.";
 "error_unknown_url_error" = "An unknown error occurred during accessing the internet. Error code=%d";
 "error_unknown" = "An unknown error occurred. Error code=%d";
+
+"error_sign_canceled" = "The requested sign has been canceled.";
+"error_keychain" = "Something wrong with encryption. Please try to sign in again.";
+"error_no_auth_in_keychain" = "Invalid signing info. Please try to sign in again.";
+"error_scopes_already_granted" = "The requested scopes are already granted. Please try to sign in again.";
+"error_no_current_user" = "There is no current user. Please try to sign in again.";
+"error_emm" = "Something wrong with EMM. Please try to sign in again.";
+"error_access_denied" = "Access denied.";
