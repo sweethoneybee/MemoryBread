@@ -239,7 +239,8 @@ extension DriveFileListViewController: UITableViewDataSource {
         
         let download = downloader?.activeDownload(forKey: file.id)
         let fileExists = downloader?.isDownloaded(file) ?? false
-        cell.configure(using: file, download: download, isExist: fileExists)
+        let downloadSucceeds = !(downloader?.failedToDownload(file) ?? false)
+        cell.configure(using: file, download: download, isExistFile: fileExists, downloadSucceeds: downloadSucceeds)
         cell.delegate = self
         return cell
     }

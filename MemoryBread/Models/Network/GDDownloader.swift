@@ -16,7 +16,7 @@ protocol GDDownloaderDelegate: AnyObject {
 final class GDDownloader {
     deinit {
         stopFetchingFileList()
-        activeDownload.values.forEach {
+        activeDownloads.values.forEach {
             $0.stopFetching()
         }
         DispatchQueue.global(qos: .background).async { [filesToBeDeleted] in
@@ -48,9 +48,10 @@ final class GDDownloader {
     /// Dictionary for guarding duplicate fetching
     /// Key is a GTLRDrive_File.id. Refer to
     /// [here](https://developers.google.com/drive/api/v3/reference/files)
-    private var activeDownload: [String: GDDownload] = [:]
+    private var activeDownloads: [String: GDDownload] = [:]
     
     private var filesToBeDeleted: Set<FileObject> = []
+    private var downloadFailedFiles: Set<FileObject> = []
 }
 
 // MARK: - File List Fetching
@@ -106,7 +107,7 @@ extension GDDownloader {
 // MARK: - File Fetching
 extension GDDownloader {
     func fetch(_ file: FileObject, to destinationURL: URL) {
-        guard activeDownload[file.id] == nil else {
+        guard activeDownloads[file.id] == nil else {
             return
         }
         
@@ -121,29 +122,32 @@ extension GDDownloader {
             download.totalBytesWritten = totalBytesWritten
             self?.delegate?.downloadProgress(file, totalBytesWritten: totalBytesWritten)
         }
-        activeDownload[file.id] = download
-        // TODO: 에러처리 개선 필요
+        
+        activeDownloads[file.id] = download
         download.beginFetch { [weak self] data, error in
+            self?.activeDownloads.removeValue(forKey: file.id)
+    
             if let error = error {
-                self?.activeDownload.removeValue(forKey: file.id)
+                self?.downloadFailedFiles.insert(file)
                 self?.delegate?.finishedDownload(file, error: error)
+                return
             }
             
-            self?.activeDownload.removeValue(forKey: file.id)
+            self?.downloadFailedFiles.remove(file)
             self?.filesToBeDeleted.insert(file)
             self?.delegate?.finishedDownload(file, error: nil)
         }
     }
     
     func stopFetching(_ file: FileObject) {
-        if let download = activeDownload[file.id] {
-            activeDownload.removeValue(forKey: file.id)
+        if let download = activeDownloads[file.id] {
+            activeDownloads.removeValue(forKey: file.id)
             download.stopFetching()
         }
     }
     
     func activeDownload(forKey fileId: String) -> GDDownload? {
-        return activeDownload[fileId]
+        return activeDownloads[fileId]
     }
     
     func isDownloaded(_ file: FileObject) -> Bool {
@@ -152,5 +156,9 @@ extension GDDownloader {
     
     func isDownloading(_ file:FileObject) -> Bool {
         return activeDownload(forKey: file.id) != nil
+    }
+    
+    func failedToDownload(_ file: FileObject) -> Bool {
+        return downloadFailedFiles.contains(file)
     }
 }

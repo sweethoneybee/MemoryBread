@@ -52,11 +52,26 @@ final class FileListCell: UITableViewCell {
         $0.lineBreakMode = .byTruncatingTail
     }
     
+    private var fileSizeContainerView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .fill
+        $0.spacing = UIConstants.contentViewSpacing
+    }
+    
     private var fileSizeLabel = UILabel().then {
         $0.font = .preferredFont(forTextStyle: .caption1)
         $0.textAlignment = .left
         $0.numberOfLines = 1
         $0.lineBreakMode = .byTruncatingTail
+    }
+    
+    private var downloadFailedLabel = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 12, weight: .ultraLight)
+        $0.textAlignment = .left
+        $0.numberOfLines = 1
+        $0.lineBreakMode = .byTruncatingTail
+        $0.isHidden = true
+        $0.text = LocalizingHelper.downloadFailed
     }
     
     private var progressView = UIProgressView().then {
@@ -107,14 +122,17 @@ final class FileListCell: UITableViewCell {
         mainContainerView.addArrangedSubview(folderIndicator)
         
         fileContainerView.addArrangedSubview(fileNameLabel)
-        fileContainerView.addArrangedSubview(fileSizeLabel)
+        fileContainerView.addArrangedSubview(fileSizeContainerView)
         fileContainerView.addArrangedSubview(progressView)
         fileContainerView.addArrangedSubview(progressFileSizeLabel)
 
+        fileSizeContainerView.addArrangedSubview(fileSizeLabel)
+        fileSizeContainerView.addArrangedSubview(downloadFailedLabel)
         
         // MARK: - layouts
         fileNameLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         fileSizeLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
+        downloadFailedLabel.setContentHuggingPriority(.init(rawValue: 1), for: .horizontal)
         progressView.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         progressFileSizeLabel.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
         
@@ -141,17 +159,18 @@ final class FileListCell: UITableViewCell {
 }
 
 extension FileListCell {
-    func configure(using file: FileObject, download: GDDownload?, isExist: Bool) {
+    func configure(using file: FileObject, download: GDDownload?, isExistFile fileExists: Bool, downloadSucceeds: Bool) {
         iconImageView.image = file.mimeType.image
         iconImageView.tintColor = file.mimeType == .folder ? .systemTeal : .systemGreen
         fileNameLabel.text = file.name
         
         let isDownloading = download != nil ? true : false
-        fileSizeLabel.isHidden = (file.mimeType == .folder) || isDownloading
+        fileSizeContainerView.isHidden = (file.mimeType == .folder) || isDownloading
+        downloadFailedLabel.isHidden = downloadSucceeds
         progressView.isHidden = !isDownloading
         progressFileSizeLabel.isHidden = !isDownloading
         cancelButton.isHidden = !isDownloading
-        openButton.isHidden = isDownloading || !isExist
+        openButton.isHidden = isDownloading || !fileExists
         
         folderIndicator.isHidden = file.mimeType != .folder
         

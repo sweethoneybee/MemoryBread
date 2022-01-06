@@ -32,6 +32,7 @@ struct LocalizingHelper {
     
     static let download = "download".localized
     static let open = "open".localized
+    static let downloadFailed = "download_failed".localized
     
     static let creatingBread = "creating_bread".localized
     static let creatingBreadFromFile = "creating_bread_from_file".localized
