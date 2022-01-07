@@ -67,6 +67,8 @@ extension RemoteDriveAuthViewController {
         view.addSubview(tableView)
         
         configureLayouts()
+        
+        addBarButtonItem()
     }
     
     private func configureLayouts() {
@@ -74,12 +76,30 @@ extension RemoteDriveAuthViewController {
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
+    
+    private func addBarButtonItem() {
+        let cancelBarButtonItem = UIBarButtonItem(
+            title: LocalizingHelper.cancel,
+            style: .plain,
+            target: self,
+            action: #selector(cancelBarButtonTapped)
+        )
+        navigationItem.leftBarButtonItem = cancelBarButtonItem
+    }
 }
 
 // MARK: - Update Views
 extension RemoteDriveAuthViewController {
     private func reloadCell(at indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .none)
+    }
+}
+
+// MARK: - Target Action
+extension RemoteDriveAuthViewController {
+    @objc
+    private func cancelBarButtonTapped() {
+        dismiss(animated: true)
     }
 }
 
