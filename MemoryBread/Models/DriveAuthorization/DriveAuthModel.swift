@@ -36,14 +36,14 @@ final class DriveAuthModel {
     var observers: [NSKeyValueObservation] = []
     
     init() {
-        observers.append(DriveAuthStorage.shared.observe(\.googleDrive, options: [.new]) { _, change in
+        observers.append(DriveAuthStorage.shared.observe(\.googleDrive, options: [.new]) { [weak self] _, change in
             let index = DriveDomain.googleDrive.rawValue
             if let newValue = change.newValue,
                let auth = newValue {
-                self.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: true, userEmail: auth.userEmail)
+                self?.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: true, userEmail: auth.userEmail)
                 return
             }
-            self.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: false, userEmail: nil)
+            self?.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: false, userEmail: nil)
         })
     }
     
