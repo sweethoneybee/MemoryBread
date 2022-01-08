@@ -47,6 +47,7 @@ struct LocalizingHelper {
     
     static let delete = "delete".localized
     static let deleteAll = "delete_all".localized
+    static let deleteSelectedMemoryBread = "delete_selected_memory_bread".localized
     static let selectedNumberOfItems = "selected_number_of_items".localized
     
     static let errorNotConnectedToTheInternet = "error_not_connected_to_the_internet".localized

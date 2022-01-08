@@ -219,20 +219,26 @@ extension BreadListViewController {
     @objc
     func deleteButtonTouched() {
         if let rows = tableView.indexPathsForSelectedRows {
-            let objectIDs = rows.map {
-                fetchedResultsController.object(at: $0).objectID
+            let alertSheet = BasicAlert.makeDestructiveAlertSheet(alertTitle: String(format: LocalizingHelper.selectedNumberOfItems, rows.count), destructiveTitle: LocalizingHelper.deleteSelectedMemoryBread) { [weak self] _ in
+                let objectIDs = rows.compactMap {
+                    self?.fetchedResultsController.object(at: $0).objectID
+                }
+                self?.coreDataStack.deleteAndSaveObjects(of: objectIDs)
+                self?.setTableViewEditing(false, animated: true)
             }
-            coreDataStack.deleteAndSaveObjects(of: objectIDs)
-            setTableViewEditing(false, animated: true)
+            present(alertSheet, animated: true)
         }
     }
     
     @objc
     func deleteAllButtonTouched() {
-        if let objectIDs = fetchedResultsController.fetchedObjects?.map({ $0.objectID }) {
-            coreDataStack.deleteAndSaveObjects(of: objectIDs)
-            setTableViewEditing(false, animated: true)
+        let actionSheet = BasicAlert.makeDestructiveAlertSheet(destructiveTitle: LocalizingHelper.deleteAll) { [weak self] _ in
+            if let objectIDs = self?.fetchedResultsController.fetchedObjects?.map({ $0.objectID }) {
+                self?.coreDataStack.deleteAndSaveObjects(of: objectIDs)
+                self?.setTableViewEditing(false, animated: true)
+            }
         }
+        present(actionSheet, animated: true)
     }
 }
 

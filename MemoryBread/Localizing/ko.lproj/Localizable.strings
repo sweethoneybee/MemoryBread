@@ -45,6 +45,7 @@
 
 "delete" = "삭제";
 "delete_all" = "모두 삭제";
+"delete_selected_memory_bread" = "선택한 암기빵 삭제";
 "selected_number_of_items" = "%d개 선택됨";
 
 "error_not_connected_to_the_internet" = "인터넷에 연결되어 있지 않습니다. 데이터 연결 상태를 확인해주세요.";

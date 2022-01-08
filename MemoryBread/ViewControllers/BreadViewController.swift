@@ -189,10 +189,12 @@ extension BreadViewController {
     }
     
     private func configureNavigation() {
-        editContentButtonItem = UIBarButtonItem(image: UIImage(systemName: "note.text"),
-                                              style: .plain,
-                                              target: self,
-                                              action: #selector(showEditContentViewController))
+        editContentButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "square.and.pencil"),
+            style: .plain,
+            target: self,
+            action: #selector(showEditContentViewController)
+        )
         navigationItem.rightBarButtonItems = [editButtonItem, editContentButtonItem]
         navigationItem.largeTitleDisplayMode = .never
 
