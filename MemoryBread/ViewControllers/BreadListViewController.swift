@@ -85,6 +85,7 @@ extension BreadListViewController {
         tableView = UITableView(frame: .zero, style: .insetGrouped).then {
             $0.allowsMultipleSelectionDuringEditing = true
             $0.tintColor = .systemPink
+            $0.contentInset.bottom = 40
         }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: BreadListViewController.reuseIdentifier)
         view.addSubview(tableView)
@@ -248,9 +249,10 @@ extension BreadListViewController {
         tableView.setEditing(editing, animated: animated)
         updateViewsInEditMode(withCount: 0)
         if animated {
-            UIView.animate(withDuration: 0.2) {
+            let animation = UIViewPropertyAnimator(duration: 0.2, curve: .easeOut) {
                 self.updateUI(whenEditing: editing)
             }
+            animation.startAnimation()
         } else {
             updateUI(whenEditing: editing)
         }
