@@ -27,6 +27,15 @@ final class BreadListViewController: UIViewController {
     private var deleteButton: UIButton!
     private var deleteAllButton: UIButton!
     
+    private var normalRightBarButtonItems: [UIBarButtonItem] {
+//        return [moresItem, remoteDriveItem]
+        return [moresItem]
+    }
+    
+    private var editRightBarButtonItems: [UIBarButtonItem] {
+        return [doneItem]
+    }
+    
     // MARK: - States
     private var diffableDataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
     private var isAdding = false
@@ -170,7 +179,7 @@ extension BreadListViewController {
             action: #selector(doneItemTouched)
         )
         
-        navigationItem.rightBarButtonItems = [moresItem, remoteDriveItem]
+        navigationItem.rightBarButtonItems = normalRightBarButtonItems
     }
     
     // MARK: - UIButton Target Actions
@@ -266,11 +275,11 @@ extension BreadListViewController {
         if editing {
             bottomToolbar.layer.opacity = 1
             addBreadButton.layer.opacity = 0
-            navigationItem.rightBarButtonItems = [doneItem]
+            navigationItem.rightBarButtonItems = editRightBarButtonItems
         } else {
             bottomToolbar.layer.opacity = 0
             addBreadButton.layer.opacity = 1
-            navigationItem.rightBarButtonItems = [moresItem, remoteDriveItem]
+            navigationItem.rightBarButtonItems = normalRightBarButtonItems
         }
     }
     
