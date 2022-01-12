@@ -28,8 +28,7 @@ final class BreadListViewController: UIViewController {
     private var deleteAllButton: UIButton!
     
     private var normalRightBarButtonItems: [UIBarButtonItem] {
-//        return [moresItem, remoteDriveItem]
-        return [moresItem]
+        return [moresItem, remoteDriveItem]
     }
     
     private var editRightBarButtonItems: [UIBarButtonItem] {
