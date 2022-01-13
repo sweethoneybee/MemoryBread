@@ -9,10 +9,14 @@ import UIKit
 import SnapKit
 
 protocol RemoteDriveCellDelegate: AnyObject {
+    func signInButtonTapped(_ cell: RemoteDriveCell)
     func signOutButtonTapped(_ cell: RemoteDriveCell)
 }
 
 final class RemoteDriveCell: UITableViewCell {
+    static let googleSignInLightNormalImage = UIImage(named: "btn_google_signin_light_normal_web")
+    static let googleSignInLightPressedImage = UIImage(named: "btn_google_signin_light_pressed_web")
+    
     struct UIConstants {
         static let containerViewInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
         static let contentViewSpacing = CGFloat(5)
@@ -40,25 +44,28 @@ final class RemoteDriveCell: UITableViewCell {
     }
     
     private var domainNameLabel = UILabel().then {
-        $0.font = .preferredFont(forTextStyle: .title3)
+        $0.font = .systemFont(ofSize: 16, weight: .regular)
         $0.textAlignment = .left
         $0.numberOfLines = 1
         $0.lineBreakMode = .byTruncatingTail
     }
     
     private var userEmailLabel = UILabel().then {
-        $0.font = .preferredFont(forTextStyle: .caption1)
+        $0.font = .systemFont(ofSize: 12, weight: .regular)
         $0.textAlignment = .left
         $0.numberOfLines = 1
         $0.lineBreakMode = .byTruncatingTail
     }
 
-    private var signOutButton = UIButton().then {
+    private var signInButton = UIButton()
+    
+    private var signOutButton = UIButton(type: .system).then {
         $0.tintColor = .white
         $0.backgroundColor = .systemPink
         $0.layer.cornerRadius = 5
         $0.isHidden = true
         $0.contentEdgeInsets = UIConstants.buttonInsets
+        $0.titleLabel?.font = .preferredFont(forTextStyle: .title3)
         $0.setTitle(LocalizingHelper.signOut, for: .normal)
     }
     
@@ -69,6 +76,7 @@ final class RemoteDriveCell: UITableViewCell {
 
         mainContainerView.addArrangedSubview(iconImageView)
         mainContainerView.addArrangedSubview(titleContainerView)
+        mainContainerView.addArrangedSubview(signInButton)
         mainContainerView.addArrangedSubview(signOutButton)
         
         titleContainerView.addArrangedSubview(domainNameLabel)
@@ -86,6 +94,7 @@ final class RemoteDriveCell: UITableViewCell {
         }
         
         // MARK: - Set target-action
+        signInButton.addTarget(self, action: #selector(signInButtonTapped), for: .touchUpInside)
         signOutButton.addTarget(self, action: #selector(signOutButtonTapped), for: .touchUpInside)
     }
     
@@ -100,7 +109,20 @@ extension RemoteDriveCell {
         domainNameLabel.text = auth.domain.name
         userEmailLabel.text = auth.userEmail
         
+        switch auth.domain {
+        case .googleDrive:
+            signInButton.setBackgroundImage(RemoteDriveCell.googleSignInLightNormalImage, for: .normal)
+            signInButton.setBackgroundImage(RemoteDriveCell.googleSignInLightPressedImage, for: .selected)
+            signInButton.setBackgroundImage(RemoteDriveCell.googleSignInLightPressedImage, for: .highlighted)
+        }
+
+        signInButton.isHidden = auth.isSignIn
         signOutButton.isHidden = !auth.isSignIn
+    }
+    
+    @objc
+    func signInButtonTapped() {
+        delegate?.signInButtonTapped(self)
     }
     
     @objc

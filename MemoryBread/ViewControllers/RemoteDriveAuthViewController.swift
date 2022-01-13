@@ -63,7 +63,9 @@ extension RemoteDriveAuthViewController {
     private func setViews() {
         view.backgroundColor = .systemBackground
         navigationItem.title = LocalizingHelper.import
-        tableView = UITableView()
+        tableView = UITableView().then {
+            $0.isScrollEnabled = false
+        }
         view.addSubview(tableView)
         
         configureLayouts()
@@ -123,6 +125,22 @@ extension RemoteDriveAuthViewController: UITableViewDataSource {
 
 // MARK: - RemoteDriveCellDelegate
 extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
+    func signInButtonTapped(_ cell: RemoteDriveCell) {
+        if let index = tableView.indexPath(for: cell)?.item {
+            model.signIn(at: index, modalView: self) { [weak self] error in
+                guard let self = self else {
+                    return
+                }
+                
+                if let error = error as NSError? {
+                    self.handle(error)
+                    return
+                }
+                
+                self.presentFileListViewController(of: self.model.drive(at: index))
+            }
+        }
+    }
     func signOutButtonTapped(_ cell: RemoteDriveCell) {
         if let indexPath = tableView.indexPath(for: cell) {
             let alert = BasicAlert.makeCancelAndConfirmAlert(title: LocalizingHelper.signOut, message: LocalizingHelper.signOutGoogleDrive) { [weak self] _ in
@@ -136,6 +154,10 @@ extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
 
 // MARK: - UITableViewDelegate
 extension RemoteDriveAuthViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        return model.isSignIn(at: indexPath.item)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         defer {
             tableView.deselectRow(at: indexPath, animated: true)
@@ -145,19 +167,6 @@ extension RemoteDriveAuthViewController: UITableViewDelegate {
         if model.isSignIn(at: index) {
             presentFileListViewController(of: model.drive(at: index))
             return
-        }
-        
-        model.signIn(at: index, modalView: self) { [weak self] error in
-            guard let self = self else {
-                return
-            }
-            
-            if let error = error as NSError? {
-                self.handle(error)
-                return
-            }
-            
-            self.presentFileListViewController(of: self.model.drive(at: index))
         }
     }
 }
