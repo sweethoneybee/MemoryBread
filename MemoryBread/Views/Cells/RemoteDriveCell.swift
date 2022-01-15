@@ -20,7 +20,6 @@ final class RemoteDriveCell: UITableViewCell {
     struct UIConstants {
         static let containerViewInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
         static let contentViewSpacing = CGFloat(5)
-        static let buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
     }
     static let reuseIdentifier = "remote-drive-cell"
     
@@ -59,13 +58,8 @@ final class RemoteDriveCell: UITableViewCell {
 
     private var signInButton = UIButton()
     
-    private var signOutButton = UIButton(type: .system).then {
-        $0.tintColor = .white
-        $0.backgroundColor = .systemPink
-        $0.layer.cornerRadius = 5
+    private var signOutButton = RoundedButton(frame: .zero).then {
         $0.isHidden = true
-        $0.contentEdgeInsets = UIConstants.buttonInsets
-        $0.titleLabel?.font = .preferredFont(forTextStyle: .title3)
         $0.setTitle(LocalizingHelper.signOut, for: .normal)
     }
     

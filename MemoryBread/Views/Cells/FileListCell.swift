@@ -17,7 +17,6 @@ final class FileListCell: UITableViewCell {
     struct UIConstants {
         static let containerViewInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
         static let contentViewSpacing = CGFloat(5)
-        static let buttonInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         static let iconImageSize = CGSize(width: 30, height: 30)
         static let folderIndicatorSize = CGSize(width: 15, height: 15)
     }
@@ -79,17 +78,7 @@ final class FileListCell: UITableViewCell {
         $0.isHidden = true
     }
     
-    private static func makeButton() -> UIButton {
-        return UIButton().then {
-            $0.tintColor = .white
-            $0.backgroundColor = .systemPink
-            $0.layer.cornerRadius = 5
-            $0.contentEdgeInsets = UIConstants.buttonInsets
-            $0.titleLabel?.font = .preferredFont(forTextStyle: .title3)
-        }
-    }
-    
-    private var cancelButton = FileListCell.makeButton().then {
+    private var cancelButton = RoundedButton(frame: .zero).then {
         $0.setTitle(LocalizingHelper.cancel, for: .normal)
     }
     
@@ -100,7 +89,7 @@ final class FileListCell: UITableViewCell {
         $0.lineBreakMode = .byTruncatingTail
     }
     
-    private var openButton = FileListCell.makeButton().then {
+    private var openButton = RoundedButton(frame: .zero).then {
         $0.setTitle(LocalizingHelper.open, for: .normal)
     }
 

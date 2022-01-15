@@ -28,6 +28,7 @@
 		405EC185276738C60031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
 		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
+		40953946279084930047B72F /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40953945279084930047B72F /* RoundedButton.swift */; };
 		409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB152780744C00F00E52 /* GDDownloaderError.swift */; };
 		409BFB1827808FB800F00E52 /* Notification.Name+RemoteDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
@@ -83,6 +84,7 @@
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
 		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
+		40953945279084930047B72F /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		409BFB152780744C00F00E52 /* GDDownloaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloaderError.swift; sourceTree = "<group>"; };
 		409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+RemoteDrive.swift"; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				40C8DE4127259F8500B8C5FC /* WordCell.swift */,
 				40060F92272D9A3200BA7A34 /* BreadListCell.swift */,
 				403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */,
+				40953945279084930047B72F /* RoundedButton.swift */,
 				40D65710276DEA210059A595 /* FileListCell.swift */,
 			);
 			path = Cells;
@@ -509,6 +512,7 @@
 				40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */,
 				40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */,
 				40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */,
+				40953946279084930047B72F /* RoundedButton.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
 				4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */,
 				409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */,
