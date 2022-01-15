@@ -8,5 +8,5 @@
 import Foundation
 
 extension Notification.Name {
-    static let noPermissionToGoogleDriveReadOnly = Notification.Name("noPermissionToGoogleDriveReadOnly")
+    static let reSigningInGoogleDriveIsNeeded = Notification.Name("reSigningIsNeeded")
 }

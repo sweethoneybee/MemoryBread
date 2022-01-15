@@ -11,6 +11,7 @@ enum GDDownloaderError: Error {
     case notConnectedToTheInternet
     case dataNotAllowed
     case hasNoPermissionToDriveReadOnly
+    case tokenHasExpiredOrRevoked
     case unknownURLError(URLError)
     case unknown(NSError)
 }
@@ -24,6 +25,8 @@ extension GDDownloaderError: LocalizedError {
             return LocalizingHelper.dataNotAllowed
         case .hasNoPermissionToDriveReadOnly:
             return LocalizingHelper.errorHasNoPermissionToGoogleDriveReadOnly
+        case .tokenHasExpiredOrRevoked:
+            return LocalizingHelper.errorTokenHasExpiredOrRevoked
         case .unknownURLError(let urlError):
             return String(format: LocalizingHelper.errorUnknownURLError, urlError.errorCode)
         case .unknown(let nserror):

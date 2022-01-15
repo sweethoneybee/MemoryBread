@@ -32,7 +32,7 @@ final class RemoteDriveAuthViewController: UIViewController {
             self?.tableView.reloadData()
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(noPermissionToGoogleDriveReadOnly), name: .noPermissionToGoogleDriveReadOnly, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reSigningInGoogleDriveIsNeeded), name: .reSigningInGoogleDriveIsNeeded, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,7 +51,7 @@ final class RemoteDriveAuthViewController: UIViewController {
     
     // Notification Method
     @objc
-    private func noPermissionToGoogleDriveReadOnly() {
+    private func reSigningInGoogleDriveIsNeeded() {
         let googleDriveIndex = DriveDomain.googleDrive.rawValue
         model.signOut(at: googleDriveIndex)
         reloadCell(at: IndexPath(row: googleDriveIndex, section: 0))

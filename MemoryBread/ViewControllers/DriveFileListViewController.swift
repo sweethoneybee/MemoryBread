@@ -207,7 +207,12 @@ extension DriveFileListViewController {
                 self?.navigationController?.popToRootViewController(animated: true)
             }
         case .hasNoPermissionToDriveReadOnly:
-            NotificationCenter.default.post(name: .noPermissionToGoogleDriveReadOnly, object: nil)
+            NotificationCenter.default.post(name: .reSigningInGoogleDriveIsNeeded, object: nil)
+            errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
+        case .tokenHasExpiredOrRevoked:
+            NotificationCenter.default.post(name: .reSigningInGoogleDriveIsNeeded, object: nil)
             errorAlert = BasicAlert.makeErrorAlert(message: errorMessage) { [weak self] _ in
                 self?.navigationController?.popToRootViewController(animated: true)
             }

@@ -51,6 +51,7 @@
 "error_not_connected_to_the_internet" = "인터넷에 연결되어 있지 않습니다. 데이터 연결 상태를 확인해주세요.";
 "data_not_allowed" = "데이터 연결이 허용되어 있지 않습니다. 셀룰러 데이터가 활성화 되어있는지 확인해주세요.";
 "error_has_no_permission_to_google_drive_read_only" = "구글 드라이브 접근이 허용되지 않았습니다. 다시 로그인하여 접근을 허용해주세요.";
+"error_token_has_expired_or_revoked" = "로그인이 만료되었거나 취소되었습니다. 다시 로그인해주세요.";
 "error_unknown_url_error" = "인터넷 연결 중 알 수 없는 에러가 발생했습니다. 에러코드=%d";
 "error_unknown" = "알 수 없는 에러가 발생했습니다. 에러코드=%d";
 

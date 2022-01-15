@@ -71,6 +71,7 @@ extension GDDownloader {
         query.orderBy = "folder, name"
         
         fileListTicket = service.executeQuery(query) { ticket, result, error in
+            /// GDDownloaderError
             if let urlError = error as? URLError {
                 switch urlError.code {
                 case .notConnectedToInternet:
@@ -84,9 +85,12 @@ extension GDDownloader {
             }
             
             if let nserror = error as NSError? {
-                if nserror.code == GTMSessionFetcherStatus.forbidden.rawValue {
+                switch nserror.code {
+                case GTMSessionFetcherStatus.forbidden.rawValue:
                     onCompleted?(nil, nil, .hasNoPermissionToDriveReadOnly)
-                } else {
+                case -10: /// OIDErrorCodeOAuthInvalidGrant
+                    onCompleted?(nil, nil, .tokenHasExpiredOrRevoked)
+                default:
                     onCompleted?(nil, nil, .unknown(nserror))
                 }
                 return

@@ -51,6 +51,7 @@
 "error_not_connected_to_the_internet" = "Not connected to the internet. Please check your internet connection.";
 "data_not_allowed" = "Data connection is not allowed. Please ensure your cellular data is on.";
 "error_has_no_permission_to_google_drive_read_only" = "No permission to Google Drive. Please permit authorization by sign in again.";
+"error_token_has_expired_or_revoked" = "Signing has expired or revoked. Please sign in again.";
 "error_unknown_url_error" = "An unknown error occurred during accessing the internet. Error code=%d";
 "error_unknown" = "An unknown error occurred. Error code=%d";
 

@@ -53,6 +53,7 @@ struct LocalizingHelper {
     static let errorNotConnectedToTheInternet = "error_not_connected_to_the_internet".localized
     static let dataNotAllowed = "data_not_allowed".localized
     static let errorHasNoPermissionToGoogleDriveReadOnly = "error_has_no_permission_to_google_drive_read_only".localized
+    static let errorTokenHasExpiredOrRevoked = "error_token_has_expired_or_revoked".localized
     static let errorUnknownURLError = "error_unknown_url_error".localized
     static let errorUnknown = "error_unknown".localized
     
