@@ -17,6 +17,7 @@
 		4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5BD274BDB0700E03F5F /* Tutorial.swift */; };
 		4013F5C1274D143500E03F5F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4013F5C3274D143500E03F5F /* Localizable.strings */; };
 		4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */; };
+		4015CD0F2797F7B400D14EDB /* FoldersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */; };
 		401AD42C277EB8B60038C9FD /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401AD42B277EB8B60038C9FD /* BottomToolbar.swift */; };
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
@@ -73,6 +74,7 @@
 		4013F5C4274D145B00E03F5F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4013F5C5274D145B00E03F5F /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizingHelper.swift; sourceTree = "<group>"; };
+		4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersViewController.swift; sourceTree = "<group>"; };
 		401AD42B277EB8B60038C9FD /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 		40F92B83272BD7B80085224E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */,
 				40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */,
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
 				40060F8B272D5D1800BA7A34 /* EditContentViewController.swift */,
@@ -503,6 +506,7 @@
 				40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */,
 				40D65711276DEA210059A595 /* FileListCell.swift in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
+				4015CD0F2797F7B400D14EDB /* FoldersViewController.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
 				409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */,
 				4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */,

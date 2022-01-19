@@ -132,7 +132,7 @@ extension BreadListViewController {
         }
         
         configureHierarchy()
-        setRightButtomItems()
+        setRightButtonItems()
     }
     
     private func configureHierarchy() {
@@ -156,7 +156,7 @@ extension BreadListViewController {
         }
     }
     
-    private func setRightButtomItems() {
+    private func setRightButtonItems() {
         remoteDriveItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.down"),
             style: .plain,

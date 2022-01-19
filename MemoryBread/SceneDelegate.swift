@@ -16,8 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
 
-        let breadListViewController = BreadListViewController(coreDataStack: AppDelegate.coreDataStack)
-        let nvc = UINavigationController(rootViewController: breadListViewController)
+//        let breadListViewController = BreadListViewController(coreDataStack: AppDelegate.coreDataStack)
+//        let nvc = UINavigationController(rootViewController: breadListViewController)
+        
+        let foldersViewController = FoldersViewController()
+        let nvc = UINavigationController(rootViewController: foldersViewController)
+        
         nvc.navigationBar.prefersLargeTitles = true
         nvc.navigationBar.tintColor = .systemPink
         
