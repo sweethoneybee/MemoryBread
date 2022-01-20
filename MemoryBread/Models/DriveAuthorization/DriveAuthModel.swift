@@ -46,7 +46,9 @@ final class DriveAuthModel {
             self?.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: false, userEmail: nil)
         })
     }
-    
+}
+
+extension DriveAuthModel {
     func authInfo(at index: Int) -> DriveAuthInfo {
         return authInfos[index]
     }

@@ -41,7 +41,9 @@ final class BreadListViewController: UIViewController {
     
     // MARK: - Models
     private let coreDataStack: CoreDataStack
-    private let viewContext: NSManagedObjectContext
+    private var viewContext: NSManagedObjectContext {
+        coreDataStack.viewContext
+    }
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
@@ -63,7 +65,6 @@ final class BreadListViewController: UIViewController {
     
     init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
-        self.viewContext = coreDataStack.viewContext
         super.init(nibName: nil, bundle: nil)
     }
     

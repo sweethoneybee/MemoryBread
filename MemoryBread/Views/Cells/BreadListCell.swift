@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class BreadListCell: UICollectionViewListCell {
+final class BreadListCell: UICollectionViewListCell {
     static let reuseIdentifier = "bread-list-cell-reuseidentifier"
     
     let titleLabel = UILabel()

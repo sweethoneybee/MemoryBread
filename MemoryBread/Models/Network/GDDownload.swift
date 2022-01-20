@@ -35,7 +35,9 @@ final class GDDownload {
         self.file = file
         self.fetcher = fetcher
     }
-    
+}
+
+extension GDDownload {
     func beginFetch(completionHandler: @escaping (Data?, Error?) -> ()) {
         fetcher.beginFetch(completionHandler: completionHandler)
     }
