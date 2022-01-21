@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let breadListViewController = BreadListViewController(coreDataStack: AppDelegate.coreDataStack)
 //        let nvc = UINavigationController(rootViewController: breadListViewController)
         
-        let foldersViewController = FoldersViewController()
+        let foldersViewController = FoldersViewController(coreDataStack: AppDelegate.coreDataStack)
         let nvc = UINavigationController(rootViewController: foldersViewController)
         
         nvc.navigationBar.prefersLargeTitles = true

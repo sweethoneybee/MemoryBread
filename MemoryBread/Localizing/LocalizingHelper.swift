@@ -13,6 +13,7 @@ struct LocalizingHelper {
     static let done = "done".localized
     static let editContent = "edit_content".localized
     
+    static let folders = "folders".localized
     static let freshBread = "fresh_bread".localized
     
     static let numberOfMemoryBread = "number_of_memory_bread".localized

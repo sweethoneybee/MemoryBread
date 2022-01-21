@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 final class FoldersViewController: UIViewController {
     static let reuseIdentifier = "folders-view-controller-reuse-identifier"
@@ -25,7 +26,21 @@ final class FoldersViewController: UIViewController {
         $1 + String($0)
     }
     
+    private let coreDataStack: CoreDataStack
+    private var viewContext: NSManagedObjectContext {
+        return coreDataStack.viewContext
+    }
+    
     // MARK: - Life Cycle
+    required init?(coder: NSCoder) {
+        fatalError("FoldersViewController not implemented")
+    }
+    
+    init(coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
@@ -45,7 +60,7 @@ extension FoldersViewController {
         view.addSubview(tableView)
         
         configureHierarchy()
-        setRightButtonItems()
+        setNavigationItem()
     }
     
     private func configureHierarchy() {
@@ -53,7 +68,8 @@ extension FoldersViewController {
             make.edges.equalToSuperview()
         }
     }
-    private func setRightButtonItems() {
+    
+    private func setNavigationItem() {
         addFolderItem = UIBarButtonItem(
             image: UIImage(systemName: "folder.badge.plus"),
             style: .plain,
@@ -62,6 +78,7 @@ extension FoldersViewController {
         )
         
         navigationItem.rightBarButtonItems = [editButtonItem, addFolderItem]
+        navigationItem.title = LocalizingHelper.folders
     }
 }
 
@@ -124,6 +141,12 @@ extension FoldersViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let blvc = BreadListViewController(coreDataStack: coreDataStack)
+        navigationController?.pushViewController(blvc, animated: true)
     }
 }
 

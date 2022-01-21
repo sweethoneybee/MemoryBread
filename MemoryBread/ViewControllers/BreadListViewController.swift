@@ -74,13 +74,7 @@ final class BreadListViewController: UIViewController {
         configureDataSource()
         tableView.delegate = self
         
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if isBeingPresented || isMovingToParent {
-            try? fetchedResultsController.performFetch()
-        }
+        try? fetchedResultsController.performFetch()
     }
 }
 
