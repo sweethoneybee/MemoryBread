@@ -33,6 +33,10 @@ final class BreadViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, UUID>!
     
+//    // MARK: - Alert
+//    private weak var titleEditAlert: UIAlertController?
+//    private weak var editDoneAction: UIAlertAction?
+    
     // MARK: - States
     private var panGestureCheckerOfItems: [Bool] = []
     private var selectedFilters: Set<Int> = []
@@ -415,9 +419,9 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
         }
         
         titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel))
-        titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.done, style: .default) { [weak self] _ in
+        titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.done, style: .default) { [weak self, weak titleEditAlert] _ in
             guard let self = self else { return }
-            if let inputText = titleEditAlert.textFields?.first?.text {
+            if let inputText = titleEditAlert?.textFields?.first?.text {
                 self.bread.updateTitle(inputText)
                 try? self.managedObjectContext.save()
                 self.updateNaviTitleView(using: inputText)
