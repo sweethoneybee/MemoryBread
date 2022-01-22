@@ -51,6 +51,7 @@
 		40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */; };
 		40D0DF55279BF8AC00F4448E /* FolderMigrationV1toV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */; };
 		40D0DF58279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */; };
+		40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */; };
 		40D65711276DEA210059A595 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65710276DEA210059A595 /* FileListCell.swift */; };
 		40D65713276DFC470059A595 /* GDDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65712276DFC470059A595 /* GDDownload.swift */; };
 		40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65715276E3FA20059A595 /* DriveFileListViewController.swift */; };
@@ -113,6 +114,7 @@
 		40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMigrationV1toV2.swift; sourceTree = "<group>"; };
 		40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V1-to-V2.xcmappingmodel"; sourceTree = "<group>"; };
+		40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewDataSource+Reload.swift"; sourceTree = "<group>"; };
 		40D65710276DEA210059A595 /* FileListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListCell.swift; sourceTree = "<group>"; };
 		40D65712276DFC470059A595 /* GDDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownload.swift; sourceTree = "<group>"; };
 		40D65715276E3FA20059A595 /* DriveFileListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileListViewController.swift; sourceTree = "<group>"; };
@@ -370,6 +372,7 @@
 			isa = PBXGroup;
 			children = (
 				40F92B88272C3E920085224E /* UICollectionView+Selection.swift */,
+				40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */,
 				409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */,
 				40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */,
 				40F1D607273D70320053AB73 /* String+Helper.swift */,
@@ -524,6 +527,7 @@
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */,
 				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
+				40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */,
 				409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,

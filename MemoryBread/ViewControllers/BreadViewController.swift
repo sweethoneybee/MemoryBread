@@ -33,9 +33,8 @@ final class BreadViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, UUID>!
     
-//    // MARK: - Alert
-//    private weak var titleEditAlert: UIAlertController?
-//    private weak var editDoneAction: UIAlertAction?
+    // MARK: - Alert Action
+    private weak var editDoneAction: UIAlertAction?
     
     // MARK: - States
     private var panGestureCheckerOfItems: [Bool] = []
@@ -90,6 +89,8 @@ final class BreadViewController: UIViewController {
         if let selectedFilters = bread.selectedFilters {
             toolbarViewController.select(selectedFilters)
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange(_:)), name: UITextField.textDidChangeNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -411,7 +412,7 @@ extension BreadViewController {
 // MARK: - SupplemantaryTitleViewDelegate
 extension BreadViewController: SupplemantaryTitleViewDelegate {
     func didTapTitleView(_ view: UICollectionReusableView) {
-        let titleEditAlert = UIAlertController(title: "제목 변경", message: nil, preferredStyle: .alert)
+        let titleEditAlert = UIAlertController(title: LocalizingHelper.changingTheTitle, message: nil, preferredStyle: .alert)
         titleEditAlert.addTextField { [weak self] textField in
             textField.clearButtonMode = .always
             textField.returnKeyType = .done
@@ -419,14 +420,17 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
         }
         
         titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel))
-        titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.done, style: .default) { [weak self, weak titleEditAlert] _ in
+        
+        let doneAction = UIAlertAction(title: LocalizingHelper.done, style: .default) { [weak self, weak titleEditAlert] _ in
             guard let self = self else { return }
-            if let inputText = titleEditAlert?.textFields?.first?.text {
+            if let inputText = titleEditAlert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) {
                 self.bread.updateTitle(inputText)
                 try? self.managedObjectContext.save()
                 self.updateNaviTitleView(using: inputText)
             }
-        })
+        }
+        editDoneAction = doneAction
+        titleEditAlert.addAction(doneAction)
         
         present(titleEditAlert, animated: true)
     }
@@ -468,15 +472,19 @@ extension BreadViewController {
     }
 }
 
-extension UICollectionViewDiffableDataSource {
-    func reconfigure(_ identifiers: [ItemIdentifierType], animatingDifferences: Bool = false) {
-        var snapshot = snapshot()
-        if #available(iOS 15.0, *) {
-            snapshot.reconfigureItems(identifiers)
-            apply(snapshot, animatingDifferences: animatingDifferences)
-        } else {
-            snapshot.reloadItems(identifiers)
-            apply(snapshot, animatingDifferences: false)
+// MARK: - Notification Action
+extension BreadViewController {
+    @objc
+    private func textDidChange(_ notification: Notification) {
+        guard let textField = notification.object as? UITextField,
+              let trimmedText = textField.text?.trimmingCharacters(in: [" "]) else {
+            return
         }
+        
+        if trimmedText.count <= 0 {
+            editDoneAction?.isEnabled = false
+            return
+        }
+        editDoneAction?.isEnabled = true
     }
 }

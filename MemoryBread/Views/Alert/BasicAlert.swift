@@ -11,10 +11,13 @@ final class BasicAlert {
     
     typealias BasicAlertCompletionHandler = ((UIAlertAction) -> ())
     
-    static func makeCancelAndConfirmAlert(title: String?, message: String?, completionHandler: BasicAlertCompletionHandler? = nil) -> UIAlertController {
+    static func makeCancelAndConfirmAlert(title: String?,
+                                          message: String?,
+                                          confirmActionTitle: String? = LocalizingHelper.confirm,
+                                          completionHandler: BasicAlertCompletionHandler? = nil) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: LocalizingHelper.confirm, style: .default, handler: completionHandler))
+        alert.addAction(UIAlertAction(title: confirmActionTitle, style: .default, handler: completionHandler))
         return alert
     }
     
