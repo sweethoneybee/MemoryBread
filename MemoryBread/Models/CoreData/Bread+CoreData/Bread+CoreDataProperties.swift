@@ -19,20 +19,40 @@ extension Bread {
     @NSManaged public var createdTime: Date?
     @NSManaged public var touch: Date?
     @NSManaged public var id: NSNumber?
-    @NSManaged public var directoryName: String?
     @NSManaged public var title: String?
     @NSManaged public var content: String?
     @NSManaged public var separatedContent: [String]?
     @NSManaged public var filterIndexes: [[Int]]?
     @NSManaged public var selectedFilters: [Int]?
+    @NSManaged public var folders: NSSet?
+}
+
+// MARK: Generated accessors for breads
+extension Bread {
+
+    @objc(addFoldersObject:)
+    @NSManaged public func addToFolders(_ value: Folder)
+
+    @objc(removeFoldersObject:)
+    @NSManaged public func removeFromFolders(_ value: Folder)
+
+    @objc(addFolders:)
+    @NSManaged public func addToFolders(_ values: NSSet)
+
+    @objc(removeFolders:)
+    @NSManaged public func removeFromFolders(_ values: NSSet)
+
 }
 
 extension Bread : Identifiable {
+
+}
+
+extension Bread {
     static func makeBasicBread(context: NSManagedObjectContext) -> Bread {
         return Bread(
             context: context,
             touch: Date(),
-            directoryName: "기본",
             title: LocalizingHelper.freshBread,
             content: "",
             separatedContent: [],

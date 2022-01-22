@@ -28,6 +28,11 @@ final class CoreDataStack {
     lazy var persistentContainer: NSPersistentContainer = {
         
         let container = NSPersistentContainer(name: modelName)
+        
+        let persistentStoreDescription = container.persistentStoreDescriptions.first
+        persistentStoreDescription?.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
+        persistentStoreDescription?.setOption(false as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
+        
         container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")

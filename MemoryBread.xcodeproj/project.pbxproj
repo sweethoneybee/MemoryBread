@@ -47,6 +47,10 @@
 		40C8DE3D27259F6700B8C5FC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3C27259F6700B8C5FC /* SnapKit */; };
 		40C8DE4027259F7300B8C5FC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3F27259F7300B8C5FC /* Then */; };
 		40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE4127259F8500B8C5FC /* WordCell.swift */; };
+		40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */; };
+		40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */; };
+		40D0DF55279BF8AC00F4448E /* FolderMigrationV1toV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */; };
+		40D0DF58279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */; };
 		40D65711276DEA210059A595 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65710276DEA210059A595 /* FileListCell.swift */; };
 		40D65713276DFC470059A595 /* GDDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65712276DFC470059A595 /* GDDownload.swift */; };
 		40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65715276E3FA20059A595 /* DriveFileListViewController.swift */; };
@@ -104,6 +108,11 @@
 		40C8DE3327259F5500B8C5FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		40C8DE3527259F5500B8C5FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40C8DE4127259F8500B8C5FC /* WordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCell.swift; sourceTree = "<group>"; };
+		40D0DF47279BDAB900F4448E /* MemoryBread v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MemoryBread v2.xcdatamodel"; sourceTree = "<group>"; };
+		40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataClass.swift"; sourceTree = "<group>"; };
+		40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMigrationV1toV2.swift; sourceTree = "<group>"; };
+		40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V1-to-V2.xcmappingmodel"; sourceTree = "<group>"; };
 		40D65710276DEA210059A595 /* FileListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListCell.swift; sourceTree = "<group>"; };
 		40D65712276DFC470059A595 /* GDDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownload.swift; sourceTree = "<group>"; };
 		40D65715276E3FA20059A595 /* DriveFileListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileListViewController.swift; sourceTree = "<group>"; };
@@ -262,7 +271,6 @@
 				404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */,
 				40C8DE3027259F5500B8C5FC /* Assets.xcassets */,
 				40C8DE3527259F5500B8C5FC /* Info.plist */,
-				40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */,
 				409D966B276CD2FC00EB8220 /* Localizing */,
 				40F92B87272C3E7D0085224E /* Extensions */,
 				40F92B83272BD7B80085224E /* ViewControllers */,
@@ -273,9 +281,38 @@
 			path = MemoryBread;
 			sourceTree = "<group>";
 		};
+		40D0DF4E279BF85600F4448E /* Folder+CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */,
+				40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */,
+			);
+			path = "Folder+CoreData";
+			sourceTree = "<group>";
+		};
+		40D0DF53279BF86800F4448E /* MappingModels */ = {
+			isa = PBXGroup;
+			children = (
+				40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */,
+			);
+			path = MappingModels;
+			sourceTree = "<group>";
+		};
+		40D0DF56279BF8B500F4448E /* Migration */ = {
+			isa = PBXGroup;
+			children = (
+				40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */,
+			);
+			path = Migration;
+			sourceTree = "<group>";
+		};
 		40D87E98277B43EB00CCB28D /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */,
+				40D0DF56279BF8B500F4448E /* Migration */,
+				40D0DF53279BF86800F4448E /* MappingModels */,
+				40D0DF4E279BF85600F4448E /* Folder+CoreData */,
 				40245D05272940EE002E84A8 /* Bread+CoreData */,
 				40D87E99277B440A00CCB28D /* CoreDataStack.swift */,
 			);
@@ -485,6 +522,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
+				40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */,
 				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
 				409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
@@ -498,6 +536,7 @@
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
 				40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */,
 				409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */,
+				40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */,
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
 				40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */,
@@ -505,6 +544,7 @@
 				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */,
 				40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */,
 				40D65711276DEA210059A595 /* FileListCell.swift in Sources */,
+				40D0DF58279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
 				4015CD0F2797F7B400D14EDB /* FoldersViewController.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
@@ -515,6 +555,7 @@
 				405EC17E27661E200031C19D /* ExcelReader.swift in Sources */,
 				40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */,
 				40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */,
+				40D0DF55279BF8AC00F4448E /* FolderMigrationV1toV2.swift in Sources */,
 				40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */,
 				40953946279084930047B72F /* RoundedButton.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
@@ -817,9 +858,10 @@
 		40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				40D0DF47279BDAB900F4448E /* MemoryBread v2.xcdatamodel */,
 				40C8DE2E27259F5300B8C5FC /* MemoryBread.xcdatamodel */,
 			);
-			currentVersion = 40C8DE2E27259F5300B8C5FC /* MemoryBread.xcdatamodel */;
+			currentVersion = 40D0DF47279BDAB900F4448E /* MemoryBread v2.xcdatamodel */;
 			path = MemoryBread.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

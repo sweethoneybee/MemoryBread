@@ -16,7 +16,7 @@ final class FoldersViewController: UIViewController {
     
     // MARK: - Views
     private var tableView: UITableView!
-    private var dataSource: UITableViewDiffableDataSource<Section, Int>!
+    private var dataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID>!
 
     // MARK: - Buttons
     private var addFolderItem: UIBarButtonItem!
@@ -30,6 +30,17 @@ final class FoldersViewController: UIViewController {
     private var viewContext: NSManagedObjectContext {
         return coreDataStack.viewContext
     }
+    
+    private lazy var fetchedResultsController: NSFetchedResultsController<Folder> = {
+        let fetchRequest = Folder.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderingNumber", ascending: false)]
+        let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                             managedObjectContext: viewContext,
+                                             sectionNameKeyPath: nil,
+                                             cacheName: nil)
+        frc.delegate = self
+        return frc
+    }()
     
     // MARK: - Life Cycle
     required init?(coder: NSCoder) {
@@ -45,6 +56,8 @@ final class FoldersViewController: UIViewController {
         super.viewDidLoad()
         setViews()
         configureDataSource()
+        
+        try? fetchedResultsController.performFetch()    
     }
 }
 
@@ -101,7 +114,7 @@ extension FoldersViewController {
 
 // MARK: - DataSource
 extension FoldersViewController {
-    class DataSource: UITableViewDiffableDataSource<Section, Int> {
+    class DataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID> {
         override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
             print("moveRowAt=\(sourceIndexPath.item), to=\(destinationIndexPath.item)")
         }
@@ -112,23 +125,20 @@ extension FoldersViewController {
     }
     
     private func configureDataSource() {
-        dataSource = DataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, itemIdentifier in
+        dataSource = DataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, objectID in
+            guard let object = try? self?.viewContext.existingObject(with: objectID) as? Folder else {
+                fatalError("Managed object should be available")
+            }
             let cell = tableView.dequeueReusableCell(withIdentifier: FoldersViewController.reuseIdentifier, for: indexPath)
             
             var contentConfiguration = UIListContentConfiguration.valueCell()
             contentConfiguration.image = UIImage(systemName: "folder")?.withTintColor(.systemPink)
-            contentConfiguration.text = self?.folders[itemIdentifier]
-            contentConfiguration.secondaryText = "32  >"
+            contentConfiguration.text = object.name
+            contentConfiguration.secondaryText = "\(object.breads?.count ?? -1)  >"
             
             cell.contentConfiguration = contentConfiguration
             return cell
         })
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(Array<Int>(0..<folders.count), toSection: .main)
-        
-        dataSource.apply(snapshot)
     }
 }
 
@@ -147,6 +157,13 @@ extension FoldersViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let blvc = BreadListViewController(coreDataStack: coreDataStack)
         navigationController?.pushViewController(blvc, animated: true)
+    }
+}
+
+extension FoldersViewController: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        let shouldAnimate = tableView.numberOfSections != 0
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Section, NSManagedObjectID>, animatingDifferences: shouldAnimate)
     }
 }
 

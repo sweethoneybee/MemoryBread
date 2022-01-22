@@ -15,7 +15,6 @@ public class Bread: NSManagedObject {
     convenience init(
         context: NSManagedObjectContext,
         touch: Date?,
-        directoryName: String?,
         title: String?,
         content: String?,
         separatedContent: [String]?,
@@ -26,11 +25,19 @@ public class Bread: NSManagedObject {
         self.createdTime = Date()
         self.id = NSNumber(value: UserManager.autoIncreaseId)
         self.touch = touch
-        self.directoryName = directoryName
         self.title = title
         self.content = content
         self.separatedContent = separatedContent
         self.filterIndexes = filterIndexes ?? Array(repeating: [], count: FilterColor.count)
         self.selectedFilters = selectedFilters ?? [Int]()
+        
+        let fetchRequest = Folder.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "orderingNumber = %lld", Int64.max)
+        
+        if let mainFolder = try? context.fetch(fetchRequest).last {
+            addToFolders(mainFolder)
+        } else {
+            fatalError("Folder fetching failed")
+        }
     }
 }

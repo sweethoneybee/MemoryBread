@@ -27,18 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if UserManager.firstLaunch {
-            let context = coreDataStack.viewContext
-            Tutorial().infos.forEach {
-                let tutorialBread = Bread.makeBasicBread(context: context)
-                tutorialBread.title = $0.title
-                tutorialBread.updateContent(with: $0.content)
-                tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
-            }
-            do {
-                try context.save()
-            } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
+            createInitialObjects()
             UserManager.firstLaunch = false
         }
         
@@ -67,6 +56,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         return false
+    }
+}
+
+extension AppDelegate {
+    private func createInitialObjects() {
+        let context = coreDataStack.viewContext
+        
+        let folderWithAllMemoryBread = Folder(context: context)
+        folderWithAllMemoryBread.id = UUID()
+        folderWithAllMemoryBread.name = LocalizingHelper.allMemoryBreads
+        folderWithAllMemoryBread.orderingNumber = Int64.max
+        
+        let trash = Folder(context: context)
+        trash.id = UUID()
+        trash.name = LocalizingHelper.trash
+        trash.orderingNumber = 0
+        
+        do {
+            try context.save()
+        } catch let nserror as NSError {
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+        
+        Tutorial().infos.forEach {
+            let tutorialBread = Bread.makeBasicBread(context: context)
+            tutorialBread.title = $0.title
+            tutorialBread.updateContent(with: $0.content)
+            tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
+        }
+        do {
+            try context.save()
+        } catch let nserror as NSError {
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
     }
 }
 
