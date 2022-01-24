@@ -126,15 +126,22 @@ extension FoldersViewController {
     
     private func configureDataSource() {
         dataSource = DataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, objectID in
-            guard let object = try? self?.viewContext.existingObject(with: objectID) as? Folder else {
+            guard let folderObject = try? self?.viewContext.existingObject(with: objectID) as? Folder else {
                 fatalError("Managed object should be available")
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: FoldersViewController.reuseIdentifier, for: indexPath)
             
             var contentConfiguration = UIListContentConfiguration.valueCell()
-            contentConfiguration.image = UIImage(systemName: "folder")?.withTintColor(.systemPink)
-            contentConfiguration.text = object.name
-            contentConfiguration.secondaryText = "\(object.breads?.count ?? -1)  >"
+            
+            let imageName: String
+            if folderObject.orderingNumber == 0 {
+                imageName = "trash"
+            } else {
+                imageName = "folder"
+            }
+            contentConfiguration.image = UIImage(systemName: imageName)?.withTintColor(.systemPink)
+            contentConfiguration.text = folderObject.name
+            contentConfiguration.secondaryText = "\(folderObject.breads?.count ?? -1)  >"
             
             cell.contentConfiguration = contentConfiguration
             return cell
@@ -154,9 +161,10 @@ extension FoldersViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let blvc = BreadListViewController(coreDataStack: coreDataStack)
+        let folder = fetchedResultsController.object(at: indexPath)
+        let blvc = BreadListViewController(coreDataStack: coreDataStack, folderName: folder.name)
         navigationController?.pushViewController(blvc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

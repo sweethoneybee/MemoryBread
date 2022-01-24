@@ -45,8 +45,12 @@ final class BreadListViewController: UIViewController {
         coreDataStack.viewContext
     }
     
+    private let currentFolderName: String?
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
+        if let currentFolderName = currentFolderName {
+            fetchRequest.predicate = NSPredicate(format: "ANY folders.name == %@", currentFolderName)
+        }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
         let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
@@ -63,8 +67,9 @@ final class BreadListViewController: UIViewController {
         fatalError("not implemented")
     }
     
-    init(coreDataStack: CoreDataStack) {
+    init(coreDataStack: CoreDataStack, folderName: String? = nil) {
         self.coreDataStack = coreDataStack
+        self.currentFolderName = folderName
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -82,8 +87,6 @@ final class BreadListViewController: UIViewController {
 extension BreadListViewController {
     private func setViews() {
         view.backgroundColor = .systemBackground
-        navigationItem.title = "app_title".localized
-        navigationItem.backButtonDisplayMode = .minimal
         
         tableView = UITableView(frame: .zero, style: .insetGrouped).then {
             $0.allowsMultipleSelectionDuringEditing = true
@@ -127,7 +130,7 @@ extension BreadListViewController {
         }
         
         configureHierarchy()
-        setRightButtonItems()
+        setNavigationItem()
     }
     
     private func configureHierarchy() {
@@ -151,7 +154,10 @@ extension BreadListViewController {
         }
     }
     
-    private func setRightButtonItems() {
+    private func setNavigationItem() {
+        navigationItem.title = currentFolderName ?? LocalizingHelper.appTitle
+        navigationItem.backButtonDisplayMode = .minimal
+        
         remoteDriveItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.down"),
             style: .plain,
