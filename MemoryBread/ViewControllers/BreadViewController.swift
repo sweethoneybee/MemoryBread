@@ -89,8 +89,6 @@ final class BreadViewController: UIViewController {
         if let selectedFilters = bread.selectedFilters {
             toolbarViewController.select(selectedFilters)
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(textDidChange(_:)), name: UITextField.textDidChangeNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -236,8 +234,8 @@ extension BreadViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: id)
         }
         
-        dataSource.supplementaryViewProvider = { [weak self] (view, kind, index) in
-            return self?.collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
+        dataSource.supplementaryViewProvider = { (collectionView, kind, index) in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
         }
         
         applyNewIdentifiers(wordPainter.ids())
@@ -417,12 +415,17 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
             textField.clearButtonMode = .always
             textField.returnKeyType = .done
             textField.text = self?.bread.title
+            
+            if let self = self {
+                NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange(_:)), name: UITextField.textDidChangeNotification, object: textField)
+            }
         }
         
         titleEditAlert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel))
         
         let doneAction = UIAlertAction(title: LocalizingHelper.done, style: .default) { [weak self, weak titleEditAlert] _ in
             guard let self = self else { return }
+            NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: titleEditAlert?.textFields?.first)
             if let inputText = titleEditAlert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) {
                 self.bread.updateTitle(inputText)
                 try? self.managedObjectContext.save()

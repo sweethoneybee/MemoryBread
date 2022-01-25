@@ -71,4 +71,10 @@ struct LocalizingHelper {
     static let errorNoCurrentUser = "error_no_current_user".localized
     static let errorEMM = "error_emm".localized
     static let errorAccessDenied = "error_access_denied".localized
+    
+    static let newFolder = "new_folder".localized
+    static let enterTheNameOfThisFolder = "enter_the_name_of_this_folder".localized
+    static let name = "name".localized
+    static let nameIsAlreadyInUse = "name_is_already_in_use".localized
+    static let enterDifferentName = "enter_different_name".localized
 }

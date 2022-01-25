@@ -18,6 +18,9 @@ final class FoldersViewController: UIViewController {
     private var tableView: UITableView!
     private var dataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID>!
 
+    // MARK: - Alert Action
+    private weak var folderNameDoneAction: UIAlertAction?
+    
     // MARK: - Buttons
     private var addFolderItem: UIBarButtonItem!
     
@@ -57,7 +60,7 @@ final class FoldersViewController: UIViewController {
         setViews()
         configureDataSource()
         
-        try? fetchedResultsController.performFetch()    
+        try? fetchedResultsController.performFetch()
     }
 }
 
@@ -99,7 +102,57 @@ extension FoldersViewController {
 extension FoldersViewController {
     @objc
     private func addFolderItemTapped() {
-        print("폴더추가버튼눌림")
+        let alert = UIAlertController(title: LocalizingHelper.newFolder, message: LocalizingHelper.enterTheNameOfThisFolder, preferredStyle: .alert)
+        alert.addTextField { [weak self] textField in
+            guard let self = self else { return }
+            textField.placeholder = LocalizingHelper.name
+            textField.clearButtonMode = .always
+            textField.returnKeyType = .done
+
+            NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange(_:)), name: UITextField.textDidChangeNotification, object: textField)
+        }
+        
+        let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel)
+        let doneAction = UIAlertAction(title: LocalizingHelper.save, style: .default) { [weak self, weak alert] _ in
+            guard let self = self else { return }
+            NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: alert?.textFields?.first)
+
+            guard let folderName = alert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) else {
+                return
+            }
+            guard let lastOrderingNumber = self.fetchedResultsController.fetchedObjects?[safe: 1]?.orderingNumber else {
+                return
+            }
+            
+            let context = self.coreDataStack.writeContext
+            context.perform {
+                let newFolder = Folder(context: context)
+                newFolder.id = UUID()
+                newFolder.name = folderName
+                newFolder.orderingNumber = lastOrderingNumber + 1
+                
+                do {
+                    try context.save()
+                } catch let nserror as NSError {
+                    switch nserror.code {
+                    case NSManagedObjectConstraintMergeError:
+                        context.delete(newFolder)
+                        DispatchQueue.main.async {
+                            let errorAlert = BasicAlert.makeConfirmAlert(title: LocalizingHelper.nameIsAlreadyInUse, message: LocalizingHelper.enterDifferentName)
+                            self.present(errorAlert, animated: true)
+                        }
+                    default:
+                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                    }
+                }
+            }
+        }
+        doneAction.isEnabled = false
+        folderNameDoneAction = doneAction
+        alert.addAction(cancelAction)
+        alert.addAction(doneAction)
+        
+        present(alert, animated: true)
     }
 }
 
@@ -153,10 +206,15 @@ extension FoldersViewController {
 // MARK: - UITableViewDelegate
 extension FoldersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return (indexPath.item != 0)
+        && (indexPath.item != (dataSource.snapshot().numberOfItems - 1))
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if (indexPath.item != 0)
+            && (indexPath.item != (dataSource.snapshot().numberOfItems - 1)) {
+            return .delete
+        }
         return .none
     }
     
@@ -175,3 +233,19 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
+// MARK: - Notification Action
+extension FoldersViewController {
+    @objc
+    private func textDidChange(_ notification: Notification) {
+        guard let textField = notification.object as? UITextField,
+              let trimmedText = textField.text?.trimmingCharacters(in: [" "]) else {
+            return
+        }
+        
+        if trimmedText.count <= 0 {
+            folderNameDoneAction?.isEnabled = false
+            return
+        }
+        folderNameDoneAction?.isEnabled = true
+    }
+}
