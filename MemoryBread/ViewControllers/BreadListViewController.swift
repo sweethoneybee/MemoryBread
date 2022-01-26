@@ -287,7 +287,7 @@ extension BreadListViewController {
         let hasSelectedRows = (numberOfSelectedRows != 0)
         deleteButton.isHidden = !hasSelectedRows
         deleteAllButton.isHidden = hasSelectedRows
-        navigationItem.title = hasSelectedRows ? String(format: LocalizingHelper.selectedNumberOfItems, numberOfSelectedRows) : LocalizingHelper.appTitle
+        navigationItem.title = hasSelectedRows ? String(format: LocalizingHelper.selectedNumberOfItems, numberOfSelectedRows) : currentFolderName
     }
 }
 
