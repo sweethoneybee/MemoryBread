@@ -18,6 +18,8 @@ final class FoldersViewController: UIViewController {
     private var tableView: UITableView!
     private var dataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID>!
 
+    private var isTableViewReordered = false
+    
     // MARK: - Alert Action
     private weak var folderNameDoneAction: UIAlertAction?
     
@@ -25,10 +27,6 @@ final class FoldersViewController: UIViewController {
     private var addFolderItem: UIBarButtonItem!
     
     // MARK: - Data
-    private var folders = Array<String>(repeating: "타이틀", count: 10).enumerated().map {
-        $1 + String($0)
-    }
-    
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
         return coreDataStack.viewContext
@@ -36,7 +34,7 @@ final class FoldersViewController: UIViewController {
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Folder> = {
         let fetchRequest = Folder.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderingNumber", ascending: false)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderingNumber", ascending: true)]
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
                                              managedObjectContext: viewContext,
                                              sectionNameKeyPath: nil,
@@ -61,6 +59,31 @@ final class FoldersViewController: UIViewController {
         configureDataSource()
         
         try? fetchedResultsController.performFetch()
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        tableView.setEditing(editing, animated: animated)
+        if !editing {
+            let snp = dataSource.snapshot()
+            snp.itemIdentifiers.enumerated().forEach {
+                let newIndex = Int64($0)
+                if let folderObject = try? viewContext.existingObject(with: $1) as? Folder,
+                   folderObject.orderingNumber != newIndex {
+                    folderObject.orderingNumber = newIndex
+                }
+            }
+
+            if viewContext.hasChanges {
+                isTableViewReordered = true
+                do {
+                    try viewContext.save()
+                } catch let nserror as NSError {
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                }
+            }
+        }
     }
 }
 
@@ -156,23 +179,25 @@ extension FoldersViewController {
     }
 }
 
-// MARK: - Edit Mode
-extension FoldersViewController {
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        
-        tableView.setEditing(editing, animated: animated)
-    }
-}
-
 // MARK: - DataSource
 extension FoldersViewController {
     class DataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID> {
         override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-            print("moveRowAt=\(sourceIndexPath.item), to=\(destinationIndexPath.item)")
+            guard sourceIndexPath != destinationIndexPath else { return }
+
+            if let src = itemIdentifier(for: sourceIndexPath),
+               let dest = itemIdentifier(for: destinationIndexPath) {
+                var snp = snapshot()
+                sourceIndexPath.row < destinationIndexPath.row ? snp.moveItem(src, afterItem: dest) : snp.moveItem(src, beforeItem: dest)
+                apply(snp, animatingDifferences: false)
+            }
         }
         
         override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+            return (indexPath.item != 0) && (indexPath.item != (snapshot().numberOfItems - 1))
+        }
+        
+        override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
             return (indexPath.item != 0) && (indexPath.item != (snapshot().numberOfItems - 1))
         }
     }
@@ -219,16 +244,32 @@ extension FoldersViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let folder = fetchedResultsController.object(at: indexPath)
-        let blvc = BreadListViewController(coreDataStack: coreDataStack, folderName: folder.name)
-        navigationController?.pushViewController(blvc, animated: true)
+        if let objectID = dataSource.itemIdentifier(for: indexPath),
+           let folderObject = try? viewContext.existingObject(with: objectID) as? Folder {
+            let blvc = BreadListViewController(coreDataStack: coreDataStack, folderName: folderObject.name)
+            navigationController?.pushViewController(blvc, animated: true)
+        }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+        guard proposedDestinationIndexPath.row > 0,
+              proposedDestinationIndexPath.row < dataSource.snapshot().numberOfItems - 1 else {
+                  return sourceIndexPath
+              }
+        return proposedDestinationIndexPath
     }
 }
 
 extension FoldersViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        let shouldAnimate = tableView.numberOfSections != 0
+        var shouldAnimate = tableView.numberOfSections != 0
+        
+        if isTableViewReordered {
+            isTableViewReordered = false
+            shouldAnimate = false
+        }
+        
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Section, NSManagedObjectID>, animatingDifferences: shouldAnimate)
     }
 }
