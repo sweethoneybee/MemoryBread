@@ -43,6 +43,9 @@ final class FoldersViewController: UIViewController {
         return frc
     }()
     
+    private let pinnnedAtTopCount = 1
+    private let pinnedAtBottomCount = 1
+    
     // MARK: - Life Cycle
     required init?(coder: NSCoder) {
         fatalError("FoldersViewController not implemented")
@@ -253,10 +256,19 @@ extension FoldersViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-        guard proposedDestinationIndexPath.row > 0,
-              proposedDestinationIndexPath.row < dataSource.snapshot().numberOfItems - 1 else {
-                  return sourceIndexPath
-              }
+        
+        let itemsCount = dataSource.snapshot().numberOfItems
+        
+        if sourceIndexPath.section != proposedDestinationIndexPath.section {
+            let rowInSourceSection = (sourceIndexPath.section > proposedDestinationIndexPath.section) ?
+            pinnnedAtTopCount : itemsCount - pinnedAtBottomCount - 1
+            return IndexPath(row: rowInSourceSection, section: sourceIndexPath.section)
+        } else if proposedDestinationIndexPath.row <= pinnnedAtTopCount - 1 {
+            return IndexPath(row: pinnnedAtTopCount, section: sourceIndexPath.section)
+        } else if proposedDestinationIndexPath.row >= itemsCount - pinnedAtBottomCount {
+            return IndexPath(row: itemsCount - pinnnedAtTopCount - 1, section: sourceIndexPath.section)
+        }
+        
         return proposedDestinationIndexPath
     }
 }
