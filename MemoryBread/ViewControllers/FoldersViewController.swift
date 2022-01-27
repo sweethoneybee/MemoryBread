@@ -34,7 +34,12 @@ final class FoldersViewController: UIViewController {
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Folder> = {
         let fetchRequest = Folder.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderingNumber", ascending: true)]
+        
+        let pinnedAtTopSort = NSSortDescriptor(key: "pinnedAtTop", ascending: false)
+        let pinnedAtBottomSort = NSSortDescriptor(key: "pinnedAtBottom", ascending: true)
+        let orderingIndexSort = NSSortDescriptor(key: "index", ascending: true)
+        fetchRequest.sortDescriptors = [pinnedAtTopSort, pinnedAtBottomSort, orderingIndexSort]
+        
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
                                              managedObjectContext: viewContext,
                                              sectionNameKeyPath: nil,
@@ -73,8 +78,8 @@ final class FoldersViewController: UIViewController {
             snp.itemIdentifiers.enumerated().forEach {
                 let newIndex = Int64($0)
                 if let folderObject = try? viewContext.existingObject(with: $1) as? Folder,
-                   folderObject.orderingNumber != newIndex {
-                    folderObject.orderingNumber = newIndex
+                   folderObject.index != newIndex {
+                    folderObject.index = newIndex
                 }
             }
 
@@ -146,16 +151,17 @@ extension FoldersViewController {
             guard let folderName = alert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) else {
                 return
             }
-            guard let lastOrderingNumber = self.fetchedResultsController.fetchedObjects?[safe: 1]?.orderingNumber else {
+            guard let topFolderIndex = self.fetchedResultsController.fetchedObjects?[safe: self.pinnnedAtTopCount]?.index else {
                 return
             }
             
+            let newIndex = topFolderIndex - 1
             let context = self.coreDataStack.writeContext
             context.perform {
                 let newFolder = Folder(context: context)
                 newFolder.id = UUID()
                 newFolder.name = folderName
-                newFolder.orderingNumber = lastOrderingNumber + 1
+                newFolder.index = newIndex
                 
                 do {
                     try context.save()
@@ -215,7 +221,7 @@ extension FoldersViewController {
             var contentConfiguration = UIListContentConfiguration.valueCell()
             
             let imageName: String
-            if folderObject.orderingNumber == 0 {
+            if folderObject.pinnedAtBottom {
                 imageName = "trash"
             } else {
                 imageName = "folder"

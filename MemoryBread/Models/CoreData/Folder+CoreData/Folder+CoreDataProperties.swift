@@ -17,11 +17,14 @@ extension Folder {
     }
 
     @NSManaged public var id: UUID?
-    @NSManaged public var orderingNumber: Int64
+    @NSManaged public var index: Int64
     @NSManaged public var name: String?
+    @NSManaged public var pinnedAtTop: Bool
+    @NSManaged public var pinnedAtBottom: Bool
+    
     @NSManaged public var breadsCount: Int64
     @NSManaged public var breads: NSSet?
-
+    
 }
 
 // MARK: Generated accessors for breads

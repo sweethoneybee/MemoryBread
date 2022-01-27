@@ -20,15 +20,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: - application methods
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-            if error == nil && user != nil {
-                DriveAuthStorage.shared.googleDrive = user?.authentication.fetcherAuthorizer()
-            }
-        }
         
         if UserManager.firstLaunch {
             createInitialObjects()
             UserManager.firstLaunch = false
+        }
+        
+        
+        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+            if error == nil && user != nil {
+                DriveAuthStorage.shared.googleDrive = user?.authentication.fetcherAuthorizer()
+            }
         }
         
         return true
@@ -66,12 +68,14 @@ extension AppDelegate {
         let folderWithAllMemoryBread = Folder(context: context)
         folderWithAllMemoryBread.id = UUID()
         folderWithAllMemoryBread.name = LocalizingHelper.allMemoryBreads
-        folderWithAllMemoryBread.orderingNumber = Int64.max
+        folderWithAllMemoryBread.index = 0
+        folderWithAllMemoryBread.pinnedAtTop = true
         
         let trash = Folder(context: context)
         trash.id = UUID()
         trash.name = LocalizingHelper.trash
-        trash.orderingNumber = 0
+        trash.index = 1
+        trash.pinnedAtBottom = true
         
         do {
             try context.save()

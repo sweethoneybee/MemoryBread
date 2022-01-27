@@ -28,6 +28,7 @@
 		405EC184276738C40031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
 		405EC185276738C60031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
 		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
+		407769BD27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 407769BC27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		40953946279084930047B72F /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40953945279084930047B72F /* RoundedButton.swift */; };
 		409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB152780744C00F00E52 /* GDDownloaderError.swift */; };
@@ -50,7 +51,6 @@
 		40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */; };
 		40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */; };
 		40D0DF55279BF8AC00F4448E /* FolderMigrationV1toV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */; };
-		40D0DF58279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */; };
 		40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */; };
 		40D0DF5C279FD0B500F4448E /* Array+subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF5B279FD0B500F4448E /* Array+subscript.swift */; };
 		40D65711276DEA210059A595 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65710276DEA210059A595 /* FileListCell.swift */; };
@@ -91,6 +91,7 @@
 		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
 		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
+		407769BC27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V1-to-V2.xcmappingmodel"; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		40953945279084930047B72F /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		409BFB152780744C00F00E52 /* GDDownloaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloaderError.swift; sourceTree = "<group>"; };
@@ -114,7 +115,6 @@
 		40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMigrationV1toV2.swift; sourceTree = "<group>"; };
-		40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V1-to-V2.xcmappingmodel"; sourceTree = "<group>"; };
 		40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewDataSource+Reload.swift"; sourceTree = "<group>"; };
 		40D0DF5B279FD0B500F4448E /* Array+subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+subscript.swift"; sourceTree = "<group>"; };
 		40D65710276DEA210059A595 /* FileListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListCell.swift; sourceTree = "<group>"; };
@@ -297,7 +297,7 @@
 		40D0DF53279BF86800F4448E /* MappingModels */ = {
 			isa = PBXGroup;
 			children = (
-				40D0DF57279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel */,
+				407769BC27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel */,
 			);
 			path = MappingModels;
 			sourceTree = "<group>";
@@ -552,11 +552,11 @@
 				40060F8C272D5D1800BA7A34 /* EditContentViewController.swift in Sources */,
 				40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */,
 				40D65711276DEA210059A595 /* FileListCell.swift in Sources */,
-				40D0DF58279C097B00F4448E /* Model-V1-to-V2.xcmappingmodel in Sources */,
 				40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */,
 				4015CD0F2797F7B400D14EDB /* FoldersViewController.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
 				409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */,
+				407769BD27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel in Sources */,
 				4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */,
 				409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */,
 				40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */,

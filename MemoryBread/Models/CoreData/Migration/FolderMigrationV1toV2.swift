@@ -16,7 +16,7 @@ class FolderMigrationV1toV2: NSEntityMigrationPolicy {
         
         // '모든 암기빵' 폴더 생성 및 기존 암기빵들과 관계 맺어주기
         let fetchRequestForFolderWithAllBreads = NSFetchRequest<NSFetchRequestResult>(entityName: "Folder")
-        fetchRequestForFolderWithAllBreads.predicate = NSPredicate(format: "orderingNumber = %lld", Int64.max)
+        fetchRequestForFolderWithAllBreads.predicate = NSPredicate(format: "index = %lld", 0)
         let resultsForFolderWithAllBreads = try manager.destinationContext.fetch(fetchRequestForFolderWithAllBreads)
         
         if let resultInstance = resultsForFolderWithAllBreads.last as? NSManagedObject {
@@ -27,7 +27,8 @@ class FolderMigrationV1toV2: NSEntityMigrationPolicy {
 
             folderWithAllBreadsInstance.setValue(UUID(), forKey: "id")
             folderWithAllBreadsInstance.setValue(LocalizingHelper.allMemoryBreads, forKey: "name")
-            folderWithAllBreadsInstance.setValue(Int64.max, forKey: "orderingNumber")
+            folderWithAllBreadsInstance.setValue(0, forKey: "index")
+            folderWithAllBreadsInstance.setValue(true, forKey: "pinnedAtTop")
         }
     
         let relationshipSet = dInstance.mutableSetValue(forKey: "folders")
@@ -35,7 +36,7 @@ class FolderMigrationV1toV2: NSEntityMigrationPolicy {
         
         // '휴지통' 폴더 생성
         let fetchRequestForTrash = NSFetchRequest<NSFetchRequestResult>(entityName: "Folder")
-        fetchRequestForTrash.predicate = NSPredicate(format: "orderingNumber = %lld", 0)
+        fetchRequestForTrash.predicate = NSPredicate(format: "index = %lld", 1)
         let resultsForTrash = try manager.destinationContext.fetch(fetchRequestForTrash)
         
         if (resultsForTrash.last as? NSManagedObject) == nil {
@@ -44,7 +45,8 @@ class FolderMigrationV1toV2: NSEntityMigrationPolicy {
             
             trashInstance.setValue(UUID(), forKey: "id")
             trashInstance.setValue(LocalizingHelper.trash, forKey: "name")
-            trashInstance.setValue(0, forKey: "orderingNumber")
+            trashInstance.setValue(1, forKey: "index")
+            trashInstance.setValue(true, forKey: "pinnedAtBottom")
         }
     }
 }

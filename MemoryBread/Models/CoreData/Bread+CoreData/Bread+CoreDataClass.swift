@@ -32,7 +32,7 @@ public class Bread: NSManagedObject {
         self.selectedFilters = selectedFilters ?? [Int]()
         
         let fetchRequest = Folder.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "orderingNumber = %lld", Int64.max)
+        fetchRequest.predicate = NSPredicate(format: "index = %lld", 0)
         
         if let mainFolder = try? context.fetch(fetchRequest).last {
             addToFolders(mainFolder)
