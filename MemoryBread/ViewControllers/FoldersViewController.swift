@@ -101,7 +101,7 @@ extension FoldersViewController {
         tableView = UITableView(frame: .zero, style: .insetGrouped).then {
             $0.tintColor = .systemPink
             $0.contentInset.bottom = 40
-            $0.register(UITableViewCell.self, forCellReuseIdentifier: FoldersViewController.reuseIdentifier)
+            $0.register(FolderListCell.self, forCellReuseIdentifier: FoldersViewController.reuseIdentifier)
             $0.delegate = self
         }
         view.addSubview(tableView)
@@ -205,10 +205,6 @@ extension FoldersViewController {
         override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
             return (indexPath.item != 0) && (indexPath.item != (snapshot().numberOfItems - 1))
         }
-        
-        override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-            return (indexPath.item != 0) && (indexPath.item != (snapshot().numberOfItems - 1))
-        }
     }
     
     private func configureDataSource() {
@@ -216,21 +212,12 @@ extension FoldersViewController {
             guard let folderObject = try? self?.viewContext.existingObject(with: objectID) as? Folder else {
                 fatalError("Managed object should be available")
             }
-            let cell = tableView.dequeueReusableCell(withIdentifier: FoldersViewController.reuseIdentifier, for: indexPath)
             
-            var contentConfiguration = UIListContentConfiguration.valueCell()
-            
-            let imageName: String
-            if folderObject.pinnedAtBottom {
-                imageName = "trash"
-            } else {
-                imageName = "folder"
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: FoldersViewController.reuseIdentifier, for: indexPath) as? FolderListCell else {
+                fatalError("FolderListCell not available")
             }
-            contentConfiguration.image = UIImage(systemName: imageName)?.withTintColor(.systemPink)
-            contentConfiguration.text = folderObject.name
-            contentConfiguration.secondaryText = "\(folderObject.breads?.count ?? -1)  >"
             
-            cell.contentConfiguration = contentConfiguration
+            cell.item = FolderListCell.Item(folderObject: folderObject)
             return cell
         })
     }

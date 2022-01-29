@@ -28,6 +28,7 @@
 		405EC184276738C40031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
 		405EC185276738C60031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
 		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
+		40743F9C27A50004009748EC /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40743F9B27A50004009748EC /* FolderListCell.swift */; };
 		407769BD27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 407769BC27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		40953946279084930047B72F /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40953945279084930047B72F /* RoundedButton.swift */; };
@@ -91,6 +92,7 @@
 		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
 		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
+		40743F9B27A50004009748EC /* FolderListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		407769BC27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V1-to-V2.xcmappingmodel"; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		40953945279084930047B72F /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 				403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */,
 				40953945279084930047B72F /* RoundedButton.swift */,
 				40D65710276DEA210059A595 /* FileListCell.swift */,
+				40743F9B27A50004009748EC /* FolderListCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */,
 				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
+				40743F9C27A50004009748EC /* FolderListCell.swift in Sources */,
 				40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */,
 				409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */,
 				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,

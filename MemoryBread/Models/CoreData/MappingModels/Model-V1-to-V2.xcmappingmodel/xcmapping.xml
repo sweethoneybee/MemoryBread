@@ -58,11 +58,11 @@
         <attribute name="migrationpolicyclassname" type="string">MemoryBread.FolderMigrationV1toV2</attribute>
         <attribute name="sourcename" type="string">Bread</attribute>
         <attribute name="mappingtypename" type="string">Undefined</attribute>
-        <attribute name="mappingnumber" type="int16">2</attribute>
+        <attribute name="mappingnumber" type="int16">1</attribute>
         <attribute name="destinationname" type="string">Bread</attribute>
         <attribute name="autogenerateexpression" type="bool">1</attribute>
         <relationship name="mappingmodel" type="1/1" destination="XDDEVMAPPINGMODEL" idrefs="z112"></relationship>
-        <relationship name="attributemappings" type="0/0" destination="XDDEVATTRIBUTEMAPPING" idrefs="z120 z117 z116 z109 z115 z102 z119 z113"></relationship>
+        <relationship name="attributemappings" type="0/0" destination="XDDEVATTRIBUTEMAPPING" idrefs="z116 z120 z102 z109 z119 z113 z117 z115"></relationship>
         <relationship name="relationshipmappings" type="0/0" destination="XDDEVRELATIONSHIPMAPPING" idrefs="z114"></relationship>
     </object>
     <object type="XDDEVATTRIBUTEMAPPING" id="z105">
