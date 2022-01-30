@@ -40,12 +40,13 @@ final class BreadListViewController: UIViewController {
     private var isAdding = false
     
     // MARK: - Models
+    var currentFolderName: String?
+    
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
         coreDataStack.viewContext
     }
     
-    private let currentFolderName: String?
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
         if let currentFolderName = currentFolderName {
@@ -67,9 +68,8 @@ final class BreadListViewController: UIViewController {
         fatalError("not implemented")
     }
     
-    init(coreDataStack: CoreDataStack, folderName: String? = nil) {
+    init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
-        self.currentFolderName = folderName
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -193,6 +193,13 @@ extension BreadListViewController {
         let writeContext = coreDataStack.writeContext
         writeContext.perform {
             let newBread = Bread.makeBasicBread(context: writeContext)
+            if let currentFolderName = self.currentFolderName {
+                let fetchRequest = Folder.fetchRequest(forName: currentFolderName)
+                if let folder = try? writeContext.fetch(fetchRequest).first {
+                    newBread.addToFolders(folder)
+                }
+            }
+            
             do {
                 try writeContext.save()
             } catch let nserror as NSError {
@@ -212,6 +219,7 @@ extension BreadListViewController {
     @objc
     func remoteDriveItemTouched() {
         let rdaVC = RemoteDriveAuthViewController(context: coreDataStack.writeContext)
+        rdaVC.currentFolderName = currentFolderName
         let nvc = UINavigationController(rootViewController: rdaVC)
         present(nvc, animated: true)
     }

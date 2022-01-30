@@ -15,6 +15,8 @@ final class RemoteDriveAuthViewController: UIViewController {
     private var tableView: UITableView!
     
     // MARK: - Model
+    var currentFolderName: String?
+    
     private var model = DriveAuthModel()
     private var gdDownloader: GDDownloader?
     private var writeContext: NSManagedObjectContext
@@ -213,6 +215,7 @@ extension RemoteDriveAuthViewController {
             gdDownloader?.authorizer = DriveAuthStorage.shared.googleDrive
             let vc = DriveFileListViewController(context: writeContext, dirID: "root", dirName: nil)
             vc.downloader = gdDownloader
+            vc.currentFolderName = currentFolderName
             fileListVC = vc
         }
         navigationController?.pushViewController(fileListVC, animated: true)

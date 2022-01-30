@@ -30,6 +30,8 @@ final class DriveFileListViewController: UIViewController {
     private var noFilesHereLabel: UILabel!
     
     // MARK: - Model
+    var currentFolderName: String? // An attribute of Folder Entity
+    
     weak var downloader: GDDownloader?
     var currentDirId: String
     private var files = OrderedDictionary<String, FileObject>()
@@ -270,6 +272,7 @@ extension DriveFileListViewController: UITableViewDelegate {
             case .folder:
                 let dflVC = DriveFileListViewController(context: writeContext, dirID: file.id, dirName: file.name)
                 dflVC.downloader = downloader
+                dflVC.currentFolderName = currentFolderName
                 navigationController?.pushViewController(dflVC, animated: true)
             }
         }
@@ -317,10 +320,20 @@ extension DriveFileListViewController: FileListCellDelegate {
                             self.present(loadingVC, animated: false)
                             
                             self.writeContext.perform {
+                                var currentFolder: Folder? = nil
+                                if let currentFolderName = self.currentFolderName {
+                                    let fetchRequest = Folder.fetchRequest(forName: currentFolderName)
+                                    currentFolder = try? self.writeContext.fetch(fetchRequest).first
+                                }
+                                
                                 for row in rows {
                                     let title = row.first
                                     let content = row.last
-                                    _ = Bread.makeBread(context: self.writeContext, title: title ?? LocalizingHelper.freshBread, content: content ?? "")
+                                    let newBread = Bread.makeBread(context: self.writeContext, title: title ?? LocalizingHelper.freshBread, content: content ?? "")
+                                    
+                                    if let currentFolder = currentFolder {
+                                        newBread.addToFolders(currentFolder)
+                                    }
                                 }
 
                                 do {
