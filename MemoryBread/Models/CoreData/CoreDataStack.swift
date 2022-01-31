@@ -21,10 +21,6 @@ final class CoreDataStack {
         return persistentContainer.newBackgroundContext()
     }()
     
-    lazy var deleteContext: NSManagedObjectContext = {
-        return persistentContainer.newBackgroundContext()
-    }()
-    
     lazy var persistentContainer: NSPersistentContainer = {
         
         let container = NSPersistentContainer(name: modelName)
@@ -50,10 +46,6 @@ final class CoreDataStack {
             self.viewContext.mergeChanges(fromContextDidSave: notificaation)
         }
         notificationTokens.append(writeNotiToken)
-        let deleteNotiToken = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: deleteContext, queue: nil) { notificaation in
-            self.viewContext.mergeChanges(fromContextDidSave: notificaation)
-        }
-        notificationTokens.append(deleteNotiToken)
     }
     
     deinit  {
@@ -66,14 +58,14 @@ final class CoreDataStack {
 // MARK: - Internal
 extension CoreDataStack {
     func deleteAndSaveObjects(of objectIDs: [NSManagedObjectID]) {
-        let deleteContext = deleteContext
-        deleteContext.perform {
+        let context = writeContext
+        context.perform {
             objectIDs.forEach { id in
-                let object = deleteContext.object(with: id)
-                deleteContext.delete(object)
+                let object = context.object(with: id)
+                context.delete(object)
             }
             do {
-                try deleteContext.save()
+                try context.save()
             } catch let nserror as NSError {
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }

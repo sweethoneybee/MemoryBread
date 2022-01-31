@@ -40,7 +40,8 @@ final class BreadListViewController: UIViewController {
     private var isAdding = false
     
     // MARK: - Models
-    var currentFolderName: String?
+    var folderName: String?
+    var folderObjectID: NSManagedObjectID?
     
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
@@ -49,8 +50,8 @@ final class BreadListViewController: UIViewController {
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
-        if let currentFolderName = currentFolderName {
-            fetchRequest.predicate = NSPredicate(format: "ANY folders.name == %@", currentFolderName)
+        if let folderName = folderName {
+            fetchRequest.predicate = NSPredicate(format: "ANY folders.name == %@", folderName)
         }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
@@ -155,7 +156,7 @@ extension BreadListViewController {
     }
     
     private func setNavigationItem() {
-        navigationItem.title = currentFolderName ?? LocalizingHelper.appTitle
+        navigationItem.title = folderName ?? LocalizingHelper.appTitle
         navigationItem.backButtonDisplayMode = .minimal
         
         remoteDriveItem = UIBarButtonItem(
@@ -193,11 +194,9 @@ extension BreadListViewController {
         let writeContext = coreDataStack.writeContext
         writeContext.perform {
             let newBread = Bread.makeBasicBread(context: writeContext)
-            if let currentFolderName = self.currentFolderName {
-                let fetchRequest = Folder.fetchRequest(forName: currentFolderName)
-                if let folder = try? writeContext.fetch(fetchRequest).first {
-                    newBread.addToFolders(folder)
-                }
+            if let folderObjectID = self.folderObjectID,
+               let folder = try? writeContext.existingObject(with: folderObjectID) as? Folder {
+                newBread.addToFolders(folder)
             }
             
             do {
@@ -219,7 +218,7 @@ extension BreadListViewController {
     @objc
     func remoteDriveItemTouched() {
         let rdaVC = RemoteDriveAuthViewController(context: coreDataStack.writeContext)
-        rdaVC.currentFolderName = currentFolderName
+        rdaVC.folderObjectID = folderObjectID
         let nvc = UINavigationController(rootViewController: rdaVC)
         present(nvc, animated: true)
     }
@@ -295,7 +294,7 @@ extension BreadListViewController {
         let hasSelectedRows = (numberOfSelectedRows != 0)
         deleteButton.isHidden = !hasSelectedRows
         deleteAllButton.isHidden = hasSelectedRows
-        navigationItem.title = hasSelectedRows ? String(format: LocalizingHelper.selectedNumberOfItems, numberOfSelectedRows) : currentFolderName
+        navigationItem.title = hasSelectedRows ? String(format: LocalizingHelper.selectedNumberOfItems, numberOfSelectedRows) : folderName
     }
 }
 

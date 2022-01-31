@@ -16,12 +16,6 @@ extension Folder {
         return NSFetchRequest<Folder>(entityName: "Folder")
     }
     
-    @nonobjc public class func fetchRequest(forName folderName: String) -> NSFetchRequest<Folder> {
-        let fetchRequest = Folder.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "name = %@", folderName)
-        return fetchRequest
-    }
-    
     @NSManaged public var id: UUID?
     @NSManaged public var index: Int64
     @NSManaged public var name: String?

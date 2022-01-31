@@ -30,7 +30,7 @@ final class DriveFileListViewController: UIViewController {
     private var noFilesHereLabel: UILabel!
     
     // MARK: - Model
-    var currentFolderName: String? // An attribute of Folder Entity
+    var folderObjectID: NSManagedObjectID?
     
     weak var downloader: GDDownloader?
     var currentDirId: String
@@ -272,7 +272,7 @@ extension DriveFileListViewController: UITableViewDelegate {
             case .folder:
                 let dflVC = DriveFileListViewController(context: writeContext, dirID: file.id, dirName: file.name)
                 dflVC.downloader = downloader
-                dflVC.currentFolderName = currentFolderName
+                dflVC.folderObjectID = folderObjectID
                 navigationController?.pushViewController(dflVC, animated: true)
             }
         }
@@ -321,9 +321,8 @@ extension DriveFileListViewController: FileListCellDelegate {
                             
                             self.writeContext.perform {
                                 var currentFolder: Folder? = nil
-                                if let currentFolderName = self.currentFolderName {
-                                    let fetchRequest = Folder.fetchRequest(forName: currentFolderName)
-                                    currentFolder = try? self.writeContext.fetch(fetchRequest).first
+                                if let folderObjectID = self.folderObjectID {
+                                    currentFolder = try? self.writeContext.existingObject(with: folderObjectID) as? Folder
                                 }
                                 
                                 for row in rows {

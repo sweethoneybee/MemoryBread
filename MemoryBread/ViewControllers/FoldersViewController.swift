@@ -243,7 +243,8 @@ extension FoldersViewController: UITableViewDelegate {
         if let objectID = dataSource.itemIdentifier(for: indexPath),
            let folderObject = try? viewContext.existingObject(with: objectID) as? Folder {
             let blvc = BreadListViewController(coreDataStack: coreDataStack)
-            blvc.currentFolderName = folderObject.name
+            blvc.folderName = folderObject.name
+            blvc.folderObjectID = folderObject.objectID
             navigationController?.pushViewController(blvc, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: true)
