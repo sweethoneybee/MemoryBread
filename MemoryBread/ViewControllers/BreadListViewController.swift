@@ -36,8 +36,8 @@ final class BreadListViewController: UIViewController {
     }
     
     // MARK: - States
-    private var diffableDataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
     private var isAdding = false
+    private var isTableViewSwipeActionShowing = false
     
     // MARK: - Models
     var folderName: String?
@@ -63,6 +63,8 @@ final class BreadListViewController: UIViewController {
         
         return controller
     }()
+
+    private var diffableDataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
 
     // MARK: - Life Cycle
     required init?(coder: NSCoder) {
@@ -262,6 +264,12 @@ extension BreadListViewController {
 // MARK: - Update Views
 extension BreadListViewController {
     private func setTableViewEditing(_ editing: Bool, animated: Bool) {
+        
+        if isTableViewSwipeActionShowing {
+            isTableViewSwipeActionShowing = false
+            tableView.setEditing(false, animated: animated)
+        }
+        
         tableView.setEditing(editing, animated: animated)
         updateViewsInEditMode(withCount: 0)
         if animated {
@@ -360,13 +368,22 @@ extension BreadListViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] _, _, completionHandler in
-            guard let self = self else { return }
-            let willBeDeletedObjectID = self.fetchedResultsController.object(at: indexPath).objectID
-            self.coreDataStack.deleteAndSaveObjects(of: [willBeDeletedObjectID])
+        
+        isTableViewSwipeActionShowing = true
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] action, _, completionHandler in
+            guard let self = self else {
+                completionHandler(false)
+                return
+            }
+            
+            let objectIDAtIndexPath = self.fetchedResultsController.object(at: indexPath).objectID
+            self.coreDataStack.deleteAndSaveObjects(of: [objectIDAtIndexPath])
+            completionHandler(true)
         }
         deleteAction.image = UIImage(systemName: "trash")
         deleteAction.backgroundColor = .systemRed
+        
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         return configuration
     }

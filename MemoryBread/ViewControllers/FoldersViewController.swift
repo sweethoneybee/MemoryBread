@@ -19,6 +19,7 @@ final class FoldersViewController: UIViewController {
     private var dataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID>!
 
     private var isTableViewReordered = false
+    private var isTableViewCellSwipeActionShowing = false
     
     // MARK: - Alert Action
     private weak var folderNameDoneAction: UIAlertAction?
@@ -71,6 +72,11 @@ final class FoldersViewController: UIViewController {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        
+        if isTableViewCellSwipeActionShowing {
+            isTableViewCellSwipeActionShowing = false
+            tableView.setEditing(false, animated: animated)
+        }
         
         tableView.setEditing(editing, animated: animated)
         if !editing {
@@ -227,13 +233,13 @@ extension FoldersViewController {
 // MARK: - UITableViewDelegate
 extension FoldersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        return (indexPath.item != 0)
-        && (indexPath.item != (dataSource.snapshot().numberOfItems - 1))
+        return (indexPath.item > pinnnedAtTopCount - 1)
+        && (indexPath.item < (dataSource.snapshot().numberOfItems - pinnedAtBottomCount))
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        if (indexPath.item != 0)
-            && (indexPath.item != (dataSource.snapshot().numberOfItems - 1)) {
+        if (indexPath.item > pinnnedAtTopCount - 1)
+            && (indexPath.item < (dataSource.snapshot().numberOfItems - pinnedAtBottomCount)) {
             return .delete
         }
         return .none
@@ -265,6 +271,31 @@ extension FoldersViewController: UITableViewDelegate {
         }
         
         return proposedDestinationIndexPath
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard indexPath.item > pinnnedAtTopCount - 1,
+              indexPath.item < dataSource.snapshot().numberOfItems - pinnedAtBottomCount else {
+                  return nil
+              }
+        
+        isTableViewCellSwipeActionShowing = true
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] action, _, completionHandler in
+            guard let self = self else {
+                completionHandler(false)
+                return
+            }
+            
+            let objectIDAtIndexPath = self.fetchedResultsController.object(at: indexPath).objectID
+            self.coreDataStack.deleteAndSaveObjects(of: [objectIDAtIndexPath])
+            completionHandler(true)
+        }
+        deleteAction.image = UIImage(systemName: "trash")
+        deleteAction.backgroundColor = .systemRed
+        
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        return configuration
     }
 }
 
