@@ -39,6 +39,7 @@
 		409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9666276B152300EB8220 /* DriveAuthModel.swift */; };
 		409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9669276B66C400EB8220 /* BasicAlert.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
+		40B0C1E927AA5F94005F2C6E /* BreadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0C1E827AA5F94005F2C6E /* BreadListView.swift */; };
 		40B176B7277DD0EB00F0B46B /* ExcelReaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */; };
 		40B176B9277DD65000F0B46B /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B176B8277DD65000F0B46B /* LoadingViewController.swift */; };
 		40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2427259F5300B8C5FC /* AppDelegate.swift */; };
@@ -103,6 +104,7 @@
 		409D9666276B152300EB8220 /* DriveAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthModel.swift; sourceTree = "<group>"; };
 		409D9669276B66C400EB8220 /* BasicAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAlert.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
+		40B0C1E827AA5F94005F2C6E /* BreadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListView.swift; sourceTree = "<group>"; };
 		40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReaderError.swift; sourceTree = "<group>"; };
 		40B176B8277DD65000F0B46B /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		40C8DE2127259F5300B8C5FC /* MemoryBread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryBread.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -392,6 +394,7 @@
 				4088CEBE272A74030071134E /* HorizontalToolbar.swift */,
 				40F92B7F272BD7880085224E /* ScrollableTitleView.swift */,
 				401AD42B277EB8B60038C9FD /* BottomToolbar.swift */,
+				40B0C1E827AA5F94005F2C6E /* BreadListView.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -531,6 +534,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
+				40B0C1E927AA5F94005F2C6E /* BreadListView.swift in Sources */,
 				40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */,
 				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
 				40743F9C27A50004009748EC /* FolderListCell.swift in Sources */,
