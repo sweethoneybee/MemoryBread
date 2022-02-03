@@ -287,14 +287,36 @@ extension FoldersViewController: UITableViewDelegate {
                 return
             }
             
-            let objectIDAtIndexPath = self.fetchedResultsController.object(at: indexPath).objectID
-            self.coreDataStack.deleteAndSaveObjects(of: [objectIDAtIndexPath])
-            completionHandler(true)
+            let folderObject = self.fetchedResultsController.object(at: indexPath)
+            if folderObject.breadsCount == 0 {
+                self.coreDataStack.deleteAndSaveObjects(of: [folderObject.objectID])
+                completionHandler(true)
+                return
+            }
+            
+            let actionSheet = UIAlertController(title: LocalizingHelper.folderAndMemoryBreadWillBeDeleted, message: nil, preferredStyle: .actionSheet)
+            let deleteAction = UIAlertAction(title: LocalizingHelper.deleteFolder, style: .destructive) { [weak self] _ in
+                guard let self = self else {
+                    completionHandler(false)
+                    return
+                }
+                self.coreDataStack.deleteAndSaveObjects(of: [folderObject.objectID])
+                completionHandler(true)
+            }
+            let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel) { _ in
+                completionHandler(false)
+            }
+            actionSheet.addAction(deleteAction)
+            actionSheet.addAction(cancelAction)
+            
+            self.present(actionSheet, animated: true)
         }
+        
         deleteAction.image = UIImage(systemName: "trash")
         deleteAction.backgroundColor = .systemRed
-        
+
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        configuration.performsFirstActionWithFullSwipe = false
         return configuration
     }
 }

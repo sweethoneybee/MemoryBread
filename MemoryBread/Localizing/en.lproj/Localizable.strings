@@ -76,3 +76,6 @@
 "name_is_already_in_use" = "The name is already in use";
 "enter_different_name" = "Please enter a different name.";
 
+"folder_and_memory_bread_will_be_deleted" = "The folder and its Memory breads will be deleted.";
+"delete_folder" = "Delete Folder";
+
