@@ -49,6 +49,19 @@ extension Bread : Identifiable {
 }
 
 extension Bread {
+    func move(toTrash trash: Folder) {
+        guard let folders = folders else { return }
+        removeFromFolders(folders)
+        addToFolders(trash)
+    }
+    
+    func move(from src: Folder, to dest: Folder) {
+        removeFromFolders(src)
+        addToFolders(dest)
+    }
+}
+
+extension Bread {
     static func makeBasicBread(context: NSManagedObjectContext) -> Bread {
         return Bread(
             context: context,
