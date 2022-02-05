@@ -263,22 +263,15 @@ extension BreadListViewController: BreadListViewDelegate {
             return
         }
         
-        let writeContext = self.coreDataStack.writeContext
-        writeContext.perform {
-            guard let trash = try? writeContext.existingObject(with: trashObjectID) as? Folder else {
+        coreDataStack.writeAndSaveIfHasChanges { context in
+            guard let trash = try? context.existingObject(with: trashObjectID) as? Folder else {
                 return
             }
             
             objectIDs.forEach {
-                if let bread = try? writeContext.existingObject(with: $0) as? Bread {
+                if let bread = try? context.existingObject(with: $0) as? Bread {
                     bread.move(toTrash: trash)
                 }
-            }
-            
-            do {
-                try writeContext.save()
-            } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }

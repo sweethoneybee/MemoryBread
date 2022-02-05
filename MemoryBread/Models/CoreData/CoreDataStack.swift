@@ -72,4 +72,19 @@ extension CoreDataStack {
             }
         }
     }
+    
+    func writeAndSaveIfHasChanges(block: @escaping (NSManagedObjectContext) -> ()) {
+        let context = writeContext
+        context.perform {
+            block(context)
+            
+            if context.hasChanges {
+                do {
+                    try context.save()
+                } catch let nserror as NSError {
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                }
+            }
+        }
+    }
 }

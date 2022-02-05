@@ -332,15 +332,13 @@ extension FoldersViewController: UITableViewDelegate {
     }
     
     private func deleteFolder(of folderObjectID: NSManagedObjectID) {
-        let writeContext = coreDataStack.writeContext
         let trashObjectID = trashObjectID
-        writeContext.perform {
-            guard let folder = try? writeContext.existingObject(with: folderObjectID) as? Folder,
+        coreDataStack.writeAndSaveIfHasChanges { context in
+            guard let folder = try? context.existingObject(with: folderObjectID) as? Folder,
                   let trashObjectID = trashObjectID,
-                  let trash = try? writeContext.existingObject(with: trashObjectID) as? Folder else {
+                  let trash = try? context.existingObject(with: trashObjectID) as? Folder else {
                 return
             }
-            
             
             if let allBreads = folder.breads?.allObjects as? [Bread] {
                 allBreads.forEach {
@@ -348,13 +346,7 @@ extension FoldersViewController: UITableViewDelegate {
                 }
             }
             
-            writeContext.delete(folder)
-            
-            do {
-                try writeContext.save()
-            } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
+            context.delete(folder)
         }
     }
 }
