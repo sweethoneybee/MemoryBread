@@ -52,6 +52,14 @@ final class FoldersViewController: UIViewController {
     private let pinnnedAtTopCount = 1
     private let pinnedAtBottomCount = 1
     
+    private var rootObjectID: NSManagedObjectID? {
+        return dataSource.snapshot().itemIdentifiers.first
+    }
+    
+    private var trashObjectID: NSManagedObjectID? {
+        return dataSource.snapshot().itemIdentifiers.last
+    }
+    
     // MARK: - Life Cycle
     required init?(coder: NSCoder) {
         fatalError("FoldersViewController not implemented")
@@ -251,6 +259,9 @@ extension FoldersViewController: UITableViewDelegate {
             let blvc = BreadListViewController(coreDataStack: coreDataStack)
             blvc.folderName = folderObject.name
             blvc.folderObjectID = folderObject.objectID
+            blvc.rootObjectID = rootObjectID
+            blvc.trashObjectID = trashObjectID
+            
             navigationController?.pushViewController(blvc, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -289,7 +300,7 @@ extension FoldersViewController: UITableViewDelegate {
             
             let folderObject = self.fetchedResultsController.object(at: indexPath)
             if folderObject.breadsCount == 0 {
-                self.coreDataStack.deleteAndSaveObjects(of: [folderObject.objectID])
+                self.deleteFolder(of: folderObject.objectID)
                 completionHandler(true)
                 return
             }
@@ -300,7 +311,7 @@ extension FoldersViewController: UITableViewDelegate {
                     completionHandler(false)
                     return
                 }
-                self.coreDataStack.deleteAndSaveObjects(of: [folderObject.objectID])
+                self.deleteFolder(of: folderObject.objectID)
                 completionHandler(true)
             }
             let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel) { _ in
@@ -318,6 +329,33 @@ extension FoldersViewController: UITableViewDelegate {
         let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
         configuration.performsFirstActionWithFullSwipe = false
         return configuration
+    }
+    
+    private func deleteFolder(of folderObjectID: NSManagedObjectID) {
+        let writeContext = coreDataStack.writeContext
+        let trashObjectID = trashObjectID
+        writeContext.perform {
+            guard let folder = try? writeContext.existingObject(with: folderObjectID) as? Folder,
+                  let trashObjectID = trashObjectID,
+                  let trash = try? writeContext.existingObject(with: trashObjectID) as? Folder else {
+                return
+            }
+            
+            
+            if let allBreads = folder.breads?.allObjects as? [Bread] {
+                allBreads.forEach {
+                    $0.move(toTrash: trash)
+                }
+            }
+            
+            writeContext.delete(folder)
+            
+            do {
+                try writeContext.save()
+            } catch let nserror as NSError {
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
     }
 }
 

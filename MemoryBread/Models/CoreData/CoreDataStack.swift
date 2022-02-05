@@ -13,9 +13,10 @@ final class CoreDataStack {
     
     private let modelName: String
     
-    var viewContext: NSManagedObjectContext {
+    lazy var viewContext: NSManagedObjectContext = {
+        persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return persistentContainer.viewContext
-    }
+    }()
     
     lazy var writeContext: NSManagedObjectContext = {
         return persistentContainer.newBackgroundContext()

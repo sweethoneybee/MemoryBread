@@ -31,6 +31,7 @@ final class DriveFileListViewController: UIViewController {
     
     // MARK: - Model
     var folderObjectID: NSManagedObjectID?
+    var rootObjectID: NSManagedObjectID?
     
     weak var downloader: GDDownloader?
     var currentDirId: String
@@ -320,19 +321,20 @@ extension DriveFileListViewController: FileListCellDelegate {
                             self.present(loadingVC, animated: false)
                             
                             self.writeContext.perform {
-                                var currentFolder: Folder? = nil
-                                if let folderObjectID = self.folderObjectID {
-                                    currentFolder = try? self.writeContext.existingObject(with: folderObjectID) as? Folder
-                                }
+                                guard let rootObjectID = self.rootObjectID,
+                                      let root = try? self.writeContext.existingObject(with: rootObjectID) as? Folder,
+                                      let folderObjectID = self.folderObjectID,
+                                      let currentFolder = try? self.writeContext.existingObject(with: folderObjectID) as? Folder else {
+                                          return
+                                      }
                                 
                                 for row in rows {
                                     let title = row.first
                                     let content = row.last
                                     let newBread = Bread.makeBread(context: self.writeContext, title: title ?? LocalizingHelper.freshBread, content: content ?? "")
                                     
-                                    if let currentFolder = currentFolder {
-                                        newBread.addToFolders(currentFolder)
-                                    }
+                                    newBread.addToFolders(root)
+                                    newBread.addToFolders(currentFolder)
                                 }
 
                                 do {

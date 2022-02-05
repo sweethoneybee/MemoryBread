@@ -16,6 +16,7 @@ final class RemoteDriveAuthViewController: UIViewController {
     
     // MARK: - Model
     var folderObjectID: NSManagedObjectID?
+    var rootObjectID: NSManagedObjectID?
     
     private var model = DriveAuthModel()
     private var gdDownloader: GDDownloader?
@@ -216,6 +217,7 @@ extension RemoteDriveAuthViewController {
             let vc = DriveFileListViewController(context: writeContext, dirID: "root", dirName: nil)
             vc.downloader = gdDownloader
             vc.folderObjectID = folderObjectID
+            vc.rootObjectID = rootObjectID
             fileListVC = vc
         }
         navigationController?.pushViewController(fileListVC, animated: true)

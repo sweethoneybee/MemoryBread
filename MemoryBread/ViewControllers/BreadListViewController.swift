@@ -34,6 +34,8 @@ final class BreadListViewController: UIViewController {
     // MARK: - Models
     var folderName: String?
     var folderObjectID: NSManagedObjectID?
+    var rootObjectID: NSManagedObjectID?
+    var trashObjectID: NSManagedObjectID?
     
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
@@ -138,6 +140,7 @@ extension BreadListViewController {
     func remoteDriveItemTouched() {
         let rdaVC = RemoteDriveAuthViewController(context: coreDataStack.writeContext)
         rdaVC.folderObjectID = folderObjectID
+        rdaVC.rootObjectID = rootObjectID
         let nvc = UINavigationController(rootViewController: rdaVC)
         present(nvc, animated: true)
     }
@@ -202,8 +205,11 @@ extension BreadListViewController: BreadListViewDelegate {
         let writeContext = coreDataStack.writeContext
         writeContext.perform {
             let newBread = Bread.makeBasicBread(context: writeContext)
-            if let folderObjectID = self.folderObjectID,
+            if let rootObjectID = self.rootObjectID,
+               let root = try? writeContext.existingObject(with: rootObjectID) as? Folder,
+               let folderObjectID = self.folderObjectID,
                let folder = try? writeContext.existingObject(with: folderObjectID) as? Folder {
+                newBread.addToFolders(root)
                 newBread.addToFolders(folder)
             }
             
@@ -235,7 +241,7 @@ extension BreadListViewController: BreadListViewDelegate {
                 let objectIDs = rows.compactMap {
                     self?.fetchedResultsController.object(at:$0).objectID
                 }
-                self?.coreDataStack.deleteAndSaveObjects(of: objectIDs)
+                self?.deleteBreads(of: objectIDs)
                 self?.setEditing(false, animated: true)
             }
         )
@@ -245,11 +251,36 @@ extension BreadListViewController: BreadListViewDelegate {
     func deleteAllButtonTouched() {
         let actionSheet = BasicAlert.makeDestructiveAlertSheet(destructiveTitle: LocalizingHelper.deleteAll) { [weak self] _ in
             if let objectIDs = self?.fetchedResultsController.fetchedObjects?.map({ $0.objectID }) {
-                self?.coreDataStack.deleteAndSaveObjects(of: objectIDs)
+                self?.deleteBreads(of: objectIDs)
                 self?.setEditing(false, animated: true)
             }
         }
         present(actionSheet, animated: true)
+    }
+    
+    private func deleteBreads(of objectIDs: [NSManagedObjectID]) {
+        guard let trashObjectID = trashObjectID else {
+            return
+        }
+        
+        let writeContext = self.coreDataStack.writeContext
+        writeContext.perform {
+            guard let trash = try? writeContext.existingObject(with: trashObjectID) as? Folder else {
+                return
+            }
+            
+            objectIDs.forEach {
+                if let bread = try? writeContext.existingObject(with: $0) as? Bread {
+                    bread.move(toTrash: trash)
+                }
+            }
+            
+            do {
+                try writeContext.save()
+            } catch let nserror as NSError {
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
     }
 }
 
@@ -298,7 +329,7 @@ extension BreadListViewController: UITableViewDelegate {
             }
             
             let objectIDAtIndexPath = self.fetchedResultsController.object(at: indexPath).objectID
-            self.coreDataStack.deleteAndSaveObjects(of: [objectIDAtIndexPath])
+            self.deleteBreads(of: [objectIDAtIndexPath])
             completionHandler(true)
         }
         deleteAction.image = UIImage(systemName: "trash")
