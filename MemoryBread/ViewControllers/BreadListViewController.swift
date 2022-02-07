@@ -33,6 +33,7 @@ final class BreadListViewController: UIViewController {
     
     // MARK: - Models
     var folderName: String?
+    var folderID: UUID?
     var folderObjectID: NSManagedObjectID?
     var rootObjectID: NSManagedObjectID?
     var trashObjectID: NSManagedObjectID?
@@ -44,15 +45,17 @@ final class BreadListViewController: UIViewController {
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
-        if let folderName = folderName {
-            fetchRequest.predicate = NSPredicate(format: "ANY folders.name == %@", folderName)
+        if let folderID = folderID {
+            fetchRequest.predicate = NSPredicate(format: "ANY folders.id = %@", folderID as CVarArg)
         }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
-        let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                    managedObjectContext: self.viewContext,
-                                                    sectionNameKeyPath: nil,
-                                                    cacheName: nil)
+        let controller = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: self.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
         controller.delegate = self
         
         return controller
@@ -165,30 +168,16 @@ extension BreadListViewController {
     }
     
     private func configureDataSource() {
-        let titleAttribute = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)]
-        let dateAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .ultraLight)]
-        let bodyAttribute = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12, weight: .light)]
-        
-        let dateHelper = DateHelper()
         diffableDataSource = DataSource(tableView: mainView.tableView) { [weak self] tableView, indexPath, objectID in
-            guard let object = try? self?.viewContext.existingObject(with: objectID) as? Bread else {
+            guard let bread = try? self?.viewContext.existingObject(with: objectID) as? Bread else {
                 fatalError("Managed object should be available")
             }
-            let cell = tableView.dequeueReusableCell(withIdentifier: BreadListView.cellReuseIdentifier, for: indexPath)
             
-            var content = cell.defaultContentConfiguration()
-            let titleAttributedString = NSAttributedString(string: object.title ?? "", attributes: titleAttribute)
-            content.attributedText = titleAttributedString
-            content.textProperties.numberOfLines = 1
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: BreadListCell.reuseIdentifier, for: indexPath) as? BreadListCell else {
+                fatalError("Cell reuse identifier should be available")
+            }
             
-            let dateString = dateHelper.string(from: object.touch ?? Date())
-            let secondaryAttributedString = NSMutableAttributedString(string: dateString + " ", attributes: dateAttribute)
-            secondaryAttributedString.append(NSAttributedString(string: String((object.content ?? "").prefix(200)), attributes: bodyAttribute))
-            
-            content.secondaryAttributedText = secondaryAttributedString
-            content.secondaryTextProperties.numberOfLines = 1
-            
-            cell.contentConfiguration = content
+            cell.configure(using: bread)
             return cell
         }
     }
@@ -241,7 +230,7 @@ extension BreadListViewController: BreadListViewDelegate {
                 let objectIDs = rows.compactMap {
                     self?.fetchedResultsController.object(at:$0).objectID
                 }
-                self?.deleteBreads(of: objectIDs)
+                self?.moveToTrash(of: objectIDs)
                 self?.setEditing(false, animated: true)
             }
         )
@@ -251,14 +240,14 @@ extension BreadListViewController: BreadListViewDelegate {
     func deleteAllButtonTouched() {
         let actionSheet = BasicAlert.makeDestructiveAlertSheet(destructiveTitle: LocalizingHelper.deleteAll) { [weak self] _ in
             if let objectIDs = self?.fetchedResultsController.fetchedObjects?.map({ $0.objectID }) {
-                self?.deleteBreads(of: objectIDs)
+                self?.moveToTrash(of: objectIDs)
                 self?.setEditing(false, animated: true)
             }
         }
         present(actionSheet, animated: true)
     }
     
-    private func deleteBreads(of objectIDs: [NSManagedObjectID]) {
+    private func moveToTrash(of objectIDs: [NSManagedObjectID]) {
         guard let trashObjectID = trashObjectID else {
             return
         }
@@ -322,7 +311,7 @@ extension BreadListViewController: UITableViewDelegate {
             }
             
             let objectIDAtIndexPath = self.fetchedResultsController.object(at: indexPath).objectID
-            self.deleteBreads(of: [objectIDAtIndexPath])
+            self.moveToTrash(of: [objectIDAtIndexPath])
             completionHandler(true)
         }
         deleteAction.image = UIImage(systemName: "trash")

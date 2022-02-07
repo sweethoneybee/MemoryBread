@@ -258,6 +258,7 @@ extension FoldersViewController: UITableViewDelegate {
            let folderObject = try? viewContext.existingObject(with: objectID) as? Folder {
             let blvc = BreadListViewController(coreDataStack: coreDataStack)
             blvc.folderName = folderObject.name
+            blvc.folderID = folderObject.id
             blvc.folderObjectID = folderObject.objectID
             blvc.rootObjectID = rootObjectID
             blvc.trashObjectID = trashObjectID

@@ -14,14 +14,12 @@ protocol BreadListViewDelegate: AnyObject {
 }
 
 final class BreadListView: UIView {
-
-    static let cellReuseIdentifier = "bread-list-view-cell-reuse-identifier"
     
     weak var delegate: BreadListViewDelegate?
     
     let tableView = UITableView(frame: .zero, style: .insetGrouped).then {
         $0.allowsMultipleSelectionDuringEditing = true
-        $0.register(UITableViewCell.self, forCellReuseIdentifier: BreadListView.cellReuseIdentifier)
+        $0.register(BreadListCell.self, forCellReuseIdentifier: BreadListCell.reuseIdentifier)
     }
 
     let tableViewHeaderLabel = UILabel().then {

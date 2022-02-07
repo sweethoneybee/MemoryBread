@@ -20,6 +20,9 @@ extension Locale {
 }
 
 final class DateHelper {
+    static let `default` = DateHelper()
+    private init() {}
+    
     /// ex) 13시 56분
     private let todayDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
