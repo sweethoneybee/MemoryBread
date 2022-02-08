@@ -256,14 +256,25 @@ extension FoldersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let objectID = dataSource.itemIdentifier(for: indexPath),
            let folderObject = try? viewContext.existingObject(with: objectID) as? Folder {
-            let blvc = BreadListViewController(coreDataStack: coreDataStack)
-            blvc.folderName = folderObject.name
-            blvc.folderID = folderObject.id
-            blvc.folderObjectID = folderObject.objectID
-            blvc.rootObjectID = rootObjectID
-            blvc.trashObjectID = trashObjectID
             
-            navigationController?.pushViewController(blvc, animated: true)
+            let destVC: UIViewController
+
+            if folderObject.pinnedAtBottom {
+                let trashVC = TrashViewController(coreDataStack: coreDataStack)
+                trashVC.folderID = folderObject.id
+                trashVC.folderObjectID = folderObject.objectID
+                destVC = trashVC
+            } else {
+                let blvc = BreadListViewController(coreDataStack: coreDataStack)
+                blvc.folderName = folderObject.name
+                blvc.folderID = folderObject.id
+                blvc.folderObjectID = folderObject.objectID
+                blvc.rootObjectID = rootObjectID
+                blvc.trashObjectID = trashObjectID
+                destVC = blvc
+            }
+            
+            navigationController?.pushViewController(destVC, animated: true)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }

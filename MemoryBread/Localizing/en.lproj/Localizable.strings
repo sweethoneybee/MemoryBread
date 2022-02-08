@@ -54,6 +54,8 @@
 "delete_all" = "Delete All";
 "delete_selected_memory_bread" = "Delete selected items";
 "selected_number_of_items" = "%d Selected";
+"delete_number_of_memory_bread_title" = "These %d Memory breads will be deleted. This action can not be rollbacked.";
+"delete_number_of_memory_bread_destructive_title" = "Delete %d Memory breads";
 
 "error_not_connected_to_the_internet" = "Not connected to the internet. Please check your internet connection.";
 "data_not_allowed" = "Data connection is not allowed. Please ensure your cellular data is on.";

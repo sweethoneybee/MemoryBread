@@ -68,6 +68,7 @@
 		40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B7F272BD7880085224E /* ScrollableTitleView.swift */; };
 		40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B81272BD7B10085224E /* BreadViewController.swift */; };
 		40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B88272C3E920085224E /* UICollectionView+Selection.swift */; };
+		40F9689E27B231E6008CBA49 /* TrashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F9689D27B231E6008CBA49 /* TrashViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -134,6 +135,7 @@
 		40F92B7F272BD7880085224E /* ScrollableTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTitleView.swift; sourceTree = "<group>"; };
 		40F92B81272BD7B10085224E /* BreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadViewController.swift; sourceTree = "<group>"; };
 		40F92B88272C3E920085224E /* UICollectionView+Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Selection.swift"; sourceTree = "<group>"; };
+		40F9689D27B231E6008CBA49 /* TrashViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrashViewController.swift; sourceTree = "<group>"; };
 		727424C018504B0C7D6E6979 /* Pods-MemoryBread.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryBread.release.xcconfig"; path = "Target Support Files/Pods-MemoryBread/Pods-MemoryBread.release.xcconfig"; sourceTree = "<group>"; };
 		83F35008E123FB08E3688565 /* libPods-MemoryBread.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MemoryBread.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C552DE7FE527EA0BC1D96EA /* Pods-MemoryBread.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoryBread.debug.xcconfig"; path = "Target Support Files/Pods-MemoryBread/Pods-MemoryBread.debug.xcconfig"; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 		40F92B83272BD7B80085224E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				40F9689D27B231E6008CBA49 /* TrashViewController.swift */,
 				4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */,
 				40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */,
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
@@ -564,6 +567,7 @@
 				4015CD0F2797F7B400D14EDB /* FoldersViewController.swift in Sources */,
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
 				409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */,
+				40F9689E27B231E6008CBA49 /* TrashViewController.swift in Sources */,
 				407769BD27A2F6590025A73A /* Model-V1-to-V2.xcmappingmodel in Sources */,
 				4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */,
 				409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */,

@@ -13,6 +13,10 @@ protocol BreadListViewDelegate: AnyObject {
     func deleteAllButtonTouched()
 }
 
+extension BreadListViewDelegate {
+    func createBreadButtonTouched() {}
+}
+
 final class BreadListView: UIView {
     
     weak var delegate: BreadListViewDelegate?
@@ -22,70 +26,73 @@ final class BreadListView: UIView {
         $0.register(BreadListCell.self, forCellReuseIdentifier: BreadListCell.reuseIdentifier)
     }
 
-    let tableViewHeaderLabel = UILabel().then {
+    private let tableViewHeaderLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 14, weight: .thin)
         $0.textAlignment = .center
         $0.frame.size.height = 30
     }
     
-    let createBreadButton = UIButton(type: .system).then {
-        $0.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
-    }
+    private var createBreadButton: UIButton?
     
-    let bottomToolbar = BottomToolbar(frame: .init(x: 0, y: 0, width: 200, height: 100)).then {
+    private let bottomToolbar = BottomToolbar(frame: .init(x: 0, y: 0, width: 200, height: 100)).then {
         $0.isHidden = true
     }
     
-    let bottomDeleteButton = UIButton(type: .system).then {
+    private let bottomDeleteButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.delete, for: .normal)
     }
     
-    @objc let bottomDeleteAllButton = UIButton(type: .system).then {
+    private let bottomDeleteAllButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.deleteAll, for: .normal)
     }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setUp()
-        configureLayouts()
-    }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setUp()
         configureLayouts()
     }
+    
+    init(isCreateButtonAvailable: Bool = true) {
+        super.init(frame: .zero)
+        if isCreateButtonAvailable {
+            self.createBreadButton = UIButton(type: .system).then {
+                $0.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+            }
+        }
+        
+        setUp()
+        configureLayouts()
+    }
 }
 
+// MARK: - Custom
 extension BreadListView {
-    func updateUI(for state: State) {
-        createBreadButton.isHidden = state.isEditing
-        bottomToolbar.isHidden = !state.isEditing
-        
-        bottomDeleteButton.isHidden = (state.numberOfSelectedRows == 0)
-        bottomDeleteAllButton.isHidden = !(bottomDeleteButton.isHidden)
-        
-        if state.isEditing {
-            createBreadButton.layer.opacity = 0
-            bottomToolbar.layer.opacity = 1
-        } else {
-            createBreadButton.layer.opacity = 1
-            bottomToolbar.layer.opacity = 0
+    var headerLabelText: String? {
+        get {
+            tableViewHeaderLabel.text
+        }
+        set {
+            tableViewHeaderLabel.text = newValue
         }
     }
-    
+}
+
+// MARK: - Set up
+extension BreadListView {
     private func setUp() {
         addSubview(tableView)
-        addSubview(createBreadButton)
-        addSubview(bottomToolbar)
-        
         tableView.tableHeaderView = tableViewHeaderLabel
+        
+        addSubview(bottomToolbar)
         bottomToolbar.addArrangedSubview(bottomDeleteButton, to: .right)
         bottomToolbar.addArrangedSubview(bottomDeleteAllButton, to: .right)
-        
-        createBreadButton.addTarget(self, action: #selector(createBreadButtonTouched), for: .touchUpInside)
         bottomDeleteButton.addTarget(self, action: #selector(bottomDeleteButtonTouched), for: .touchUpInside)
         bottomDeleteAllButton.addTarget(self, action: #selector(bottomDeleteAllButtonTouched), for: .touchUpInside)
+        
+        if let createBreadButton = createBreadButton {
+            addSubview(createBreadButton)
+            createBreadButton.addTarget(self, action: #selector(createBreadButtonTouched), for: .touchUpInside)
+        }
     }
     
     private func configureLayouts() {
@@ -93,13 +100,13 @@ extension BreadListView {
             make.edges.equalToSuperview()
         }
         
-        createBreadButton.snp.makeConstraints { make in
+        createBreadButton?.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 60, height: 60))
             make.trailing.equalTo(safeAreaLayoutGuide.snp.trailing).offset(-20)
             make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
         
-        createBreadButton.imageView?.snp.makeConstraints { make in
+        createBreadButton?.imageView?.snp.makeConstraints { make in
             make.size.equalTo(CGSize(width: 60, height: 60))
         }
         
@@ -107,6 +114,29 @@ extension BreadListView {
             make.top.equalTo(safeAreaLayoutGuide.snp.bottom).offset(-50)
             make.bottom.equalToSuperview()
             make.bottom.leading.trailing.equalToSuperview()
+        }
+    }
+}
+
+// MARK: - Interface
+extension BreadListView {
+    func setEditing(_ editing: Bool, animated: Bool) {
+        tableView.setEditing(editing, animated: animated)
+    }
+    
+    func updateUI(for state: State) {
+        createBreadButton?.isHidden = state.isEditing
+        bottomToolbar.isHidden = !state.isEditing
+        
+        bottomDeleteButton.isHidden = (state.numberOfSelectedRows == 0)
+        bottomDeleteAllButton.isHidden = !(bottomDeleteButton.isHidden)
+        
+        if state.isEditing {
+            createBreadButton?.layer.opacity = 0
+            bottomToolbar.layer.opacity = 1
+        } else {
+            createBreadButton?.layer.opacity = 1
+            bottomToolbar.layer.opacity = 0
         }
     }
 }

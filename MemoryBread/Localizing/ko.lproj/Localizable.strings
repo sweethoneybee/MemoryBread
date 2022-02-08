@@ -54,6 +54,8 @@
 "delete_all" = "모두 삭제";
 "delete_selected_memory_bread" = "선택한 암기빵 삭제";
 "selected_number_of_items" = "%d개 선택됨";
+"delete_number_of_memory_bread_title" = "이 %d개의 암기빵이 삭제됩니다. 이 동작은 취소할 수 없습니다.";
+"delete_number_of_memory_bread_destructive_title" = "%d개의 메모 삭제";
 
 "error_not_connected_to_the_internet" = "인터넷에 연결되어 있지 않습니다. 데이터 연결 상태를 확인해주세요.";
 "data_not_allowed" = "데이터 연결이 허용되어 있지 않습니다. 셀룰러 데이터가 활성화 되어있는지 확인해주세요.";

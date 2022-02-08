@@ -1,42 +1,35 @@
 //
-//  BreadListViewController.swift
+//  TrashViewController.swift
 //  MemoryBread
 //
-//  Created by 정성훈 on 2021/10/31.
-//  'ImplementingModernCollectionViews' sample code from Apple.
+//  Created by 정성훈 on 2022/02/07.
 //
 
 import UIKit
-import SnapKit
 import CoreData
 
-final class BreadListViewController: UIViewController {
-
+final class TrashViewController: UIViewController {
+    
     // MARK: - Views
-    private lazy var mainView = BreadListView()
+    private lazy var mainView = BreadListView(isCreateButtonAvailable: false)
     
-    private var remoteDriveItem: UIBarButtonItem!
-    private var moresItem: UIBarButtonItem!
-    private var doneItem: UIBarButtonItem!
-    
-    private var normalRightBarButtonItems: [UIBarButtonItem] {
-        return [moresItem, remoteDriveItem]
+    private var moresItem = UIBarButtonItem().then {
+        $0.image = UIImage(systemName: "ellipsis.circle")
+        $0.style = .plain
     }
     
-    private var editingRightBarButtonItems: [UIBarButtonItem] {
-        return [doneItem]
+    private let doneItem = UIBarButtonItem().then {
+        $0.title = LocalizingHelper.done
+        $0.style = .done
     }
     
     // MARK: - States
-    private var isAdding = false
     private var isTableViewSwipeActionShowing = false
     
     // MARK: - Models
-    var folderName: String?
+    private let folderName = LocalizingHelper.trash
     var folderID: UUID?
     var folderObjectID: NSManagedObjectID?
-    var rootObjectID: NSManagedObjectID?
-    var trashObjectID: NSManagedObjectID?
     
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
@@ -45,14 +38,16 @@ final class BreadListViewController: UIViewController {
     
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
+
         if let folderID = folderID {
             fetchRequest.predicate = NSPredicate(format: "ANY folders.id = %@", folderID as CVarArg)
         }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
+        
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
-            managedObjectContext: self.viewContext,
+            managedObjectContext: viewContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
@@ -60,9 +55,9 @@ final class BreadListViewController: UIViewController {
         
         return controller
     }()
-
-    private var diffableDataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
-
+    
+    private var dataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
+    
     // MARK: - Life Cycle
     override func loadView() {
         self.view = mainView
@@ -81,6 +76,7 @@ final class BreadListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setNavigationItem()
         configureDataSource()
         
@@ -92,7 +88,7 @@ final class BreadListViewController: UIViewController {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-
+        
         if isTableViewSwipeActionShowing {
             isTableViewSwipeActionShowing = false
             mainView.setEditing(false, animated: animated)
@@ -103,72 +99,42 @@ final class BreadListViewController: UIViewController {
         
         navigationItem.title = folderName
         navigationItem.hidesBackButton = editing
-        navigationItem.rightBarButtonItems = editing ? editingRightBarButtonItems : normalRightBarButtonItems
+        navigationItem.rightBarButtonItem = editing ? doneItem : moresItem
     }
 }
 
 // MARK: - Configure Navigation
-extension BreadListViewController {
-    
+
+extension TrashViewController {
     private func setNavigationItem() {
-        navigationItem.title = folderName ?? LocalizingHelper.appTitle
+        navigationItem.title = folderName
         navigationItem.backButtonDisplayMode = .minimal
         
-        remoteDriveItem = UIBarButtonItem(
-            image: UIImage(systemName: "square.and.arrow.down"),
-            style: .plain,
-            target: self,
-            action: #selector(remoteDriveItemTouched)
-        )
+        moresItem.target = self
+        moresItem.action = #selector(moresItemTouched)
+
+        doneItem.target = self
+        doneItem.action = #selector(doneItemTouched)
         
-        moresItem = UIBarButtonItem(
-            image: UIImage(systemName: "ellipsis.circle"),
-            style: .plain,
-            target: self,
-            action: #selector(moresItemTouched)
-        )
-        
-        doneItem = UIBarButtonItem(
-            title: LocalizingHelper.done,
-            style: .done,
-            target: self,
-            action: #selector(doneItemTouched)
-        )
-        
-        navigationItem.rightBarButtonItems = normalRightBarButtonItems
+        navigationItem.rightBarButtonItem = moresItem
     }
     
-    // MARK: - UIButton Target Actions
+    // MARK: - UIBarButtonItem Actions
     @objc
-    func remoteDriveItemTouched() {
-        let rdaVC = RemoteDriveAuthViewController(context: coreDataStack.writeContext)
-        rdaVC.folderObjectID = folderObjectID
-        rdaVC.rootObjectID = rootObjectID
-        let nvc = UINavigationController(rootViewController: rdaVC)
-        present(nvc, animated: true)
-    }
-    
-    @objc
-    func moresItemTouched() {
+    private func moresItemTouched() {
         setEditing(true, animated: true)
     }
     
     @objc
-    func doneItemTouched() {
+    private func doneItemTouched() {
         setEditing(false, animated: true)
     }
 }
 
-// MARK: - DataSource
-extension BreadListViewController {
-    class DataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID> {
-        override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-            return true
-        }
-    }
-    
+// MARK: - Configure DataSource
+extension TrashViewController {
     private func configureDataSource() {
-        diffableDataSource = DataSource(tableView: mainView.tableView) { [weak self] tableView, indexPath, objectID in
+        dataSource = BreadListViewController.DataSource(tableView: mainView.tableView) { [weak self] tableView, indexPath, objectID in
             guard let bread = try? self?.viewContext.existingObject(with: objectID) as? Bread else {
                 fatalError("Managed object should be available")
             }
@@ -184,84 +150,42 @@ extension BreadListViewController {
 }
 
 // MARK: - BreadListViewDelegate
-extension BreadListViewController: BreadListViewDelegate {
-    func createBreadButtonTouched() {
-        guard isAdding == false else {
-            return
-        }
-        
-        isAdding = true
-        let writeContext = coreDataStack.writeContext
-        writeContext.perform {
-            let newBread = Bread.makeBasicBread(context: writeContext)
-            if let rootObjectID = self.rootObjectID,
-               let root = try? writeContext.existingObject(with: rootObjectID) as? Folder,
-               let folderObjectID = self.folderObjectID,
-               let folder = try? writeContext.existingObject(with: folderObjectID) as? Folder {
-                newBread.addToFolders(root)
-                newBread.addToFolders(folder)
-            }
-            
-            do {
-                try writeContext.save()
-            } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-            DispatchQueue.main.async { [weak self] in
-                if let self = self,
-                   let bread = try? self.viewContext.existingObject(with: newBread.objectID) as? Bread {
-                    let breadVC = BreadViewController(context: self.viewContext, bread: bread)
-                    self.navigationController?.pushViewController(breadVC, animated: true)
-                    self.isAdding = false
-                }
-            }
-        }
-    }
-    
+extension TrashViewController: BreadListViewDelegate {
     func deleteButtonTouched(selectedIndexPaths rows: [IndexPath]?) {
-        guard let rows = rows,
-              rows.count > 0 else {
+        guard let rows = rows else {
             return
         }
         
-        let objectIDs = rows.compactMap {
-            fetchedResultsController.object(at:$0).objectID
-        }
-        moveToTrash(of: objectIDs)
-        setEditing(false, animated: true)
+        let alertSheet = BasicAlert.makeDestructiveAlertSheet(
+            alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, rows.count),
+            destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, rows.count),
+            completionHandler: { [weak self] _ in
+                let objectIDs = rows.compactMap {
+                    self?.fetchedResultsController.object(at:$0).objectID
+                }
+                self?.deleteBreads(of: objectIDs)
+                self?.setEditing(false, animated: true)
+            })
+        present(alertSheet, animated: true)
     }
     
     func deleteAllButtonTouched() {
-        let actionSheet = BasicAlert.makeDestructiveAlertSheet(destructiveTitle: LocalizingHelper.deleteAll) { [weak self] _ in
-            if let objectIDs = self?.diffableDataSource.snapshot().itemIdentifiers {
-                self?.moveToTrash(of: objectIDs)
-                self?.setEditing(false, animated: true)
-            }
-        }
-        present(actionSheet, animated: true)
-    }
-    
-    private func moveToTrash(of objectIDs: [NSManagedObjectID]) {
-        guard let trashObjectID = trashObjectID else {
-            return
-        }
-        
-        coreDataStack.writeAndSaveIfHasChanges { context in
-            guard let trash = try? context.existingObject(with: trashObjectID) as? Folder else {
-                return
-            }
-            
-            objectIDs.forEach {
-                if let bread = try? context.existingObject(with: $0) as? Bread {
-                    bread.move(toTrash: trash)
+        let numberOfAllBreads = dataSource.snapshot().numberOfItems
+        let alertSheet = BasicAlert.makeDestructiveAlertSheet(
+            alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, numberOfAllBreads),
+            destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, numberOfAllBreads),
+            completionHandler: { [weak self] _ in
+                if let objectIDs = self?.dataSource.snapshot().itemIdentifiers {
+                    self?.deleteBreads(of: objectIDs)
+                    self?.setEditing(false, animated: true)
                 }
-            }
-        }
+            })
+        present(alertSheet, animated: true)
     }
 }
 
 // MARK: - UITableViewDelegate
-extension BreadListViewController: UITableViewDelegate {
+extension TrashViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView.isEditing {
             let indexPaths = tableView.indexPathsForSelectedRows
@@ -305,7 +229,7 @@ extension BreadListViewController: UITableViewDelegate {
             }
             
             let objectIDAtIndexPath = self.fetchedResultsController.object(at: indexPath).objectID
-            self.moveToTrash(of: [objectIDAtIndexPath])
+            self.deleteBreads(of: [objectIDAtIndexPath])
             completionHandler(true)
         }
         deleteAction.image = UIImage(systemName: "trash")
@@ -315,18 +239,15 @@ extension BreadListViewController: UITableViewDelegate {
         return configuration
     }
     
-}
-
-// MARK: - NSFetchedResultsControllerDelegate
-extension BreadListViewController: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        guard let dataSource = mainView.tableView.dataSource as? UITableViewDiffableDataSource<Int, NSManagedObjectID> else {
-            assertionFailure("The data source has not implemented snapshot support while it should")
-            return
-        }
-        let shouldAnimate = mainView.tableView.numberOfSections != 0
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
-        mainView.headerLabelText = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)
+    private func deleteBreads(of objectIDs: [NSManagedObjectID]) {
+        coreDataStack.deleteAndSaveObjects(of: objectIDs)
     }
 }
-
+// MARK: - NSFetchedResultsControllerDelegate
+extension TrashViewController: NSFetchedResultsControllerDelegate {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        let shouldAnimate = mainView.tableView.numberOfSections != 0
+        
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
+    }
+}
