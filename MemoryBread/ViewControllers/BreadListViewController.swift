@@ -210,8 +210,12 @@ extension BreadListViewController: BreadListViewDelegate {
             DispatchQueue.main.async { [weak self] in
                 if let self = self,
                    let bread = try? self.viewContext.existingObject(with: newBread.objectID) as? Bread {
-                    let breadVC = BreadViewController(context: self.viewContext, bread: bread)
-                    self.navigationController?.pushViewController(breadVC, animated: true)
+                    
+                    let childContext = self.coreDataStack.makeChildMainQueueContext()
+                    if let childBread = childContext.object(with: bread.objectID) as? Bread {
+                        let breadVC = BreadViewController(context: childContext, bread: childBread)
+                        self.navigationController?.pushViewController(breadVC, animated: true)
+                    }
                     self.isAdding = false
                 }
             }
@@ -273,8 +277,13 @@ extension BreadListViewController: UITableViewDelegate {
             return
         }
         
-        let breadVC = BreadViewController(context: viewContext, bread: fetchedResultsController.object(at: indexPath))
-        navigationController?.pushViewController(breadVC, animated: true)
+        let childContext = coreDataStack.makeChildMainQueueContext()
+        let breadAtRow = fetchedResultsController.object(at: indexPath)
+        if let childBread = childContext.object(with: breadAtRow.objectID) as? Bread {
+            let breadVC = BreadViewController(context: childContext, bread: childBread)
+            navigationController?.pushViewController(breadVC, animated: true)            
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

@@ -124,6 +124,11 @@ extension BreadListView {
         tableView.setEditing(editing, animated: animated)
     }
     
+    struct State {
+        let isEditing: Bool
+        let numberOfSelectedRows: Int
+    }
+    
     func updateUI(for state: State) {
         createBreadButton?.isHidden = state.isEditing
         bottomToolbar.isHidden = !state.isEditing
@@ -158,9 +163,3 @@ extension BreadListView {
     }
 }
 
-extension BreadListView {
-    struct State {
-        let isEditing: Bool
-        let numberOfSelectedRows: Int
-    }
-}

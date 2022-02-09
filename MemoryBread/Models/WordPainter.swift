@@ -32,7 +32,6 @@ final class WordPainter {
 
     // MARK: - Models
     private let bread: Bread
-    private let managedObjectContext: NSManagedObjectContext
     
     /// items는 오직 순서를 위해서만 사용함; 값의 최신화를 보장하지 않음.
     private lazy var items: [Item] = populateItems()
@@ -41,17 +40,10 @@ final class WordPainter {
     }()
     
     // MARK: - Life Cycle
-    init(context: NSManagedObjectContext, bread: Bread) {
-        self.managedObjectContext = context
+    init(bread: Bread) {
         self.bread = bread
     }
-    
-    convenience init(_ model: WordPainter, context: NSManagedObjectContext) {
-        self.init(context: context, bread: model.bread)
-        self.items = model.items
-        self.itemsWithKey = model.itemsWithKey
-    }
-    
+
     // MARK: - 쿼리
     var count: Int {
         return items.count
@@ -105,13 +97,12 @@ final class WordPainter {
         return updatedKeys
     }
     
-    func saveBreadFilterIndexes() {
+    func makeFilterIndexesUpToDate() {
         bread.updateFilterIndexes(with: items.map {
             var item = Item(word: $0.word)
             item.filterColor = itemsWithKey[$0.id]?.filterColor
             return item
         })
-        try? managedObjectContext.save()
     }
     
     /// Bread's content has changed equally as `newContent`

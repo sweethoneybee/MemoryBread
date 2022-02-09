@@ -197,8 +197,13 @@ extension TrashViewController: UITableViewDelegate {
             return
         }
         
-        let breadVC = BreadViewController(context: viewContext, bread: fetchedResultsController.object(at: indexPath))
-        navigationController?.pushViewController(breadVC, animated: true)
+        let childContext = coreDataStack.makeChildMainQueueContext()
+        let breadAtRow = fetchedResultsController.object(at: indexPath)
+        if let childBread = childContext.object(with: breadAtRow.objectID) as? Bread {
+            let breadVC = BreadViewController(context: childContext, bread: childBread)
+            navigationController?.pushViewController(breadVC, animated: true)
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

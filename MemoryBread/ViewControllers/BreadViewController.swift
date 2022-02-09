@@ -64,7 +64,7 @@ final class BreadViewController: UIViewController {
     init(context: NSManagedObjectContext, bread: Bread) {
         self.managedObjectContext = context
         self.bread = bread
-        self.wordPainter = WordPainter(context: managedObjectContext, bread: bread)
+        self.wordPainter = WordPainter(bread: bread)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -96,9 +96,9 @@ final class BreadViewController: UIViewController {
         
         let selectedFiltersArray = Array(selectedFilters)
         if let latestSelectedFilters = bread.selectedFilters,
-        latestSelectedFilters != selectedFiltersArray {
+           latestSelectedFilters != selectedFiltersArray {
             bread.selectedFilters = Array(selectedFilters)
-            try? managedObjectContext.save()
+            saveContextIfNeeded()
         }
     }
     
@@ -113,7 +113,8 @@ final class BreadViewController: UIViewController {
             return
         }
         
-        wordPainter.saveBreadFilterIndexes()
+        wordPainter.makeFilterIndexesUpToDate()
+        saveContextIfNeeded()
 
         dataSource.reconfigure(wordPainter.idsHavingFilter(), animatingDifferences: true)
         editContentButtonItem.isEnabled = true
@@ -428,7 +429,7 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
             NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: titleEditAlert?.textFields?.first)
             if let inputText = titleEditAlert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) {
                 self.bread.updateTitle(inputText)
-                try? self.managedObjectContext.save()
+                self.saveContextIfNeeded()
                 self.updateNaviTitleView(using: inputText)
             }
         }
@@ -464,7 +465,8 @@ extension BreadViewController {
         guard bread.content != newContent else { return }
 
         bread.updateContent(with: newContent)
-        try? managedObjectContext.save()
+        saveContextIfNeeded()
+        
         wordPainter.refreshItems()
         
         applyNewIdentifiers(wordPainter.ids())
@@ -489,5 +491,18 @@ extension BreadViewController {
             return
         }
         editDoneAction?.isEnabled = true
+    }
+}
+
+extension BreadViewController {
+    private func saveContextIfNeeded() {
+        if managedObjectContext.hasChanges {
+            do {
+                try managedObjectContext.save()
+                try managedObjectContext.parent?.save()
+            } catch let nserror as NSError {
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
     }
 }
