@@ -11,10 +11,12 @@ final class BasicAlert {
     
     typealias BasicAlertCompletionHandler = ((UIAlertAction) -> ())
     
-    static func makeCancelAndConfirmAlert(title: String?,
-                                          message: String?,
-                                          confirmActionTitle: String? = LocalizingHelper.confirm,
-                                          completionHandler: BasicAlertCompletionHandler? = nil) -> UIAlertController {
+    static func makeCancelAndConfirmAlert(
+        title: String?,
+        message: String?,
+        confirmActionTitle: String? = LocalizingHelper.confirm,
+        completionHandler: BasicAlertCompletionHandler? = nil
+    ) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: confirmActionTitle, style: .default, handler: completionHandler))
@@ -33,10 +35,15 @@ final class BasicAlert {
         return alert
     }
     
-    static func makeDestructiveAlertSheet(alertTitle: String? = nil, destructiveTitle: String? = nil, completionHandler: BasicAlertCompletionHandler? = nil) -> UIAlertController {
+    static func makeDestructiveAlertSheet(
+        alertTitle: String? = nil,
+        destructiveTitle: String? = nil,
+        completionHandler: BasicAlertCompletionHandler? = nil,
+        cancelHandler: BasicAlertCompletionHandler? = nil
+    ) -> UIAlertController {
         let actionSheet = UIAlertController(title: alertTitle, message: nil, preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: completionHandler))
-        actionSheet.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel))
+        actionSheet.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: cancelHandler))
         return actionSheet
     }
 }

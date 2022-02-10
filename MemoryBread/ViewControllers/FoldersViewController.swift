@@ -317,22 +317,22 @@ extension FoldersViewController: UITableViewDelegate {
                 return
             }
             
-            let actionSheet = UIAlertController(title: LocalizingHelper.folderAndMemoryBreadWillBeDeleted, message: nil, preferredStyle: .actionSheet)
-            let deleteAction = UIAlertAction(title: LocalizingHelper.deleteFolder, style: .destructive) { [weak self] _ in
-                guard let self = self else {
+            let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
+                alertTitle: LocalizingHelper.folderAndMemoryBreadWillBeDeleted,
+                destructiveTitle: LocalizingHelper.deleteFolder,
+                completionHandler: { [weak self] _ in
+                    guard let self = self else {
+                        completionHandler(false)
+                        return
+                    }
+                    self.deleteFolder(of: folderObject.objectID)
+                    completionHandler(true)
+                },
+                cancelHandler: { _ in
                     completionHandler(false)
-                    return
                 }
-                self.deleteFolder(of: folderObject.objectID)
-                completionHandler(true)
-            }
-            let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel) { _ in
-                completionHandler(false)
-            }
-            actionSheet.addAction(deleteAction)
-            actionSheet.addAction(cancelAction)
-            
-            self.present(actionSheet, animated: true)
+            )
+            self.present(askingToDeleteSheet, animated: true)
         }
         
         deleteAction.image = UIImage(systemName: "trash")

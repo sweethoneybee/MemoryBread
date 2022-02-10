@@ -156,7 +156,7 @@ extension TrashViewController: BreadListViewDelegate {
             return
         }
         
-        let alertSheet = BasicAlert.makeDestructiveAlertSheet(
+        let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
             alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, rows.count),
             destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, rows.count),
             completionHandler: { [weak self] _ in
@@ -166,12 +166,12 @@ extension TrashViewController: BreadListViewDelegate {
                 self?.deleteBreads(of: objectIDs)
                 self?.setEditing(false, animated: true)
             })
-        present(alertSheet, animated: true)
+        present(askingToDeleteSheet, animated: true)
     }
     
     func deleteAllButtonTouched() {
         let numberOfAllBreads = dataSource.snapshot().numberOfItems
-        let alertSheet = BasicAlert.makeDestructiveAlertSheet(
+        let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
             alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, numberOfAllBreads),
             destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, numberOfAllBreads),
             completionHandler: { [weak self] _ in
@@ -180,7 +180,7 @@ extension TrashViewController: BreadListViewDelegate {
                     self?.setEditing(false, animated: true)
                 }
             })
-        present(alertSheet, animated: true)
+        present(askingToDeleteSheet, animated: true)
     }
 }
 
@@ -233,9 +233,21 @@ extension TrashViewController: UITableViewDelegate {
                 return
             }
             
-            let objectIDAtIndexPath = self.fetchedResultsController.object(at: indexPath).objectID
-            self.deleteBreads(of: [objectIDAtIndexPath])
-            completionHandler(true)
+            let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
+                alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, 1),
+                destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, 1),
+                completionHandler: { [weak self] _ in
+                    if let objectIDAtIndexPath = self?.fetchedResultsController.object(at: indexPath).objectID {
+                        self?.deleteBreads(of: [objectIDAtIndexPath])
+                        completionHandler(true)
+                    }
+                },
+                cancelHandler: { _ in
+                    completionHandler(false)
+                }
+            )
+            
+            self.present(askingToDeleteSheet, animated: true)
         }
         deleteAction.image = UIImage(systemName: "trash")
         deleteAction.backgroundColor = .systemRed

@@ -236,13 +236,17 @@ extension BreadListViewController: BreadListViewDelegate {
     }
     
     func deleteAllButtonTouched() {
-        let actionSheet = BasicAlert.makeDestructiveAlertSheet(destructiveTitle: LocalizingHelper.deleteAll) { [weak self] _ in
-            if let objectIDs = self?.diffableDataSource.snapshot().itemIdentifiers {
-                self?.moveToTrash(of: objectIDs)
-                self?.setEditing(false, animated: true)
+        let askingToDeleteAllSheet = BasicAlert.makeDestructiveAlertSheet(
+            alertTitle: nil,
+            destructiveTitle: LocalizingHelper.deleteAll,
+            completionHandler: { [weak self] _ in
+                if let objectIDs = self?.diffableDataSource.snapshot().itemIdentifiers {
+                    self?.moveToTrash(of: objectIDs)
+                    self?.setEditing(false, animated: true)
+                }
             }
-        }
-        present(actionSheet, animated: true)
+        )
+        present(askingToDeleteAllSheet, animated: true)
     }
     
     private func moveToTrash(of objectIDs: [NSManagedObjectID]) {
