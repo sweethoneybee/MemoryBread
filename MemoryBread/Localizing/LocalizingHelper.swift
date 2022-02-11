@@ -82,4 +82,7 @@ struct LocalizingHelper {
     
     static let folderAndMemoryBreadWillBeDeleted = "folder_and_memory_bread_will_be_deleted".localized
     static let deleteFolder = "delete_folder".localized
+    
+    static let move = "move".localized
+    static let folderMove = "folder_move".localized
 }

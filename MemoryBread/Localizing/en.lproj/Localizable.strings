@@ -81,3 +81,5 @@
 "folder_and_memory_bread_will_be_deleted" = "The folder and its Memory breads will be deleted.";
 "delete_folder" = "Delete Folder";
 
+"move" = "Move";
+"folder_move" = "Folder Move";

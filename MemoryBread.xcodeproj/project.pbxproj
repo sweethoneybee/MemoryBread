@@ -25,6 +25,7 @@
 		403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F32768903400B787A4 /* DriveAuthInfo.swift */; };
 		40534A1127B69E89002C7E6B /* MoveBreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40534A1027B69E89002C7E6B /* MoveBreadViewController.swift */; };
 		40534A1427B6A772002C7E6B /* MoveBreadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40534A1327B6A772002C7E6B /* MoveBreadModel.swift */; };
+		40534A1627B6CCB4002C7E6B /* MoveFolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40534A1527B6CCB4002C7E6B /* MoveFolderListCell.swift */; };
 		405EC17E27661E200031C19D /* ExcelReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC17D27661E200031C19D /* ExcelReader.swift */; };
 		405EC18127661E8E0031C19D /* CoreXLSX in Frameworks */ = {isa = PBXBuildFile; productRef = 405EC18027661E8E0031C19D /* CoreXLSX */; };
 		405EC184276738C40031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
@@ -94,6 +95,7 @@
 		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
 		40534A1027B69E89002C7E6B /* MoveBreadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveBreadViewController.swift; sourceTree = "<group>"; };
 		40534A1327B6A772002C7E6B /* MoveBreadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveBreadModel.swift; sourceTree = "<group>"; };
+		40534A1527B6CCB4002C7E6B /* MoveFolderListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveFolderListCell.swift; sourceTree = "<group>"; };
 		405EC1772764D5C60031C19D /* GDDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloader.swift; sourceTree = "<group>"; };
 		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 				40F7589D272AFA5A000ADD4F /* CircleCell.swift */,
 				40C8DE4127259F8500B8C5FC /* WordCell.swift */,
 				40060F92272D9A3200BA7A34 /* BreadListCell.swift */,
+				40534A1527B6CCB4002C7E6B /* MoveFolderListCell.swift */,
 				403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */,
 				40953945279084930047B72F /* RoundedButton.swift */,
 				40D65710276DEA210059A595 /* FileListCell.swift */,
@@ -566,6 +569,7 @@
 				401AD42C277EB8B60038C9FD /* BottomToolbar.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
+				40534A1627B6CCB4002C7E6B /* MoveFolderListCell.swift in Sources */,
 				40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */,
 				409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */,
 				40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */,

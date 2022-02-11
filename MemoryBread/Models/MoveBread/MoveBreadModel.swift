@@ -46,16 +46,16 @@ extension MoveBreadModel {
         selectedBreads.compactMap { $0.title }
     }
     
-    var folderInfos: [FolderInfo] {
+    var folderInfos: [FolderItem] {
         folders.map {
-            FolderInfo(
+            FolderItem(
                 name: $0.name ?? "",
                 disabled: ($0.objectID == currentFolderObjectID) ? true : false
             )
         }
     }
     
-    struct FolderInfo: Hashable {
+    struct FolderItem: Hashable {
         let name: String
         let disabled: Bool
         let id = UUID()

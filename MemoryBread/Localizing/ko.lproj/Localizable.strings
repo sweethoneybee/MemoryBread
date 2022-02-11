@@ -80,3 +80,6 @@
 
 "folder_and_memory_bread_will_be_deleted" = "해당 폴더와 암기빵이 삭제됩니다.";
 "delete_folder" = "폴더 삭제";
+
+"move" = "이동";
+"folder_move" = "폴더 이동";
