@@ -82,4 +82,5 @@
 "delete_folder" = "Delete Folder";
 
 "move" = "Move";
+"move_all" = "Move All";
 "folder_move" = "Folder Move";

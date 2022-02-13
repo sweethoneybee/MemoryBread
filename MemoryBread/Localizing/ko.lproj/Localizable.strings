@@ -82,4 +82,5 @@
 "delete_folder" = "폴더 삭제";
 
 "move" = "이동";
+"move_all" = "모두 이동";
 "folder_move" = "폴더 이동";

@@ -84,5 +84,6 @@ struct LocalizingHelper {
     static let deleteFolder = "delete_folder".localized
     
     static let move = "move".localized
+    static let moveAll = "move_all".localized
     static let folderMove = "folder_move".localized
 }

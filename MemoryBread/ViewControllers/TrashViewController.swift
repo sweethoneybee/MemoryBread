@@ -182,6 +182,14 @@ extension TrashViewController: BreadListViewDelegate {
             })
         present(askingToDeleteSheet, animated: true)
     }
+    
+    func moveButtonTouched(selectedIndexPaths rows: [IndexPath]?) {
+        print("move button touched")
+    }
+    
+    func moveAllButtonTouched() {
+        print("move all button touched")
+    }
 }
 
 // MARK: - UITableViewDelegate

@@ -11,6 +11,8 @@ protocol BreadListViewDelegate: AnyObject {
     func createBreadButtonTouched()
     func deleteButtonTouched(selectedIndexPaths rows: [IndexPath]?)
     func deleteAllButtonTouched()
+    func moveButtonTouched(selectedIndexPaths rows: [IndexPath]?)
+    func moveAllButtonTouched()
 }
 
 extension BreadListViewDelegate {
@@ -40,12 +42,22 @@ final class BreadListView: UIView {
     
     private let bottomDeleteButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.delete, for: .normal)
+        $0.isHidden = true
     }
     
     private let bottomDeleteAllButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.deleteAll, for: .normal)
     }
 
+    private let bottomMoveButton = UIButton(type: .system).then {
+        $0.setTitle(LocalizingHelper.move, for: .normal)
+        $0.isHidden = true
+    }
+    
+    private let bottomMoveAllButton = UIButton(type: .system).then {
+        $0.setTitle(LocalizingHelper.moveAll, for: .normal)
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setUp()
@@ -86,8 +98,13 @@ extension BreadListView {
         addSubview(bottomToolbar)
         bottomToolbar.addArrangedSubview(bottomDeleteButton, to: .right)
         bottomToolbar.addArrangedSubview(bottomDeleteAllButton, to: .right)
+        bottomToolbar.addArrangedSubview(bottomMoveButton, to: .left)
+        bottomToolbar.addArrangedSubview(bottomMoveAllButton, to: .left)
+        
         bottomDeleteButton.addTarget(self, action: #selector(bottomDeleteButtonTouched), for: .touchUpInside)
         bottomDeleteAllButton.addTarget(self, action: #selector(bottomDeleteAllButtonTouched), for: .touchUpInside)
+        bottomMoveButton.addTarget(self, action: #selector(bottomMoveButtonTouched), for: .touchUpInside)
+        bottomMoveAllButton.addTarget(self, action: #selector(bottomMoveAllButtonTouched), for: .touchUpInside)
         
         if let createBreadButton = createBreadButton {
             addSubview(createBreadButton)
@@ -135,6 +152,8 @@ extension BreadListView {
         
         bottomDeleteButton.isHidden = (state.numberOfSelectedRows == 0)
         bottomDeleteAllButton.isHidden = !(bottomDeleteButton.isHidden)
+        bottomMoveButton.isHidden = (state.numberOfSelectedRows == 0)
+        bottomMoveAllButton.isHidden = !(bottomMoveButton.isHidden)
         
         if state.isEditing {
             createBreadButton?.layer.opacity = 0
@@ -160,6 +179,16 @@ extension BreadListView {
     @objc
     func bottomDeleteAllButtonTouched() {
         delegate?.deleteAllButtonTouched()
+    }
+    
+    @objc
+    func bottomMoveButtonTouched() {
+        delegate?.moveButtonTouched(selectedIndexPaths: tableView.indexPathsForSelectedRows)
+    }
+    
+    @objc
+    func bottomMoveAllButtonTouched() {
+        delegate?.moveAllButtonTouched()
     }
 }
 
