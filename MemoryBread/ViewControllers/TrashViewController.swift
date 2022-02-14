@@ -161,7 +161,7 @@ extension TrashViewController: BreadListViewDelegate {
             destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, rows.count),
             completionHandler: { [weak self] _ in
                 let objectIDs = rows.compactMap {
-                    self?.fetchedResultsController.object(at:$0).objectID
+                    self?.bread(at: $0).objectID
                 }
                 self?.deleteBreads(of: objectIDs)
                 self?.setEditing(false, animated: true)
@@ -184,11 +184,40 @@ extension TrashViewController: BreadListViewDelegate {
     }
     
     func moveButtonTouched(selectedIndexPaths rows: [IndexPath]?) {
-        print("move button touched")
+        guard let rows = rows,
+              rows.count > 0 else {
+            return
+        }
+        
+        let selectedObjectIDs = breads(at: rows).map { $0.objectID }
+        presentMoveBreadViewController(with: selectedObjectIDs)
     }
     
     func moveAllButtonTouched() {
-        print("move all button touched")
+        let allObjectIDs = dataSource.snapshot().itemIdentifiers
+        presentMoveBreadViewController(with: allObjectIDs)
+    }
+    
+    private func presentMoveBreadViewController(with targetBreadObjectIDs: [NSManagedObjectID]) {
+        let model = MoveBreadModel(
+            context: coreDataStack.writeContext,
+            selectedBreadObjectIDs: targetBreadObjectIDs,
+            currentFolderObjectID: folderObjectID
+        )
+        let mbvc = MoveBreadViewController(model: model)
+        let nvc = UINavigationController(rootViewController: mbvc)
+        
+        present(nvc, animated: true)
+    }
+    
+    private func bread(at indexPath: IndexPath) -> Bread {
+        return fetchedResultsController.object(at: indexPath)
+    }
+    
+    private func breads(at indexPaths: [IndexPath]) -> [Bread] {
+        return indexPaths.map {
+            fetchedResultsController.object(at: $0)
+        }
     }
 }
 
@@ -206,8 +235,8 @@ extension TrashViewController: UITableViewDelegate {
         }
         
         let childContext = coreDataStack.makeChildMainQueueContext()
-        let breadAtRow = fetchedResultsController.object(at: indexPath)
-        if let childBread = childContext.object(with: breadAtRow.objectID) as? Bread {
+        let selectedObjectID = bread(at: indexPath).objectID
+        if let childBread = childContext.object(with: selectedObjectID) as? Bread {
             let breadVC = BreadViewController(context: childContext, bread: childBread)
             navigationController?.pushViewController(breadVC, animated: true)
         }
@@ -245,8 +274,8 @@ extension TrashViewController: UITableViewDelegate {
                 alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, 1),
                 destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, 1),
                 completionHandler: { [weak self] _ in
-                    if let objectIDAtIndexPath = self?.fetchedResultsController.object(at: indexPath).objectID {
-                        self?.deleteBreads(of: [objectIDAtIndexPath])
+                    if let objectID = self?.bread(at: indexPath).objectID {
+                        self?.deleteBreads(of: [objectID])
                         completionHandler(true)
                     }
                 },
@@ -274,5 +303,6 @@ extension TrashViewController: NSFetchedResultsControllerDelegate {
         let shouldAnimate = mainView.tableView.numberOfSections != 0
         
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
+        moresItem.isEnabled = snapshot.numberOfItems != 0
     }
 }

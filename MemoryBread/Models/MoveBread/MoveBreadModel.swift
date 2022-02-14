@@ -11,7 +11,7 @@ import CoreData
 final class MoveBreadModel {
     private let moc: NSManagedObjectContext
     private let selectedBreadObjectIDs: [NSManagedObjectID]
-    private let currentFolderObjectID: NSManagedObjectID
+    private let currentFolderObjectID: NSManagedObjectID?
     
     private lazy var selectedBreads: [Bread] = {
         selectedBreadObjectIDs.compactMap { objectID in
@@ -34,7 +34,11 @@ final class MoveBreadModel {
         (try? moc.fetch(foldersFetchRequest)) ?? []
     }()
     
-    init(context: NSManagedObjectContext, selectedBreadObjectIDs: [NSManagedObjectID], currentFolderObjectID: NSManagedObjectID) {
+    init(
+        context: NSManagedObjectContext,
+        selectedBreadObjectIDs: [NSManagedObjectID],
+        currentFolderObjectID: NSManagedObjectID?
+    ) {
         self.moc = context
         self.selectedBreadObjectIDs = selectedBreadObjectIDs
         self.currentFolderObjectID = currentFolderObjectID

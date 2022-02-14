@@ -147,14 +147,6 @@ extension BreadListView {
     }
     
     func updateUI(for state: State) {
-        createBreadButton?.isHidden = state.isEditing
-        bottomToolbar.isHidden = !state.isEditing
-        
-        bottomDeleteButton.isHidden = (state.numberOfSelectedRows == 0)
-        bottomDeleteAllButton.isHidden = !(bottomDeleteButton.isHidden)
-        bottomMoveButton.isHidden = (state.numberOfSelectedRows == 0)
-        bottomMoveAllButton.isHidden = !(bottomMoveButton.isHidden)
-        
         if state.isEditing {
             createBreadButton?.layer.opacity = 0
             bottomToolbar.layer.opacity = 1
@@ -162,6 +154,14 @@ extension BreadListView {
             createBreadButton?.layer.opacity = 1
             bottomToolbar.layer.opacity = 0
         }
+
+        createBreadButton?.isHidden = state.isEditing
+        bottomToolbar.isHidden = !state.isEditing
+        
+        bottomDeleteButton.isHidden = (state.numberOfSelectedRows == 0)
+        bottomDeleteAllButton.isHidden = !(bottomDeleteButton.isHidden)
+        bottomMoveButton.isHidden = (state.numberOfSelectedRows == 0)
+        bottomMoveAllButton.isHidden = !(bottomMoveButton.isHidden)
     }
 }
 
