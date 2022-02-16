@@ -9,7 +9,7 @@ import CoreData
 
 extension NSManagedObjectContext {
     func saveContextAndParentIfNeeded(forcing: Bool = false) {
-        if forcing && hasChanges {
+        if forcing || hasChanges {
             do {
                 try save()
                 try parent?.save()

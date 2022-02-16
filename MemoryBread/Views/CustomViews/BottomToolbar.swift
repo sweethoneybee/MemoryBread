@@ -10,18 +10,15 @@ import UIKit
 final class BottomToolbar: UIView {
 
     struct UIConstants {
-        static let containerViewInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+        static let containerViewInsetsAmount = CGFloat(10)
         static let spacing = CGFloat(5)
     }
     
     // MARK: - Views
-    
     private let containerView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .top
         $0.distribution = .fill
-        $0.isLayoutMarginsRelativeArrangement = true
-        $0.directionalLayoutMargins = UIConstants.containerViewInsets
         $0.spacing = UIConstants.spacing
     }
     
@@ -51,7 +48,7 @@ extension BottomToolbar {
         
         // MARK: - layouts
         containerView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalToSuperview().inset(UIConstants.containerViewInsetsAmount)
         }
     }
 }
