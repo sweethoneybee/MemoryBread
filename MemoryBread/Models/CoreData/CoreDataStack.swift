@@ -14,8 +14,9 @@ final class CoreDataStack {
     private let modelName: String
     
     lazy var viewContext: NSManagedObjectContext = {
-        persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        return persistentContainer.viewContext
+        let context = makeChildMainQueueContext()
+        context.automaticallyMergesChangesFromParent = true
+        return context
     }()
     
     lazy var writeContext: NSManagedObjectContext = {
@@ -42,11 +43,6 @@ final class CoreDataStack {
     
     init(modelName: String) {
         self.modelName = modelName
-        
-        let writeNotiToken = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: writeContext, queue: nil) { notificaation in
-            self.viewContext.mergeChanges(fromContextDidSave: notificaation)
-        }
-        notificationTokens.append(writeNotiToken)
     }
     
     deinit  {

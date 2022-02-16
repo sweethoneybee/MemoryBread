@@ -98,7 +98,7 @@ final class BreadViewController: UIViewController {
         if let latestSelectedFilters = bread.selectedFilters,
            latestSelectedFilters != selectedFiltersArray {
             bread.selectedFilters = Array(selectedFilters)
-            saveContextIfNeeded()
+            managedObjectContext.saveContextAndParentIfNeeded()
         }
     }
     
@@ -114,7 +114,7 @@ final class BreadViewController: UIViewController {
         }
         
         wordPainter.makeFilterIndexesUpToDate()
-        saveContextIfNeeded()
+        managedObjectContext.saveContextAndParentIfNeeded()
 
         dataSource.reconfigure(wordPainter.idsHavingFilter(), animatingDifferences: true)
         editContentButtonItem.isEnabled = true
@@ -429,7 +429,7 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
             NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: titleEditAlert?.textFields?.first)
             if let inputText = titleEditAlert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) {
                 self.bread.updateTitle(inputText)
-                self.saveContextIfNeeded()
+                self.managedObjectContext.saveContextAndParentIfNeeded()
                 self.updateNaviTitleView(using: inputText)
             }
         }
@@ -465,7 +465,7 @@ extension BreadViewController {
         guard bread.content != newContent else { return }
 
         bread.updateContent(with: newContent)
-        saveContextIfNeeded()
+        managedObjectContext.saveContextAndParentIfNeeded()
         
         wordPainter.refreshItems()
         
@@ -491,18 +491,5 @@ extension BreadViewController {
             return
         }
         editDoneAction?.isEnabled = true
-    }
-}
-
-extension BreadViewController {
-    private func saveContextIfNeeded() {
-        if managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-                try managedObjectContext.parent?.save()
-            } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
     }
 }

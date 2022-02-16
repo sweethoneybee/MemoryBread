@@ -21,6 +21,7 @@
 		401AD42C277EB8B60038C9FD /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401AD42B277EB8B60038C9FD /* BottomToolbar.swift */; };
 		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
+		40370D6B27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40370D6A27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift */; };
 		403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */; };
 		403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F32768903400B787A4 /* DriveAuthInfo.swift */; };
 		40534A1127B69E89002C7E6B /* MoveBreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40534A1027B69E89002C7E6B /* MoveBreadViewController.swift */; };
@@ -90,6 +91,7 @@
 		401AD42B277EB8B60038C9FD /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
 		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
+		40370D6A27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Save.swift"; sourceTree = "<group>"; };
 		403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveCell.swift; sourceTree = "<group>"; };
 		403E63F32768903400B787A4 /* DriveAuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthInfo.swift; sourceTree = "<group>"; };
 		404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MemoryBread-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -404,6 +406,7 @@
 				40060F8F272D77F500BA7A34 /* UIColor+CustomColor.swift */,
 				40F1D607273D70320053AB73 /* String+Helper.swift */,
 				40D0DF5B279FD0B500F4448E /* Array+subscript.swift */,
+				40370D6A27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -608,6 +611,7 @@
 				409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */,
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
 				405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */,
+				40370D6B27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift in Sources */,
 				403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */,
 				40B176B9277DD65000F0B46B /* LoadingViewController.swift in Sources */,
 				40B176B7277DD0EB00F0B46B /* ExcelReaderError.swift in Sources */,

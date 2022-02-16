@@ -99,11 +99,7 @@ final class FoldersViewController: UIViewController {
 
             if viewContext.hasChanges {
                 isTableViewReordered = true
-                do {
-                    try viewContext.save()
-                } catch let nserror as NSError {
-                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                }
+                viewContext.saveContextAndParentIfNeeded(forcing: true)
             }
         }
     }
