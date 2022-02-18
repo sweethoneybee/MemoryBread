@@ -84,3 +84,7 @@
 "move" = "Move";
 "move_all" = "Move All";
 "folder_move" = "Folder Move";
+
+"no_selected_memory_bread" = "No selected Memory bread";
+"and_the_number_of_breads" = "and %d breads";
+"selected_the_number_of_memory_breads" = "%d Memory bread selected";

@@ -53,7 +53,7 @@ final class MoveBreadModel {
 extension MoveBreadModel {
     func selectedBreadNames(inWidth maxWidth: CGFloat, withAttributes attributes: [NSAttributedString.Key : Any]) -> String {
         guard let lastName = selectedBreadNames.last else {
-            return "선택된 암기빵 없음"
+            return LocalizingHelper.noSelectedMemoryBread
         }
         
         let connectedNames = selectedBreadNames.reduce("") { partialResult, nextName in
@@ -67,7 +67,7 @@ extension MoveBreadModel {
             return connectedNames
         }
         
-        let trailingText = selectedBreads.count != 1 ? " 외 \(selectedBreadNames.count - 1)개" : ""
+        let trailingText = selectedBreads.count != 1 ? " " + String(format: LocalizingHelper.andTheNumberOfBreads, selectedBreadNames.count) : ""
         let omittedNames = lastName + trailingText
         if omittedNames.size(withAttributes: attributes).width < maxWidth {
             return omittedNames
@@ -101,7 +101,7 @@ extension MoveBreadModel {
     }
     
     func selectedBreadsCount() -> String {
-        return "\(selectedBreadNames.count)개의 암기빵이 선택됨"
+        return String(format: LocalizingHelper.selectedTheNumberOfMemoryBreads, selectedBreadNames.count)
     }
     
     var folderItems: [FolderItem] {

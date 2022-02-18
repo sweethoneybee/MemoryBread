@@ -84,3 +84,7 @@
 "move" = "이동";
 "move_all" = "모두 이동";
 "folder_move" = "폴더 이동";
+
+"no_selected_memory_bread" = "선택된 암기빵이 없습니다.";
+"and_the_number_of_breads" = "외 %d개";
+"selected_the_number_of_memory_breads" = "%d개의 암기빵이 선택됨";
