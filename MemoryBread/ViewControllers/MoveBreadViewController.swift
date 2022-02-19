@@ -26,6 +26,9 @@ final class MoveBreadViewController: UIViewController {
     private let model: MoveBreadModel
     private var dataSource: UITableViewDiffableDataSource<Int, FolderItem>!
 
+    typealias DoneHandler = (() -> Void)
+    private let moveDoneHandler: DoneHandler
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -47,6 +50,7 @@ final class MoveBreadViewController: UIViewController {
             make.top.equalTo(selectedBreadsView.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
+        tableView.delegate = self
         
         configureDataSource()
     }
@@ -56,8 +60,9 @@ final class MoveBreadViewController: UIViewController {
         updateViews()
     }
     
-    init(model: MoveBreadModel) {
+    init(model: MoveBreadModel, moveDoneHandler handler: @escaping DoneHandler) {
         self.model = model
+        self.moveDoneHandler = handler
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -98,9 +103,27 @@ extension MoveBreadViewController {
     }
     
 }
+
 extension MoveBreadViewController {
     @objc
     private func cancelBarButtonItemTapped() {
         dismiss(animated: true)
+    }
+}
+
+extension MoveBreadViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        let folderItem = dataSource.itemIdentifier(for: indexPath)
+        return !(folderItem?.disabled ?? true)
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
+            model.moveBreads(to: selectedItem.objectID)
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+        dismiss(animated: true) {
+            self.moveDoneHandler()
+        }
     }
 }

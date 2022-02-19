@@ -53,11 +53,11 @@ final class FoldersViewController: UIViewController {
     private let pinnedAtBottomCount = 1
     
     private var rootObjectID: NSManagedObjectID? {
-        return dataSource.snapshot().itemIdentifiers.first
+        return fetchedResultsController.fetchedObjects?.first?.objectID
     }
     
     private var trashObjectID: NSManagedObjectID? {
-        return dataSource.snapshot().itemIdentifiers.last
+        return fetchedResultsController.fetchedObjects?.last?.objectID
     }
     
     // MARK: - Life Cycle
@@ -250,29 +250,31 @@ extension FoldersViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    
         if let objectID = dataSource.itemIdentifier(for: indexPath),
-           let folderObject = try? viewContext.existingObject(with: objectID) as? Folder {
+           let folderObject = try? viewContext.existingObject(with: objectID) as? Folder,
+           let rootObjectID = rootObjectID,
+           let trashObjectID = trashObjectID {
             
-            let destVC: UIViewController
-
             if folderObject.pinnedAtBottom {
-                let trashVC = TrashViewController(coreDataStack: coreDataStack)
-                trashVC.folderID = folderObject.id
-                trashVC.folderObjectID = folderObject.objectID
-                destVC = trashVC
-            } else {
-                let blvc = BreadListViewController(coreDataStack: coreDataStack)
-                blvc.folderName = folderObject.name
-                blvc.folderID = folderObject.id
-                blvc.folderObjectID = folderObject.objectID
-                blvc.rootObjectID = rootObjectID
-                blvc.trashObjectID = trashObjectID
-                destVC = blvc
+                let trashVC = TrashViewController(
+                    coreDataStack: coreDataStack,
+                    rootObjectID: rootObjectID,
+                    trashObjectID: trashObjectID
+                )
+                navigationController?.pushViewController(trashVC, animated: true)
+                return
             }
             
-            navigationController?.pushViewController(destVC, animated: true)
+            let blvc = BreadListViewController(
+                coreDataStack: coreDataStack,
+                currentFolderObjectID: folderObject.objectID,
+                rootObjectID: rootObjectID,
+                trashObjectID: trashObjectID
+            )
+            navigationController?.pushViewController(blvc, animated: true)
         }
-        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {

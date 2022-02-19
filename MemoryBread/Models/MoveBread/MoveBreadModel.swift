@@ -11,7 +11,30 @@ import CoreData
 final class MoveBreadModel {
     private let moc: NSManagedObjectContext
     private let selectedBreadObjectIDs: [NSManagedObjectID]
-    private let currentFolderObjectID: NSManagedObjectID?
+    private let currentFolderObjectID: NSManagedObjectID
+    private let rootObjectID: NSManagedObjectID
+    private let trashObjectID: NSManagedObjectID
+    
+    private lazy var currentFolcerObject: Folder = {
+        guard let currentFolder = moc.object(with: currentFolderObjectID) as? Folder else {
+            fatalError("Folder casting error")
+        }
+        return currentFolder
+    }()
+    
+    private lazy var rootObject: Folder = {
+        guard let root = moc.object(with: rootObjectID) as? Folder else {
+            fatalError("Folder casting error")
+        }
+        return root
+    }()
+    
+    private lazy var trashObject: Folder = {
+        guard let trash = moc.object(with: trashObjectID) as? Folder else {
+            fatalError("Folder casting error")
+        }
+        return trash
+    }()
     
     private lazy var selectedBreads: [Bread] = {
         selectedBreadObjectIDs.compactMap { objectID in
@@ -41,11 +64,15 @@ final class MoveBreadModel {
     init(
         context: NSManagedObjectContext,
         selectedBreadObjectIDs: [NSManagedObjectID],
-        currentFolderObjectID: NSManagedObjectID?
+        currentFolderObjectID: NSManagedObjectID,
+        rootObjectID: NSManagedObjectID,
+        trashObjectID: NSManagedObjectID
     ) {
         self.moc = context
         self.selectedBreadObjectIDs = selectedBreadObjectIDs
         self.currentFolderObjectID = currentFolderObjectID
+        self.rootObjectID = rootObjectID
+        self.trashObjectID = trashObjectID
     }
 }
 
@@ -106,7 +133,8 @@ extension MoveBreadModel {
         folders.map {
             FolderItem(
                 name: $0.name ?? "",
-                disabled: ($0.objectID == currentFolderObjectID) ? true : false
+                disabled: ($0.objectID == currentFolderObjectID) ? true : false,
+                objectID: $0.objectID
             )
         }
     }
@@ -114,6 +142,56 @@ extension MoveBreadModel {
     struct FolderItem: Hashable {
         let name: String
         let disabled: Bool
-        let id = UUID()
+        let objectID: NSManagedObjectID
+    }
+}
+
+extension MoveBreadModel {
+    func moveBreads(to destObjectID: NSManagedObjectID) {
+        guard let destFolder = moc.object(with: destObjectID) as? Folder else {
+            return
+        }
+        
+        if isInTrash() {
+            moveFromTrash(to: destFolder)
+            moc.saveContextAndParentIfNeeded()
+            return
+        }
+        
+        if isInRoot() {
+            moveFromRoot(to: destFolder)
+            moc.saveContextAndParentIfNeeded()
+            return
+        }
+        
+        moveSelectedBreads(from: currentFolcerObject, to: destFolder)
+        moc.saveContextAndParentIfNeeded()
+    }
+ 
+    private func isInTrash() -> Bool {
+        return currentFolderObjectID == trashObjectID
+    }
+    
+    private func isInRoot() -> Bool {
+        return currentFolderObjectID == rootObjectID
+    }
+    
+    private func moveFromTrash(to dest: Folder) {
+        selectedBreads.forEach {
+            $0.addToFolders(rootObject)
+            $0.move(from: trashObject, to: dest)
+        }
+    }
+
+    private func moveFromRoot(to dest: Folder) {
+        selectedBreads.forEach {
+            $0.move(to: dest, root: rootObject)
+        }
+    }
+
+    private func moveSelectedBreads(from src: Folder, to dest: Folder) {
+        selectedBreads.forEach {
+            $0.move(from: src, to: dest)
+        }
     }
 }

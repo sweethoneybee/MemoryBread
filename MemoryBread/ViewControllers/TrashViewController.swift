@@ -28,8 +28,18 @@ final class TrashViewController: UIViewController {
     
     // MARK: - Models
     private let folderName = LocalizingHelper.trash
-    var folderID: UUID?
-    var folderObjectID: NSManagedObjectID?
+    private lazy var trash: Folder = {
+        guard let folder = viewContext.object(with: trashObjectID) as? Folder else {
+            fatalError("Folder casting error")
+        }
+        return folder
+    }()
+    
+    private var folderID: UUID? {
+        trash.id
+    }
+    private let rootObjectID: NSManagedObjectID
+    private let trashObjectID: NSManagedObjectID
     
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
@@ -69,8 +79,14 @@ final class TrashViewController: UIViewController {
         fatalError("not implemented")
     }
     
-    init(coreDataStack: CoreDataStack) {
+    init(
+        coreDataStack: CoreDataStack,
+        rootObjectID: NSManagedObjectID,
+        trashObjectID: NSManagedObjectID
+    ) {
         self.coreDataStack = coreDataStack
+        self.rootObjectID = rootObjectID
+        self.trashObjectID = trashObjectID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -202,9 +218,13 @@ extension TrashViewController: BreadListViewDelegate {
         let model = MoveBreadModel(
             context: coreDataStack.writeContext,
             selectedBreadObjectIDs: targetBreadObjectIDs,
-            currentFolderObjectID: folderObjectID
+            currentFolderObjectID: trashObjectID,
+            rootObjectID: rootObjectID,
+            trashObjectID: trashObjectID
         )
-        let mbvc = MoveBreadViewController(model: model)
+        let mbvc = MoveBreadViewController(model: model) { [weak self] in
+            self?.setEditing(false, animated: true)
+        }
         let nvc = UINavigationController(rootViewController: mbvc)
         
         present(nvc, animated: true)

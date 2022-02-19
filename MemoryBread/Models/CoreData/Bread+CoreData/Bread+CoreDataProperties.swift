@@ -59,6 +59,13 @@ extension Bread {
         removeFromFolders(src)
         addToFolders(dest)
     }
+    
+    func move(to dest: Folder, root: Folder) {
+        guard let folders = folders else { return }
+        removeFromFolders(folders)
+        addToFolders(dest)
+        addToFolders(root)
+    }
 }
 
 extension Bread {

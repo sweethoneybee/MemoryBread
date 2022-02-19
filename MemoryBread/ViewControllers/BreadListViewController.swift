@@ -32,11 +32,23 @@ final class BreadListViewController: UIViewController {
     private var isTableViewSwipeActionShowing = false
     
     // MARK: - Models
-    var folderName: String?
-    var folderID: UUID?
-    var folderObjectID: NSManagedObjectID?
-    var rootObjectID: NSManagedObjectID?
-    var trashObjectID: NSManagedObjectID?
+    private lazy var folderObject: Folder = {
+        guard let folder = viewContext.object(with: currentFolderObjectID) as? Folder else {
+            fatalError("Folder casting error")
+        }
+        return folder
+    }()
+    
+    private var folderName: String? {
+        folderObject.name
+    }
+    private var folderID: UUID? {
+        folderObject.id
+    }
+    
+    private let currentFolderObjectID: NSManagedObjectID
+    private let rootObjectID: NSManagedObjectID
+    private let trashObjectID: NSManagedObjectID
     
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
@@ -74,8 +86,16 @@ final class BreadListViewController: UIViewController {
         fatalError("not implemented")
     }
     
-    init(coreDataStack: CoreDataStack) {
+    init(
+        coreDataStack: CoreDataStack,
+        currentFolderObjectID: NSManagedObjectID,
+        rootObjectID: NSManagedObjectID,
+        trashObjectID: NSManagedObjectID
+    ) {
         self.coreDataStack = coreDataStack
+        self.currentFolderObjectID = currentFolderObjectID
+        self.rootObjectID = rootObjectID
+        self.trashObjectID = trashObjectID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -142,7 +162,7 @@ extension BreadListViewController {
     @objc
     func remoteDriveItemTouched() {
         let rdaVC = RemoteDriveAuthViewController(context: coreDataStack.writeContext)
-        rdaVC.folderObjectID = folderObjectID
+        rdaVC.folderObjectID = currentFolderObjectID
         rdaVC.rootObjectID = rootObjectID
         let nvc = UINavigationController(rootViewController: rdaVC)
         present(nvc, animated: true)
@@ -194,10 +214,8 @@ extension BreadListViewController: BreadListViewDelegate {
         let writeContext = coreDataStack.writeContext
         writeContext.perform {
             let newBread = Bread.makeBasicBread(context: writeContext)
-            if let rootObjectID = self.rootObjectID,
-               let root = try? writeContext.existingObject(with: rootObjectID) as? Folder,
-               let folderObjectID = self.folderObjectID,
-               let folder = try? writeContext.existingObject(with: folderObjectID) as? Folder {
+            if let root = try? writeContext.existingObject(with: self.rootObjectID) as? Folder,
+               let folder = try? writeContext.existingObject(with: self.currentFolderObjectID) as? Folder {
                 newBread.addToFolders(root)
                 newBread.addToFolders(folder)
             }
@@ -248,12 +266,8 @@ extension BreadListViewController: BreadListViewDelegate {
     }
     
     private func moveToTrash(of objectIDs: [NSManagedObjectID]) {
-        guard let trashObjectID = trashObjectID else {
-            return
-        }
-        
         coreDataStack.writeAndSaveIfHasChanges { context in
-            guard let trash = try? context.existingObject(with: trashObjectID) as? Folder else {
+            guard let trash = try? context.existingObject(with: self.trashObjectID) as? Folder else {
                 return
             }
             
@@ -284,9 +298,13 @@ extension BreadListViewController: BreadListViewDelegate {
         let model = MoveBreadModel(
             context: coreDataStack.writeContext,
             selectedBreadObjectIDs: targetBreadObjectIDs,
-            currentFolderObjectID: folderObjectID
+            currentFolderObjectID: currentFolderObjectID,
+            rootObjectID: rootObjectID,
+            trashObjectID: trashObjectID
         )
-        let mbvc = MoveBreadViewController(model: model)
+        let mbvc = MoveBreadViewController(model: model) { [weak self] in
+            self?.setEditing(false, animated: true)
+        }
         let nvc = UINavigationController(rootViewController: mbvc)
         
         present(nvc, animated: true)
