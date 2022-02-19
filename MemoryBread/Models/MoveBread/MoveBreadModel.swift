@@ -12,7 +12,6 @@ final class MoveBreadModel {
     private let moc: NSManagedObjectContext
     private let selectedBreadObjectIDs: [NSManagedObjectID]
     private let currentFolderObjectID: NSManagedObjectID?
-    private let prefixTrimmingLength = 15
     
     private lazy var selectedBreads: [Bread] = {
         selectedBreadObjectIDs.compactMap { objectID in
@@ -88,8 +87,7 @@ extension MoveBreadModel {
         inWidth maxWidth: CGFloat,
         withAttributes attributes: [NSAttributedString.Key : Any]
     ) -> String {
-        let prefixLength = prefixTrimmingLength
-        var trimmedText = String(text.prefix(prefixLength))
+        var trimmedText = text
         var resultText = trimmedText + "..." + trailingText
         while resultText.size(withAttributes: attributes).width >= maxWidth,
               trimmedText.isEmpty != true {
