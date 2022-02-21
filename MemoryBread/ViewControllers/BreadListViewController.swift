@@ -42,8 +42,13 @@ final class BreadListViewController: UIViewController {
     private var folderName: String? {
         folderObject.name
     }
+    
     private var folderID: UUID? {
         folderObject.id
+    }
+    
+    private var showFolder: Bool {
+        folderObject.pinnedAtTop
     }
     
     private let currentFolderObjectID: NSManagedObjectID
@@ -197,7 +202,7 @@ extension BreadListViewController {
                 fatalError("Cell reuse identifier should be available")
             }
             
-            cell.configure(using: bread)
+            cell.configure(using: bread, showFolder: self?.showFolder ?? false)
             return cell
         }
     }
@@ -357,7 +362,7 @@ extension BreadListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return CGFloat(60)
+        return showFolder ? CGFloat(75) : CGFloat(60)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

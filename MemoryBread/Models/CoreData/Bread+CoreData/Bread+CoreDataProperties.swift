@@ -49,6 +49,16 @@ extension Bread : Identifiable {
 }
 
 extension Bread {
+    var currentFolder: Folder? {
+        guard let folders = folders?.allObjects as? [Folder] else {
+            return nil
+        }
+        
+        return folders.filter {
+            $0.pinnedAtTop != true
+        }.first
+    }
+    
     func move(toTrash trash: Folder) {
         guard let folders = folders else { return }
         removeFromFolders(folders)
