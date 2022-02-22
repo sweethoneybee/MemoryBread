@@ -328,6 +328,11 @@ extension BreadListViewController: BreadListViewDelegate {
 
 // MARK: - UITableViewDelegate
 extension BreadListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let bread = fetchedResultsController.object(at: indexPath)
+        return (showFolder && (bread.currentFolder != nil)) ? CGFloat(75) : CGFloat(60)
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView.isEditing {
             let indexPaths = tableView.indexPathsForSelectedRows
@@ -359,10 +364,6 @@ extension BreadListViewController: UITableViewDelegate {
             navigationItem.title = (indexPaths != nil) ? String(format: LocalizingHelper.selectedNumberOfItems, indexPaths!.count) : folderName
             return
         }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return showFolder ? CGFloat(75) : CGFloat(60)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

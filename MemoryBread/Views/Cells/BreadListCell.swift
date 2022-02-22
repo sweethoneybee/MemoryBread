@@ -81,10 +81,6 @@ extension BreadListCell {
     }
 
     func configure(using bread: Bread, showFolder: Bool = false) {
-        configureWithNew(using: bread, showFolder: showFolder)
-    }
-    
-    private func configureWithNew(using bread: Bread, showFolder: Bool = false) {
         titleLabel.text = bread.title ?? ""
         
         let dateString = DateHelper.default.string(from: bread.touch ?? Date())
@@ -92,9 +88,9 @@ extension BreadListCell {
         secondaryAttributedString.append(NSAttributedString(string: String((bread.content ?? "").prefix(200)), attributes: bodyAttribute))
         subTitleLabel.attributedText = secondaryAttributedString
         
-        folderLine.isHidden = !showFolder && bread.currentFolder?.name != nil
+        folderLine.isHidden = !showFolder || bread.currentFolder?.name == nil
         if showFolder,
-           let folderName = bread.currentFolder?.name{
+           let folderName = bread.currentFolder?.name {
             folderLabel.text = folderName
         }
     }
