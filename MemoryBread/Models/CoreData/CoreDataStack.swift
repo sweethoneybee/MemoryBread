@@ -61,11 +61,7 @@ extension CoreDataStack {
                 let object = context.object(with: id)
                 context.delete(object)
             }
-            do {
-                try context.save()
-            } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
+            context.saveContextAndParentIfNeeded()
         }
     }
     

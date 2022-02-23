@@ -77,23 +77,13 @@ extension AppDelegate {
         trash.index = 1
         trash.pinnedAtBottom = true
         
-        do {
-            try context.save()
-        } catch let nserror as NSError {
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-        }
-        
         Tutorial().infos.forEach {
             let tutorialBread = Bread.makeBasicBread(context: context)
             tutorialBread.title = $0.title
             tutorialBread.updateContent(with: $0.content)
             tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
         }
-        do {
-            try context.save()
-        } catch let nserror as NSError {
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-        }
+        context.saveContextAndParentIfNeeded()
     }
 }
 

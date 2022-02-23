@@ -337,11 +337,7 @@ extension DriveFileListViewController: FileListCellDelegate {
                                     newBread.addToFolders(currentFolder)
                                 }
 
-                                do {
-                                    try self.writeContext.save()
-                                } catch let nserror as NSError {
-                                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                                }
+                                self.writeContext.saveContextAndParentIfNeeded()
                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                     loadingVC.set(state: .init(isLoading: false))

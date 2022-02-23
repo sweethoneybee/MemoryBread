@@ -225,11 +225,8 @@ extension BreadListViewController: BreadListViewDelegate {
                 newBread.addToFolders(folder)
             }
             
-            do {
-                try writeContext.save()
-            } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
+            writeContext.saveContextAndParentIfNeeded()
+            
             DispatchQueue.main.async { [weak self] in
                 if let self = self,
                    let bread = try? self.viewContext.existingObject(with: newBread.objectID) as? Bread {
