@@ -30,14 +30,5 @@ public class Bread: NSManagedObject {
         self.separatedContent = separatedContent
         self.filterIndexes = filterIndexes ?? Array(repeating: [], count: FilterColor.count)
         self.selectedFilters = selectedFilters ?? [Int]()
-        
-        let fetchRequest = Folder.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "index = %lld", 0)
-        
-        if let mainFolder = try? context.fetch(fetchRequest).last {
-            addToFolders(mainFolder)
-        } else {
-            fatalError("Folder fetching failed")
-        }
     }
 }

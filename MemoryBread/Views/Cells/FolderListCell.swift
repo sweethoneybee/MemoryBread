@@ -29,7 +29,7 @@ final class FolderListCell: UITableViewCell {
         }
     }
     
-    var item: Item?
+    private var item: Item?
     
     override func updateConfiguration(using state: UICellConfigurationState) {
         var content = UIListContentConfiguration.valueCell().updated(for: state)
@@ -45,5 +45,9 @@ final class FolderListCell: UITableViewCell {
         }
         
         self.contentConfiguration = content
+    }
+    
+    func inject(_ item: Item) {
+        self.item = item
     }
 }

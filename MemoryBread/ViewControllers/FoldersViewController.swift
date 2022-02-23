@@ -18,7 +18,7 @@ final class FoldersViewController: UIViewController {
     private var tableView: UITableView!
     private var dataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID>!
 
-    private var isTableViewReordered = false
+    private var noAnimatationForTableView = false
     private var isTableViewCellSwipeActionShowing = false
     
     // MARK: - Alert Action
@@ -60,6 +60,8 @@ final class FoldersViewController: UIViewController {
         return fetchedResultsController.fetchedObjects?.last?.objectID
     }
     
+    private var folderModel: FolderModel
+    
     // MARK: - Life Cycle
     required init?(coder: NSCoder) {
         fatalError("FoldersViewController not implemented")
@@ -67,6 +69,7 @@ final class FoldersViewController: UIViewController {
     
     init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
+        self.folderModel = FolderModel(context: coreDataStack.writeContext)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -88,18 +91,12 @@ final class FoldersViewController: UIViewController {
         
         tableView.setEditing(editing, animated: animated)
         if !editing {
-            let snp = dataSource.snapshot()
-            snp.itemIdentifiers.enumerated().forEach {
-                let newIndex = Int64($0)
-                if let folderObject = try? viewContext.existingObject(with: $1) as? Folder,
-                   folderObject.index != newIndex {
-                    folderObject.index = newIndex
-                }
-            }
-
-            if viewContext.hasChanges {
-                isTableViewReordered = true
-                viewContext.saveContextAndParentIfNeeded(forcing: true)
+            let folderObjectIDs = dataSource.snapshot().itemIdentifiers
+            folderModel.updateFoldersIndexIfNeeded(of: folderObjectIDs)
+            
+            if folderModel.isFoldersIndexChanged() {
+                folderModel.removeFoldersIndexFlag()
+                noAnimatationForTableView = true
             }
         }
     }
@@ -154,41 +151,42 @@ extension FoldersViewController {
         }
         
         let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel)
-        let doneAction = UIAlertAction(title: LocalizingHelper.save, style: .default) { [weak self, weak alert] _ in
+        let doneAction = UIAlertAction(
+            title: LocalizingHelper.save,
+            style: .default
+        ) { [weak self, weak alert] _ in
             guard let self = self else { return }
-            NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: alert?.textFields?.first)
+            NotificationCenter.default.removeObserver(
+                self,
+                name: UITextField.textDidChangeNotification,
+                object: alert?.textFields?.first
+            )
 
             guard let folderName = alert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) else {
                 return
             }
-            guard let topFolderIndex = self.fetchedResultsController.fetchedObjects?[safe: self.pinnnedAtTopCount]?.index else {
+            guard let topFolderIndex = self.fetchedResultsController
+                    .fetchedObjects?[safe: self.pinnnedAtTopCount]?.index else {
                 return
             }
             
             let newIndex = topFolderIndex - 1
-            let context = self.coreDataStack.writeContext
-            context.perform {
-                let newFolder = Folder(context: context)
-                newFolder.id = UUID()
-                newFolder.name = folderName
-                newFolder.index = newIndex
-                
-                do {
-                    try context.save()
-                } catch let nserror as NSError {
-                    switch nserror.code {
-                    case NSManagedObjectConstraintMergeError:
-                        context.delete(newFolder)
-                        DispatchQueue.main.async {
-                            let errorAlert = BasicAlert.makeConfirmAlert(title: LocalizingHelper.nameIsAlreadyInUse, message: LocalizingHelper.enterDifferentName)
-                            self.present(errorAlert, animated: true)
-                        }
-                    default:
-                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                    }
+            do {
+                try self.folderModel.createFolderWith(name: folderName, index: newIndex)
+            } catch let nserror as NSError {
+                switch nserror.code {
+                case NSManagedObjectConstraintMergeError:
+                    let errorAlert = BasicAlert.makeConfirmAlert(
+                        title: LocalizingHelper.nameIsAlreadyInUse,
+                        message: LocalizingHelper.enterDifferentName
+                    )
+                    self.present(errorAlert, animated: true)
+                default:
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
                 }
             }
         }
+        
         doneAction.isEnabled = false
         folderNameDoneAction = doneAction
         alert.addAction(cancelAction)
@@ -227,7 +225,8 @@ extension FoldersViewController {
                 fatalError("FolderListCell not available")
             }
             
-            cell.item = FolderListCell.Item(folderObject: folderObject)
+            let cellItem = FolderListCell.Item(folderObject: folderObject)
+            cell.inject(cellItem)
             return cell
         })
     }
@@ -363,10 +362,10 @@ extension FoldersViewController: UITableViewDelegate {
 
 extension FoldersViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        var shouldAnimate = tableView.numberOfSections != 0
         
-        if isTableViewReordered {
-            isTableViewReordered = false
+        var shouldAnimate = true
+        if noAnimatationForTableView {
+            noAnimatationForTableView = false
             shouldAnimate = false
         }
         
