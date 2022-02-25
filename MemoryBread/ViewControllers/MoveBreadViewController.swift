@@ -22,7 +22,7 @@ final class MoveBreadViewController: UIViewController {
         $0.tintColor = .systemPink
     }
     
-    typealias FolderItem = MoveBreadModel.FolderItem
+    typealias FolderItem = MoveBreadModel.Item
     private let model: MoveBreadModel
     private var dataSource: UITableViewDiffableDataSource<Int, FolderItem>!
 
@@ -83,6 +83,9 @@ extension MoveBreadViewController {
         
         var snapshot = NSDiffableDataSourceSnapshot<Int, FolderItem>()
         snapshot.appendSections([0])
+        
+        let createFolderItem = MoveFolderListCell.Item(name: LocalizingHelper.newFolder, disabled: false, objectID: nil)
+        snapshot.appendItems([createFolderItem], toSection: 0)
         snapshot.appendItems(model.folderItems, toSection: 0)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -118,12 +121,21 @@ extension MoveBreadViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-            model.moveBreads(to: selectedItem.objectID)
+        guard let selectedItem = dataSource.itemIdentifier(for: indexPath) else {
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
         }
+        
+        if let folderObjectID = selectedItem.objectID {
+            model.moveBreads(to: folderObjectID)
+            tableView.deselectRow(at: indexPath, animated: true)
+            dismiss(animated: true) {
+                self.moveDoneHandler()
+            }
+        
+            return
+        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
-        dismiss(animated: true) {
-            self.moveDoneHandler()
-        }
     }
 }

@@ -9,11 +9,15 @@ import Foundation
 import CoreData
 
 final class MoveBreadModel {
+    
+    typealias Item = MoveFolderListCell.Item
     private let moc: NSManagedObjectContext
     private let selectedBreadObjectIDs: [NSManagedObjectID]
     private let currentFolderObjectID: NSManagedObjectID
     private let rootObjectID: NSManagedObjectID
     private let trashObjectID: NSManagedObjectID
+    
+    private let folderModel: FolderModel
     
     private lazy var currentFolcerObject: Folder = {
         guard let currentFolder = moc.object(with: currentFolderObjectID) as? Folder else {
@@ -73,9 +77,12 @@ final class MoveBreadModel {
         self.currentFolderObjectID = currentFolderObjectID
         self.rootObjectID = rootObjectID
         self.trashObjectID = trashObjectID
+        
+        self.folderModel = FolderModel(context: context)
     }
 }
 
+// MARK: - 폴더 목록 조회 관련
 extension MoveBreadModel {
     func selectedBreadNames(inWidth maxWidth: CGFloat, withAttributes attributes: [NSAttributedString.Key : Any]) -> String {
         guard let lastName = selectedBreadNames.last else {
@@ -129,23 +136,18 @@ extension MoveBreadModel {
         return String(format: LocalizingHelper.selectedTheNumberOfMemoryBreads, selectedBreadNames.count)
     }
     
-    var folderItems: [FolderItem] {
+    var folderItems: [Item] {
         folders.map {
-            FolderItem(
+            Item(
                 name: $0.name ?? "",
                 disabled: ($0.objectID == currentFolderObjectID) ? true : false,
                 objectID: $0.objectID
             )
         }
     }
-    
-    struct FolderItem: Hashable {
-        let name: String
-        let disabled: Bool
-        let objectID: NSManagedObjectID
-    }
 }
 
+// MARK: - 옮기기 로직
 extension MoveBreadModel {
     func moveBreads(to destObjectID: NSManagedObjectID) {
         guard let destFolder = moc.object(with: destObjectID) as? Folder else {
@@ -192,6 +194,19 @@ extension MoveBreadModel {
     private func moveSelectedBreads(from src: Folder, to dest: Folder) {
         selectedBreads.forEach {
             $0.move(from: src, to: dest)
+        }
+    }
+}
+
+// MARK: - 폴더 생성
+extension MoveBreadModel {
+    func createFolder(withName name: String) throws {
+        let topIndex = folders.first?.index ?? 0
+        let newIndex = topIndex + 1
+        do {
+            try folderModel.createFolderWith(name: name, index: newIndex)
+        } catch {
+            throw error
         }
     }
 }
