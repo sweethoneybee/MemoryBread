@@ -298,7 +298,7 @@ extension BreadListViewController: BreadListViewDelegate {
     
     private func presentMoveBreadViewController(with targetBreadObjectIDs: [NSManagedObjectID]) {
         let model = MoveBreadModel(
-            context: coreDataStack.writeContext,
+            context: coreDataStack.makeChildConcurrencyQueueContext(),
             selectedBreadObjectIDs: targetBreadObjectIDs,
             currentFolderObjectID: currentFolderObjectID,
             rootObjectID: rootObjectID,

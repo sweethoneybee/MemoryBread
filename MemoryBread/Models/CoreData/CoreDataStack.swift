@@ -85,4 +85,10 @@ extension CoreDataStack {
         childContext.parent = writeContext
         return childContext
     }
+    
+    func makeChildConcurrencyQueueContext() -> NSManagedObjectContext {
+        let childContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        childContext.parent = writeContext
+        return childContext
+    }
 }
