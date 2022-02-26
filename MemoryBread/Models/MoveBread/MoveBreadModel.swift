@@ -11,6 +11,7 @@ import CoreData
 final class MoveBreadModel {
     
     typealias Item = MoveFolderListCell.Item
+    
     private let moc: NSManagedObjectContext
     private let selectedBreadObjectIDs: [NSManagedObjectID]
     private let currentFolderObjectID: NSManagedObjectID
@@ -65,6 +66,9 @@ final class MoveBreadModel {
         (try? moc.fetch(foldersFetchRequest)) ?? []
     }()
     
+    var didCreateFolderHandler: ((Item) -> Void)?
+    
+    // MARK: - init
     init(
         context: NSManagedObjectContext,
         selectedBreadObjectIDs: [NSManagedObjectID],
@@ -202,9 +206,15 @@ extension MoveBreadModel {
 extension MoveBreadModel {
     func createFolder(withName name: String) throws {
         let topIndex = folders.first?.index ?? 0
-        let newIndex = topIndex + 1
+        let newIndex = topIndex - 1
         do {
-            try folderModel.createFolderWith(name: name, index: newIndex)
+            let newFolder = try folderModel.createFolderWith(name: name, index: newIndex)
+            let newFolderItem = Item(
+                name: newFolder.name ?? "",
+                disabled: false,
+                objectID: newFolder.objectID
+            )
+            didCreateFolderHandler?(newFolderItem)
         } catch {
             throw error
         }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 final class MoveBreadViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .insetGrouped).then {
@@ -21,12 +22,13 @@ final class MoveBreadViewController: UIViewController {
     ).then {
         $0.tintColor = .systemPink
     }
+    private weak var askingFolderNameDoneAction: UIAlertAction?
     
     typealias FolderItem = MoveBreadModel.Item
+    typealias DoneHandler = (() -> Void)
+
     private let model: MoveBreadModel
     private var dataSource: UITableViewDiffableDataSource<Int, FolderItem>!
-
-    typealias DoneHandler = (() -> Void)
     private let moveDoneHandler: DoneHandler
     
     override func viewDidLoad() {
@@ -88,6 +90,16 @@ extension MoveBreadViewController {
         snapshot.appendItems([createFolderItem], toSection: 0)
         snapshot.appendItems(model.folderItems, toSection: 0)
         dataSource.apply(snapshot, animatingDifferences: false)
+        
+        model.didCreateFolderHandler = { [weak self] item in
+            guard var snapshot = self?.dataSource.snapshot(),
+                  let createFolderItem = snapshot.itemIdentifiers.first else {
+                      return
+                  }
+            
+            snapshot.insertItems([item], afterItem: createFolderItem)
+            self?.dataSource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     private func updateViews() {
@@ -136,6 +148,82 @@ extension MoveBreadViewController: UITableViewDelegate {
             return
         }
         
+        let askingFolderNameAlert = makeAskingFolderNameAlert()
+        present(askingFolderNameAlert, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+}
+
+extension MoveBreadViewController {
+    private func makeAskingFolderNameAlert() -> UIAlertController {
+        let alert = UIAlertController(
+            title: LocalizingHelper.newFolder,
+            message: LocalizingHelper.enterTheNameOfThisFolder,
+            preferredStyle: .alert
+        )
+        alert.addTextField { textField in
+            textField.placeholder = LocalizingHelper.name
+            textField.clearButtonMode = .always
+            textField.returnKeyType = .done
+            
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(self.textDidChange(_:)),
+                name: UITextField.textDidChangeNotification,
+                object: textField
+            )
+        }
+        
+        let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel)
+        let doneAction = UIAlertAction(
+            title: LocalizingHelper.save,
+            style: .default,
+            handler: { [weak alert] _ in
+                NotificationCenter.default.removeObserver(
+                    self,
+                    name: UITextField.textDidChangeNotification,
+                    object: alert?.textFields?.first
+                )
+                
+                guard let folderName = alert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) else {
+                    return
+                }
+                
+                do {
+                    try self.model.createFolder(withName: folderName)
+                    
+                } catch let nserror as NSError {
+                    switch nserror.code {
+                    case NSManagedObjectConstraintMergeError:
+                        let errorAlert = BasicAlert.makeConfirmAlert(
+                            title: LocalizingHelper.nameIsAlreadyInUse,
+                            message: LocalizingHelper.enterDifferentName
+                        )
+                        self.present(errorAlert, animated: true)
+                    default:
+                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                    }
+                }
+            })
+        
+        alert.addAction(cancelAction)
+        alert.addAction(doneAction)
+        doneAction.isEnabled = false
+        askingFolderNameDoneAction = doneAction
+        return alert
+    }
+    @objc
+    private func textDidChange(_ notification: Notification) {
+        guard let textField = notification.object as? UITextField,
+              let trimmedText = textField.text?.trimmingCharacters(in: [" "]) else {
+                  return
+              }
+        
+        if trimmedText.count <= 0 {
+            askingFolderNameDoneAction?.isEnabled = false
+            return
+        }
+        askingFolderNameDoneAction?.isEnabled = true
     }
 }

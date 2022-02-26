@@ -15,8 +15,9 @@ final class FolderModel {
     init(context: NSManagedObjectContext) {
         self.moc = context
     }
-    
-    func createFolderWith(name: String, index: Int64) throws {
+   
+    @discardableResult
+    func createFolderWith(name: String, index: Int64) throws -> Folder {
         let newFolder = Folder(context: moc)
         newFolder.id = UUID()
         newFolder.name = name
@@ -24,6 +25,7 @@ final class FolderModel {
         
         do {
             try moc.save()
+            return newFolder
         } catch {
             moc.delete(newFolder)
             throw error
