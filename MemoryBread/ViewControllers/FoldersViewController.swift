@@ -301,20 +301,41 @@ extension FoldersViewController: UITableViewDelegate {
         
         isTableViewCellSwipeActionShowing = true
         
-        let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] action, _, completionHandler in
-            guard let self = self else {
-                completionHandler(false)
-                return
-            }
+        let folder = fetchedResultsController.object(at: indexPath)
+        let deleteAction = makeTrailingSwipeDeleteAction(for: folder)
+        let editAction = makeTrailingSwipeEditAction(for: folder)
+        
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
+    }
+
+    private func makeTrailingSwipeEditAction(for folder: Folder) -> UIContextualAction {
+        let action = UIContextualAction(style: .normal, title: nil) { _, _, completionHandler in
+            completionHandler(true)
+        }
+        
+        action.image = UIImage(systemName: "folder.badge.gearshape")
+        action.backgroundColor = .systemBlue
+        return action
+    }
+    
+    private func makeTrailingSwipeDeleteAction(for folder: Folder) -> UIContextualAction {
+        let action = UIContextualAction(style: .destructive, title: nil) { [weak self, weak folder] _, _, completionHandler in
+            guard let self = self,
+                  let breadsCount = folder?.breadsCount,
+                  let objectID = folder?.objectID else {
+                      completionHandler(false)
+                      return
+                  }
             
-            let folderObject = self.fetchedResultsController.object(at: indexPath)
-            if folderObject.breadsCount == 0 {
-                self.deleteFolder(of: folderObject.objectID)
+            if breadsCount == 0 {
+                self.deleteFolder(of: objectID)
                 completionHandler(true)
                 return
             }
             
-            let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
+            let deletingActionSheet = BasicAlert.makeDestructiveAlertSheet(
                 alertTitle: LocalizingHelper.folderAndMemoryBreadWillBeDeleted,
                 destructiveTitle: LocalizingHelper.deleteFolder,
                 completionHandler: { [weak self] _ in
@@ -322,22 +343,19 @@ extension FoldersViewController: UITableViewDelegate {
                         completionHandler(false)
                         return
                     }
-                    self.deleteFolder(of: folderObject.objectID)
+                    self.deleteFolder(of: objectID)
                     completionHandler(true)
                 },
                 cancelHandler: { _ in
                     completionHandler(false)
                 }
             )
-            self.present(askingToDeleteSheet, animated: true)
+            self.present(deletingActionSheet, animated: true)
         }
         
-        deleteAction.image = UIImage(systemName: "trash")
-        deleteAction.backgroundColor = .systemRed
-
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
-        configuration.performsFirstActionWithFullSwipe = false
-        return configuration
+        action.image = UIImage(systemName: "trash")
+        action.backgroundColor = .systemRed
+        return action
     }
     
     private func deleteFolder(of folderObjectID: NSManagedObjectID) {
