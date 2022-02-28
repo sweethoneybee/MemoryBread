@@ -22,10 +22,10 @@ final class FoldersViewController: UIViewController {
     private var isTableViewCellSwipeActionShowing = false
     
     // MARK: - Alert Action
-    private weak var folderNameDoneAction: UIAlertAction?
+    private weak var textFieldAlertDoneAction: UIAlertAction?
     
     // MARK: - Buttons
-    private var addFolderItem: UIBarButtonItem!
+    private var createFolderItem: UIBarButtonItem!
     
     // MARK: - Data
     private let coreDataStack: CoreDataStack
@@ -124,14 +124,14 @@ extension FoldersViewController {
     }
     
     private func setNavigationItem() {
-        addFolderItem = UIBarButtonItem(
+        createFolderItem = UIBarButtonItem(
             image: UIImage(systemName: "folder.badge.plus"),
             style: .plain,
             target: self,
-            action: #selector(addFolderItemTapped)
+            action: #selector(createFolderItemTapped)
         )
         
-        navigationItem.rightBarButtonItems = [editButtonItem, addFolderItem]
+        navigationItem.rightBarButtonItems = [editButtonItem, createFolderItem]
         navigationItem.title = LocalizingHelper.folders
     }
 }
@@ -139,33 +139,16 @@ extension FoldersViewController {
 // MARK: - Target Action
 extension FoldersViewController {
     @objc
-    private func addFolderItemTapped() {
-        let alert = UIAlertController(title: LocalizingHelper.newFolder, message: LocalizingHelper.enterTheNameOfThisFolder, preferredStyle: .alert)
-        alert.addTextField { [weak self] textField in
-            guard let self = self else { return }
-            textField.placeholder = LocalizingHelper.name
-            textField.clearButtonMode = .always
-            textField.returnKeyType = .done
-
-            NotificationCenter.default.addObserver(self, selector: #selector(self.textDidChange(_:)), name: UITextField.textDidChangeNotification, object: textField)
-        }
-        
-        let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel)
-        let doneAction = UIAlertAction(
-            title: LocalizingHelper.save,
-            style: .default
-        ) { [weak self, weak alert] _ in
-            guard let self = self else { return }
-            NotificationCenter.default.removeObserver(
-                self,
-                name: UITextField.textDidChangeNotification,
-                object: alert?.textFields?.first
-            )
-
-            guard let folderName = alert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) else {
+    private func createFolderItemTapped() {
+        let createFolderAlert = makeTextFieldAlert(
+            title: LocalizingHelper.newFolder,
+            textInTextField: nil) { [weak self] userInputText in
+            guard let folderName = userInputText?.trimmingCharacters(in: [" "]) else {
                 return
             }
-            guard let topFolderIndex = self.fetchedResultsController
+            guard let self = self,
+                  let topFolderIndex = self
+                    .fetchedResultsController
                     .fetchedObjects?[safe: self.pinnnedAtTopCount]?.index else {
                 return
             }
@@ -187,12 +170,55 @@ extension FoldersViewController {
             }
         }
         
+        present(createFolderAlert, animated: true)
+    }
+    
+    private func makeTextFieldAlert(
+        title: String?,
+        textInTextField text: String?,
+        userInputHandler: ((String?) -> Void)?
+    ) -> UIAlertController {
+        let alert = UIAlertController(
+            title: title,
+            message: LocalizingHelper.enterTheNameOfThisFolder,
+            preferredStyle: .alert
+        )
+        alert.addTextField { [weak self] textField in
+            guard let self = self else { return }
+            textField.text = text
+            textField.placeholder = LocalizingHelper.name
+            textField.clearButtonMode = .always
+            textField.returnKeyType = .done
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(self.textDidChange(_:)),
+                name: UITextField.textDidChangeNotification,
+                object: textField
+            )
+        }
+        
+        let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel)
+        let doneAction = UIAlertAction(
+            title: LocalizingHelper.save,
+            style: .default
+        ) { [weak self, weak alert] _ in
+            guard let self = self else { return }
+            NotificationCenter.default.removeObserver(
+                self,
+                name: UITextField.textDidChangeNotification,
+                object: alert?.textFields?.first
+            )
+            
+            let userInputText = alert?.textFields?.first?.text
+            userInputHandler?(userInputText)
+        }
+        
         doneAction.isEnabled = false
-        folderNameDoneAction = doneAction
+        textFieldAlertDoneAction = doneAction
         alert.addAction(cancelAction)
         alert.addAction(doneAction)
         
-        present(alert, animated: true)
+        return alert
     }
 }
 
@@ -401,9 +427,9 @@ extension FoldersViewController {
         }
         
         if trimmedText.count <= 0 {
-            folderNameDoneAction?.isEnabled = false
+            textFieldAlertDoneAction?.isEnabled = false
             return
         }
-        folderNameDoneAction?.isEnabled = true
+        textFieldAlertDoneAction?.isEnabled = true
     }
 }
