@@ -142,41 +142,42 @@ extension FoldersViewController {
     private func createFolderItemTapped() {
         let createFolderAlert = makeTextFieldAlert(
             title: LocalizingHelper.newFolder,
-            textInTextField: nil) { [weak self] userInputText in
-            guard let folderName = userInputText?.trimmingCharacters(in: [" "]) else {
-                return
-            }
-            guard let self = self,
-                  let topFolderIndex = self
-                    .fetchedResultsController
-                    .fetchedObjects?[safe: self.pinnnedAtTopCount]?.index else {
-                return
-            }
-            
-            let newIndex = topFolderIndex - 1
-            do {
-                try self.folderModel.createFolderWith(name: folderName, index: newIndex)
-            } catch let nserror as NSError {
-                switch nserror.code {
-                case NSManagedObjectConstraintMergeError:
-                    let errorAlert = BasicAlert.makeConfirmAlert(
-                        title: LocalizingHelper.nameIsAlreadyInUse,
-                        message: LocalizingHelper.enterDifferentName
-                    )
-                    self.present(errorAlert, animated: true)
-                default:
-                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            textInTextField: nil,
+            cancelHandler: nil,
+            userInputCompletionHandler: {
+                [weak self] userInputText in
+                guard let folderName = userInputText?.trimmingCharacters(in: [" "]) else {
+                    return
+                }
+                guard let self = self,
+                      let topFolderIndex = self
+                        .fetchedResultsController
+                        .fetchedObjects?[safe: self.pinnnedAtTopCount]?.index else {
+                            return
+                        }
+                
+                let newIndex = topFolderIndex - 1
+                do {
+                    try self.folderModel.createFolderWith(name: folderName, index: newIndex)
+                } catch let nserror as NSError {
+                    switch nserror.code {
+                    case NSManagedObjectConstraintMergeError:
+                        self.presentDuplicatedFolderNameAlert()
+                    default:
+                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                    }
                 }
             }
-        }
+        )
         
         present(createFolderAlert, animated: true)
     }
     
     private func makeTextFieldAlert(
         title: String?,
-        textInTextField text: String?,
-        userInputHandler: ((String?) -> Void)?
+        textInTextField: String?,
+        cancelHandler: ((UIAlertAction) -> Void)?,
+        userInputCompletionHandler: ((String?) -> Void)?
     ) -> UIAlertController {
         let alert = UIAlertController(
             title: title,
@@ -185,7 +186,7 @@ extension FoldersViewController {
         )
         alert.addTextField { [weak self] textField in
             guard let self = self else { return }
-            textField.text = text
+            textField.text = textInTextField
             textField.placeholder = LocalizingHelper.name
             textField.clearButtonMode = .always
             textField.returnKeyType = .done
@@ -197,7 +198,7 @@ extension FoldersViewController {
             )
         }
         
-        let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel)
+        let cancelAction = UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: cancelHandler)
         let doneAction = UIAlertAction(
             title: LocalizingHelper.save,
             style: .default
@@ -210,15 +211,23 @@ extension FoldersViewController {
             )
             
             let userInputText = alert?.textFields?.first?.text
-            userInputHandler?(userInputText)
+            userInputCompletionHandler?(userInputText)
         }
         
-        doneAction.isEnabled = false
+        doneAction.isEnabled = !(textInTextField ?? "").isEmpty
         textFieldAlertDoneAction = doneAction
         alert.addAction(cancelAction)
         alert.addAction(doneAction)
         
         return alert
+    }
+    
+    private func presentDuplicatedFolderNameAlert() {
+        let errorAlert = BasicAlert.makeConfirmAlert(
+            title: LocalizingHelper.nameIsAlreadyInUse,
+            message: LocalizingHelper.enterDifferentName
+        )
+        present(errorAlert, animated: true)
     }
 }
 
@@ -328,17 +337,48 @@ extension FoldersViewController: UITableViewDelegate {
         isTableViewCellSwipeActionShowing = true
         
         let folder = fetchedResultsController.object(at: indexPath)
-        let deleteAction = makeTrailingSwipeDeleteAction(for: folder)
-        let editAction = makeTrailingSwipeEditAction(for: folder)
+        let deletingAction = makeDeletingTrailingSwipeAction(for: folder)
+        let renamingAction = makeRenamingTrailingSwipeAction(for: folder)
         
-        let configuration = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+        let configuration = UISwipeActionsConfiguration(actions: [deletingAction, renamingAction])
         configuration.performsFirstActionWithFullSwipe = false
         return configuration
     }
 
-    private func makeTrailingSwipeEditAction(for folder: Folder) -> UIContextualAction {
+    private func makeRenamingTrailingSwipeAction(for folder: Folder) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: nil) { _, _, completionHandler in
-            completionHandler(true)
+            guard let folderName = folder.name else {
+                completionHandler(false)
+                return
+            }
+            
+            let textFieldAlert = self.makeTextFieldAlert(
+                title: LocalizingHelper.renameFolder,
+                textInTextField: folderName,
+                cancelHandler: { _ in
+                    completionHandler(false)
+                },
+                userInputCompletionHandler: { userInputText in
+                    guard let newFolderName = userInputText?.trimmingCharacters(in: [" "]) else {
+                        completionHandler(false)
+                        return
+                    }
+                    
+                    do {
+                        try self.folderModel.renameFolder(of: folder.objectID, to: newFolderName)
+                        completionHandler(true)
+                    } catch let nserror as NSError {
+                        switch nserror.code {
+                        case NSManagedObjectConstraintMergeError:
+                            self.presentDuplicatedFolderNameAlert()
+                        default:
+                            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                        }
+                    }                    
+                }
+            )
+            
+            self.present(textFieldAlert, animated: true)
         }
         
         action.image = UIImage(systemName: "folder.badge.gearshape")
@@ -346,7 +386,7 @@ extension FoldersViewController: UITableViewDelegate {
         return action
     }
     
-    private func makeTrailingSwipeDeleteAction(for folder: Folder) -> UIContextualAction {
+    private func makeDeletingTrailingSwipeAction(for folder: Folder) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: nil) { [weak self, weak folder] _, _, completionHandler in
             guard let self = self,
                   let breadsCount = folder?.breadsCount,

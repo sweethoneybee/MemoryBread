@@ -27,7 +27,7 @@ final class FolderModel {
             try moc.save()
             return newFolder
         } catch {
-            moc.delete(newFolder)
+            moc.rollback()
             throw error
         }
     }
@@ -51,5 +51,21 @@ final class FolderModel {
     
     func removeFoldersIndexFlag() {
         foldersIndexChangedFlag = false
+    }
+    
+    func renameFolder(of folderObjectID: NSManagedObjectID, to newFolderName: String) throws {
+        do {
+            guard let folder = try moc.existingObject(with: folderObjectID) as? Folder else {
+                fatalError("Folder casting fail")
+            }
+            
+            folder.name = newFolderName
+            do {
+                try moc.save()
+            } catch {
+                moc.rollback()
+                throw error
+            }
+        }
     }
 }

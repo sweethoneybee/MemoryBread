@@ -77,6 +77,7 @@
 "name" = "이름";
 "name_is_already_in_use" = "이름이 이미 사용 중임";
 "enter_different_name" = "다른 이름을 입력해주세요.";
+"rename_folder" = "폴더 이름 변경";
 
 "folder_and_memory_bread_will_be_deleted" = "해당 폴더와 암기빵이 삭제됩니다.";
 "delete_folder" = "폴더 삭제";

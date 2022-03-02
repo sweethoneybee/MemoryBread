@@ -79,6 +79,7 @@ struct LocalizingHelper {
     static let name = "name".localized
     static let nameIsAlreadyInUse = "name_is_already_in_use".localized
     static let enterDifferentName = "enter_different_name".localized
+    static let renameFolder = "rename_folder".localized
     
     static let folderAndMemoryBreadWillBeDeleted = "folder_and_memory_bread_will_be_deleted".localized
     static let deleteFolder = "delete_folder".localized
