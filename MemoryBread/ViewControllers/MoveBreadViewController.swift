@@ -213,17 +213,16 @@ extension MoveBreadViewController {
         askingFolderNameDoneAction = doneAction
         return alert
     }
+}
+
+// MARK: - TextFieldAlertActionEnabling
+extension MoveBreadViewController: TextFieldAlertActionEnabling {
+    var alertAction: UIAlertAction? {
+        askingFolderNameDoneAction
+    }
+    
     @objc
     private func textDidChange(_ notification: Notification) {
-        guard let textField = notification.object as? UITextField,
-              let trimmedText = textField.text?.trimmingCharacters(in: [" "]) else {
-                  return
-              }
-        
-        if trimmedText.count <= 0 {
-            askingFolderNameDoneAction?.isEnabled = false
-            return
-        }
-        askingFolderNameDoneAction?.isEnabled = true
+        enableAlertActionByTextCount(notification)
     }
 }

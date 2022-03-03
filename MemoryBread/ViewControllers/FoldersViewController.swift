@@ -457,19 +457,14 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-// MARK: - Notification Action
-extension FoldersViewController {
+// MARK: - TextFieldAlertActionEnabling
+extension FoldersViewController: TextFieldAlertActionEnabling {
+    var alertAction: UIAlertAction? {
+        textFieldAlertDoneAction
+    }
+
     @objc
     private func textDidChange(_ notification: Notification) {
-        guard let textField = notification.object as? UITextField,
-              let trimmedText = textField.text?.trimmingCharacters(in: [" "]) else {
-            return
-        }
-        
-        if trimmedText.count <= 0 {
-            textFieldAlertDoneAction?.isEnabled = false
-            return
-        }
-        textFieldAlertDoneAction?.isEnabled = true
+        enableAlertActionByTextCount(notification)
     }
 }

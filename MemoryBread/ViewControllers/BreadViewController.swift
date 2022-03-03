@@ -477,19 +477,14 @@ extension BreadViewController {
     }
 }
 
-// MARK: - Notification Action
-extension BreadViewController {
+// MARK: - TextFieldAlertActionEnabling
+extension BreadViewController: TextFieldAlertActionEnabling {
+    var alertAction: UIAlertAction? {
+        editDoneAction
+    }
+    
     @objc
     private func textDidChange(_ notification: Notification) {
-        guard let textField = notification.object as? UITextField,
-              let trimmedText = textField.text?.trimmingCharacters(in: [" "]) else {
-            return
-        }
-        
-        if trimmedText.count <= 0 {
-            editDoneAction?.isEnabled = false
-            return
-        }
-        editDoneAction?.isEnabled = true
+        enableAlertActionByTextCount(notification)
     }
 }
