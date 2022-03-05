@@ -288,28 +288,14 @@ extension BreadListViewController: BreadListViewDelegate {
         }
         
         let selectedObjectIDs = breads(at: rows).map { $0.objectID }
-        presentMoveBreadViewController(with: selectedObjectIDs)
+        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
+        presentMoveBreadViewControllerWith(context: childContext, targetBreadObjectIDs: selectedObjectIDs)
     }
     
     func moveAllButtonTouched() {
         let allObjectIDs = diffableDataSource.snapshot().itemIdentifiers
-        presentMoveBreadViewController(with: allObjectIDs)
-    }
-    
-    private func presentMoveBreadViewController(with targetBreadObjectIDs: [NSManagedObjectID]) {
-        let model = MoveBreadModel(
-            context: coreDataStack.makeChildConcurrencyQueueContext(),
-            selectedBreadObjectIDs: targetBreadObjectIDs,
-            currentFolderObjectID: currentFolderObjectID,
-            rootObjectID: rootObjectID,
-            trashObjectID: trashObjectID
-        )
-        let mbvc = MoveBreadViewController(model: model) { [weak self] in
-            self?.setEditing(false, animated: true)
-        }
-        let nvc = UINavigationController(rootViewController: mbvc)
-        
-        present(nvc, animated: true)
+        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
+        presentMoveBreadViewControllerWith(context: childContext, targetBreadObjectIDs: allObjectIDs)
     }
     
     private func bread(at indexPath: IndexPath) -> Bread {
@@ -401,3 +387,17 @@ extension BreadListViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
+// MARK: - MoveBreadViewControllerPresentable
+extension BreadListViewController: MoveBreadViewControllerPresentable {
+    var sourceFolderObjectID: NSManagedObjectID {
+        currentFolderObjectID
+    }
+    
+    var rootFolderObjectID: NSManagedObjectID {
+        rootObjectID
+    }
+    
+    var trashFolderObjectID: NSManagedObjectID {
+        trashObjectID
+    }
+}
