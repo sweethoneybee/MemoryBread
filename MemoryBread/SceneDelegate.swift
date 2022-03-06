@@ -15,9 +15,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-
-//        let breadListViewController = BreadListViewController(coreDataStack: AppDelegate.coreDataStack)
-//        let nvc = UINavigationController(rootViewController: breadListViewController)
         
         let foldersViewController = FoldersViewController(coreDataStack: AppDelegate.coreDataStack)
         let nvc = UINavigationController(rootViewController: foldersViewController)
