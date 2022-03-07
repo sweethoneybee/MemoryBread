@@ -40,11 +40,14 @@ final class FoldersViewController: UIViewController {
         let pinnedAtBottomSort = NSSortDescriptor(key: "pinnedAtBottom", ascending: true)
         let orderingIndexSort = NSSortDescriptor(key: "index", ascending: true)
         fetchRequest.sortDescriptors = [pinnedAtTopSort, pinnedAtBottomSort, orderingIndexSort]
+        fetchRequest.fetchBatchSize = 50
         
-        let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                             managedObjectContext: viewContext,
-                                             sectionNameKeyPath: nil,
-                                             cacheName: nil)
+        let frc = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
         frc.delegate = self
         return frc
     }()
