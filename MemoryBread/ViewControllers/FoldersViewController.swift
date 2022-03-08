@@ -63,7 +63,7 @@ final class FoldersViewController: UIViewController {
         return fetchedResultsController.fetchedObjects?.last?.objectID
     }
     
-    private var folderModel: FolderModel
+    private let folderModel: FolderModel
     
     // MARK: - Life Cycle
     required init?(coder: NSCoder) {
@@ -82,6 +82,7 @@ final class FoldersViewController: UIViewController {
         configureDataSource()
         
         try? fetchedResultsController.performFetch()
+        self.folderModel.trashObjectID = trashObjectID
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -393,13 +394,13 @@ extension FoldersViewController: UITableViewDelegate {
         let action = UIContextualAction(style: .destructive, title: nil) { [weak self, weak folder] _, _, completionHandler in
             guard let self = self,
                   let breadsCount = folder?.breadsCount,
-                  let objectID = folder?.objectID else {
+                  let folderObjectID = folder?.objectID else {
                       completionHandler(false)
                       return
                   }
             
             if breadsCount == 0 {
-                self.deleteFolder(of: objectID)
+                self.folderModel.delete(folderObjectID)
                 completionHandler(true)
                 return
             }
@@ -412,7 +413,7 @@ extension FoldersViewController: UITableViewDelegate {
                         completionHandler(false)
                         return
                     }
-                    self.deleteFolder(of: objectID)
+                    self.folderModel.delete(folderObjectID)
                     completionHandler(true)
                 },
                 cancelHandler: { _ in
@@ -425,25 +426,6 @@ extension FoldersViewController: UITableViewDelegate {
         action.image = UIImage(systemName: "trash")
         action.backgroundColor = .systemRed
         return action
-    }
-    
-    private func deleteFolder(of folderObjectID: NSManagedObjectID) {
-        let trashObjectID = trashObjectID
-        coreDataStack.writeAndSaveIfHasChanges { context in
-            guard let folder = try? context.existingObject(with: folderObjectID) as? Folder,
-                  let trashObjectID = trashObjectID,
-                  let trash = try? context.existingObject(with: trashObjectID) as? Folder else {
-                return
-            }
-            
-            if let allBreads = folder.breads?.allObjects as? [Bread] {
-                allBreads.forEach {
-                    $0.move(toTrash: trash)
-                }
-            }
-            
-            context.delete(folder)
-        }
     }
 }
 

@@ -11,6 +11,7 @@ import CoreData
 final class FolderModel {
     private let moc: NSManagedObjectContext
     private var foldersIndexChangedFlag = false
+    var trashObjectID: NSManagedObjectID?
     
     init(context: NSManagedObjectContext) {
         self.moc = context
@@ -65,6 +66,32 @@ final class FolderModel {
             } catch {
                 moc.rollback()
                 throw error
+            }
+        }
+    }
+    
+    func delete(_ folderObjectID: NSManagedObjectID) {
+        print("trashObject=\(trashObjectID)")
+        moc.perform { [moc, trashObjectID] in
+            guard let folder = try? moc.existingObject(with: folderObjectID) as? Folder,
+                  let allBreadsInFolder = folder.breads?.allObjects as? [Bread],
+                  let trashObjectID = trashObjectID,
+                  let trash = try? moc.existingObject(with: trashObjectID) as? Folder else {
+                      return
+                  }
+            
+            allBreadsInFolder.forEach {
+                $0.move(toTrash: trash)
+            }
+            
+            moc.delete(folder)
+            
+            if moc.hasChanges {
+                do {
+                    try moc.save()
+                } catch {
+                    fatalError("Saving for deleting folder is failed.")
+                }
             }
         }
     }
