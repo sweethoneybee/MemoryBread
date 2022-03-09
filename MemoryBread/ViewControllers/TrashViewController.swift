@@ -309,6 +309,7 @@ extension TrashViewController: NSFetchedResultsControllerDelegate {
         let shouldAnimate = mainView.tableView.numberOfSections != 0
         
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
+        mainView.headerLabelText = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)
         moresItem.isEnabled = snapshot.numberOfItems != 0
     }
 }
