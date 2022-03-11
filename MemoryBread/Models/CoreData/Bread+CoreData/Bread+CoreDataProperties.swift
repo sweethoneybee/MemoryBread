@@ -121,12 +121,6 @@ extension Bread {
     func updateContent(with newContent: String) {
         content = newContent
         separatedContent = newContent.components(separatedBy: ["\n", " ", "\t"])
-            .map {
-                $0.components(withMaxLength: 16)
-            }
-            .flatMap{
-                $0
-            }
         
         filterIndexes = Array(repeating: [], count: FilterColor.count)
         touch = Date()

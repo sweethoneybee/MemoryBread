@@ -20,6 +20,7 @@ final class BreadViewController: UIViewController {
         static let wordItemSpacing: CGFloat = 5
         static let lineSpacing: CGFloat = 15
         static let backButtonOffset: CGFloat = -10
+        static let collectionViewHeaderHeight: CGFloat = 44
     }
     
     private var collectionViewContentWidth: CGFloat {
@@ -134,28 +135,10 @@ final class BreadViewController: UIViewController {
 
 // MARK: - Configure Views
 extension BreadViewController {
-    private func createLayout() -> UICollectionViewCompositionalLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(10),
-                                              heightDimension: .estimated(10))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(10))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .fixed(UIConstants.wordItemSpacing)
-    
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = UIConstants.lineSpacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: UIConstants.edgeInset, bottom: 0, trailing: UIConstants.edgeInset)
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(44))
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                        elementKind: SupplemantaryTitleView.reuseIdentifier,
-                                                                        alignment: .top)
-        section.boundarySupplementaryItems = [sectionHeader]
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
+    private func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = UIConstants.wordItemSpacing
+        layout.minimumLineSpacing = UIConstants.lineSpacing
         return layout
     }
     
@@ -163,7 +146,9 @@ extension BreadViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .breadBody
-
+        collectionView.register(SupplemantaryTitleView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SupplemantaryTitleView.reuseIdentifier)
+        collectionView.alwaysBounceVertical = true
+        
         view.addSubview(collectionView)
         
         addToolbar()
@@ -208,6 +193,38 @@ extension BreadViewController {
     }
 }
 
+extension BreadViewController: UICollectionViewDelegateFlowLayout {
+    private func wordCellSizeWith(word: String, attributes: [NSAttributedString.Key: Any]?, maxWidth: CGFloat) -> CGSize {
+        let wordSize = word.size(withAttributes: attributes).applying(.init(scaleX: 1.01, y: 1.01))
+        let wordWidth = wordSize.width
+        
+        if wordWidth <= maxWidth {
+            return wordSize
+        }
+        
+        let heightMultiplier = ceil(wordWidth / maxWidth)
+        return CGSize(width: maxWidth, height: wordSize.height * heightMultiplier)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let id = dataSource.itemIdentifier(for: indexPath),
+           let item = wordPainter.item(forKey: id) {
+            
+            let att = [NSAttributedString.Key.font: WordCell.labelFont]
+            return wordCellSizeWith(word: item.word, attributes: att, maxWidth: collectionViewContentWidth)
+        }
+        return CGSize.zero
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: UIConstants.edgeInset, bottom: 0, right: UIConstants.edgeInset)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionViewContentWidth, height: UIConstants.collectionViewHeaderHeight)
+    }
+}
+
 // MARK: - Diffable Data Source
 extension BreadViewController {
     private func configureDataSource() {
@@ -223,20 +240,19 @@ extension BreadViewController {
             }
         }
         
-        let headerRegistration = UICollectionView.SupplementaryRegistration
-        <SupplemantaryTitleView>(elementKind: SupplemantaryTitleView.reuseIdentifier) {
-            [weak self] supplementaryView, elementKind, indexPath in
-            guard let self = self else { return }
-            supplementaryView.configure(using: self.bread.title)
-            supplementaryView.delegate = self
-        }
-        
         dataSource = UICollectionViewDiffableDataSource<Section, UUID>(collectionView: collectionView) { collectionView, indexPath, id in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: id)
         }
         
-        dataSource.supplementaryViewProvider = { (collectionView, kind, index) in
-            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: index)
+        dataSource.supplementaryViewProvider = { [weak self] (collectionView, kind, indexPath) in
+            guard let self = self,
+                  let supplementaryView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SupplemantaryTitleView.reuseIdentifier, for: indexPath) as? SupplemantaryTitleView else {
+                return nil
+            }
+            
+            supplementaryView.configure(using: self.bread.title)
+            supplementaryView.delegate = self
+            return supplementaryView
         }
         
         applyNewIdentifiers(wordPainter.ids())

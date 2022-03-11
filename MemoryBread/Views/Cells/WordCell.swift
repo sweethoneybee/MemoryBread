@@ -10,10 +10,13 @@ import SnapKit
 import Then
 
 final class WordCell: UICollectionViewCell {
+    static let labelFont = UIFont.systemFont(ofSize: 18, weight: .regular)
+    
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
-        $0.font = .systemFont(ofSize: 18, weight: .regular)
+        $0.font = WordCell.labelFont
         $0.textColor = .label
+        $0.numberOfLines = 0
     }
     
     let overlayView = UIView()
@@ -34,9 +37,7 @@ extension WordCell {
         contentView.addSubview(overlayView)
         
         label.snp.makeConstraints { make in
-            let inset = CGFloat(1)
-            make.leading.top.equalToSuperview().offset(inset)
-            make.trailing.bottom.equalToSuperview().offset(-inset)
+            make.edges.equalToSuperview()
         }
         
         overlayView.snp.makeConstraints { make in

@@ -36,7 +36,8 @@ extension SupplemantaryTitleView {
         label.font = Self.font
         label.numberOfLines = 0
         label.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview()
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().inset(BreadViewController.UIConstants.edgeInset)
             make.trailing.lessThanOrEqualToSuperview()
             make.bottom.equalToSuperview().offset(-10)
         }
