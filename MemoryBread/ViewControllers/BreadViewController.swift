@@ -20,7 +20,6 @@ final class BreadViewController: UIViewController {
         static let wordItemSpacing: CGFloat = 5
         static let lineSpacing: CGFloat = 15
         static let backButtonOffset: CGFloat = -10
-        static let collectionViewHeaderHeight: CGFloat = 44
     }
     
     private var collectionViewContentWidth: CGFloat {
@@ -221,7 +220,12 @@ extension BreadViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionViewContentWidth, height: UIConstants.collectionViewHeaderHeight)
+        guard let title = bread.title else {
+            return CGSize(width: collectionViewContentWidth, height: SupplemantaryTitleView.UIConstants.minimumHeight)
+        }
+        
+        let calculatedHeight = title.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) + SupplemantaryTitleView.UIConstants.bottomInset
+        return CGSize(width: collectionViewContentWidth, height: calculatedHeight)
     }
 }
 

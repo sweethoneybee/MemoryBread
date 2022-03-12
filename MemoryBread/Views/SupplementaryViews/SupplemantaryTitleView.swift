@@ -13,9 +13,15 @@ protocol SupplemantaryTitleViewDelegate: AnyObject {
 }
 
 final class SupplemantaryTitleView: UICollectionReusableView {
+    struct UIConstants {
+        static let bottomInset: CGFloat = 10
+        static let minimumHeight: CGFloat = 37 + bottomInset
+    }
+    
     static let reuseIdentifier = "scrollable-supplemantary-view"
     static let font = UIFont.boldSystemFont(ofSize: 22)
-
+    
+    
     weak var delegate: SupplemantaryTitleViewDelegate?
     let label = UILabel()
     
@@ -38,8 +44,8 @@ extension SupplemantaryTitleView {
         label.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview().inset(BreadViewController.UIConstants.edgeInset)
-            make.trailing.lessThanOrEqualToSuperview()
-            make.bottom.equalToSuperview().offset(-10)
+            make.trailing.lessThanOrEqualToSuperview().inset(BreadViewController.UIConstants.edgeInset)
+            make.bottom.equalToSuperview().inset(UIConstants.bottomInset)
         }
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTitleView))
