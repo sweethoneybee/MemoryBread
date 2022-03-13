@@ -32,6 +32,10 @@ final class BreadListViewController: UIViewController {
     private var isTableViewSwipeActionShowing = false
     
     // MARK: - Models
+    private let coreDataStack: CoreDataStack
+    private let currentFolderObjectID: NSManagedObjectID
+    private let isAllBreadsFolder: Bool
+    
     private lazy var folderObject: Folder = {
         guard let folder = viewContext.object(with: currentFolderObjectID) as? Folder else {
             fatalError("Folder casting error")
@@ -48,14 +52,20 @@ final class BreadListViewController: UIViewController {
     }
     
     private var showFolder: Bool {
-        folderObject.pinnedAtTop
+        folderObject.pinnedAtTop && folderObject.isSystemFolder
     }
     
-    private let currentFolderObjectID: NSManagedObjectID
-    private let rootObjectID: NSManagedObjectID
-    private let trashObjectID: NSManagedObjectID
+    private var defaultFolderObjectID: NSManagedObjectID {
+        coreDataStack.defaultFolderObjectID
+    }
+    private var trashObjectID: NSManagedObjectID {
+        coreDataStack.trashFolderObjectID
+    }
     
-    private let coreDataStack: CoreDataStack
+    private var folderObjectIDForCreating: NSManagedObjectID {
+        isAllBreadsFolder ? defaultFolderObjectID : currentFolderObjectID
+    }
+    
     private var viewContext: NSManagedObjectContext {
         coreDataStack.viewContext
     }
@@ -63,7 +73,7 @@ final class BreadListViewController: UIViewController {
     private lazy var fetchedResultsController: NSFetchedResultsController<Bread> = {
         let fetchRequest = Bread.fetchRequest()
         if let folderID = folderID {
-            fetchRequest.predicate = NSPredicate(format: "ANY folders.id = %@", folderID as CVarArg)
+            fetchRequest.predicate = isAllBreadsFolder ? NSPredicate(format: "folder.pinnedAtBottom = NO") : NSPredicate(format: "folder.id = %@", folderID as CVarArg)
         }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
@@ -91,16 +101,10 @@ final class BreadListViewController: UIViewController {
         fatalError("not implemented")
     }
     
-    init(
-        coreDataStack: CoreDataStack,
-        currentFolderObjectID: NSManagedObjectID,
-        rootObjectID: NSManagedObjectID,
-        trashObjectID: NSManagedObjectID
-    ) {
+    init(coreDataStack: CoreDataStack, currentFolderObjectID: NSManagedObjectID, isAllBreadsFolder: Bool) {
         self.coreDataStack = coreDataStack
         self.currentFolderObjectID = currentFolderObjectID
-        self.rootObjectID = rootObjectID
-        self.trashObjectID = trashObjectID
+        self.isAllBreadsFolder = isAllBreadsFolder
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -166,9 +170,10 @@ extension BreadListViewController {
     // MARK: - UIButton Target Actions
     @objc
     func remoteDriveItemTouched() {
-        let rdaVC = RemoteDriveAuthViewController(context: coreDataStack.writeContext)
-        rdaVC.folderObjectID = currentFolderObjectID
-        rdaVC.rootObjectID = rootObjectID
+        let rdaVC = RemoteDriveAuthViewController(
+            context: coreDataStack.writeContext,
+            folderObjectID: folderObjectIDForCreating
+        )
         let nvc = UINavigationController(rootViewController: rdaVC)
         present(nvc, animated: true)
     }
@@ -219,10 +224,8 @@ extension BreadListViewController: BreadListViewDelegate {
         let writeContext = coreDataStack.writeContext
         writeContext.perform {
             let newBread = Bread.makeBasicBread(context: writeContext)
-            if let root = try? writeContext.existingObject(with: self.rootObjectID) as? Folder,
-               let folder = try? writeContext.existingObject(with: self.currentFolderObjectID) as? Folder {
-                newBread.addToFolders(root)
-                newBread.addToFolders(folder)
+            if let folder = try? writeContext.existingObject(with: self.folderObjectIDForCreating) as? Folder {
+                newBread.folder = folder
             }
             
             writeContext.saveContextAndParentIfNeeded()
@@ -275,7 +278,7 @@ extension BreadListViewController: BreadListViewDelegate {
             
             objectIDs.forEach {
                 if let bread = try? context.existingObject(with: $0) as? Bread {
-                    bread.move(toTrash: trash)
+                    bread.move(to: trash)
                 }
             }
         }
@@ -312,8 +315,7 @@ extension BreadListViewController: BreadListViewDelegate {
 // MARK: - UITableViewDelegate
 extension BreadListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let bread = fetchedResultsController.object(at: indexPath)
-        return (showFolder && (bread.currentFolder != nil)) ? CGFloat(75) : CGFloat(60)
+        return (showFolder) ? CGFloat(75) : CGFloat(60)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -389,12 +391,8 @@ extension BreadListViewController: NSFetchedResultsControllerDelegate {
 
 // MARK: - MoveBreadViewControllerPresentable
 extension BreadListViewController: MoveBreadViewControllerPresentable {
-    var sourceFolderObjectID: NSManagedObjectID {
-        currentFolderObjectID
-    }
-    
-    var rootFolderObjectID: NSManagedObjectID {
-        rootObjectID
+    var sourceFolderObjectID: NSManagedObjectID? {
+        isAllBreadsFolder ? nil : currentFolderObjectID
     }
     
     var trashFolderObjectID: NSManagedObjectID {

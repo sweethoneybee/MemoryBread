@@ -20,12 +20,16 @@ final class FolderListCell: UITableViewCell {
             }
             return "folder"
         }
-        
-        init(folderObject: Folder) {
+                
+        init(folderObject: Folder, breadsCount: Int64) {
             self.title = folderObject.name ?? ""
             self.pinnedAtTop = folderObject.pinnedAtTop
             self.pinnedAtBottom = folderObject.pinnedAtBottom
-            self.count = folderObject.breadsCount
+            self.count = breadsCount
+        }
+        
+        init(folderObject: Folder) {
+            self.init(folderObject: folderObject, breadsCount: folderObject.breadsCount)
         }
     }
     

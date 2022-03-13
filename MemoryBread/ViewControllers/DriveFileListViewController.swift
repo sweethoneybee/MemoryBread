@@ -30,8 +30,7 @@ final class DriveFileListViewController: UIViewController {
     private var noFilesHereLabel: UILabel!
     
     // MARK: - Model
-    var folderObjectID: NSManagedObjectID?
-    var rootObjectID: NSManagedObjectID?
+    private let folderObjectID: NSManagedObjectID
     
     weak var downloader: GDDownloader?
     var currentDirId: String
@@ -64,8 +63,9 @@ final class DriveFileListViewController: UIViewController {
         }
     }
     
-    init(context: NSManagedObjectContext, dirID: String, dirName: String? = nil) {
+    init(context: NSManagedObjectContext, folderObjectID: NSManagedObjectID, dirID: String, dirName: String? = nil) {
         self.writeContext = context
+        self.folderObjectID = folderObjectID
         self.currentDirId = dirID
         self.currentDirName = dirName ?? "Google Drive"
         super.init(nibName: nil, bundle: nil)
@@ -271,9 +271,13 @@ extension DriveFileListViewController: UITableViewDelegate {
                     reload(at: indexPath.item)
                 }
             case .folder:
-                let dflVC = DriveFileListViewController(context: writeContext, dirID: file.id, dirName: file.name)
+                let dflVC = DriveFileListViewController(
+                    context: writeContext,
+                    folderObjectID: folderObjectID,
+                    dirID: file.id,
+                    dirName: file.name
+                )
                 dflVC.downloader = downloader
-                dflVC.folderObjectID = folderObjectID
                 navigationController?.pushViewController(dflVC, animated: true)
             }
         }
@@ -321,10 +325,7 @@ extension DriveFileListViewController: FileListCellDelegate {
                             self.present(loadingVC, animated: false)
                             
                             self.writeContext.perform {
-                                guard let rootObjectID = self.rootObjectID,
-                                      let root = try? self.writeContext.existingObject(with: rootObjectID) as? Folder,
-                                      let folderObjectID = self.folderObjectID,
-                                      let currentFolder = try? self.writeContext.existingObject(with: folderObjectID) as? Folder else {
+                                guard let folder = try? self.writeContext.existingObject(with: self.folderObjectID) as? Folder else {
                                           return
                                       }
                                 
@@ -332,9 +333,7 @@ extension DriveFileListViewController: FileListCellDelegate {
                                     let title = row.first
                                     let content = row.last
                                     let newBread = Bread.makeBread(context: self.writeContext, title: title ?? LocalizingHelper.freshBread, content: content ?? "")
-                                    
-                                    newBread.addToFolders(root)
-                                    newBread.addToFolders(currentFolder)
+                                    newBread.folder = folder
                                 }
 
                                 self.writeContext.saveContextAndParentIfNeeded()

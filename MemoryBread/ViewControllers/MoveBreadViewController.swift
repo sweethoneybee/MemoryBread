@@ -88,16 +88,16 @@ extension MoveBreadViewController {
         
         let createFolderItem = MoveFolderListCell.Item(name: LocalizingHelper.newFolder, disabled: false, objectID: nil)
         snapshot.appendItems([createFolderItem], toSection: 0)
-        snapshot.appendItems(model.folderItems, toSection: 0)
+        snapshot.appendItems(model.makeFolderItems(), toSection: 0)
         dataSource.apply(snapshot, animatingDifferences: false)
         
         model.didCreateFolderHandler = { [weak self] item in
             guard var snapshot = self?.dataSource.snapshot(),
-                  let createFolderItem = snapshot.itemIdentifiers.first else {
+                  let defaultFolderItem = snapshot.itemIdentifiers[safe: 1] else {
                       return
                   }
             
-            snapshot.insertItems([item], afterItem: createFolderItem)
+            snapshot.insertItems([item], afterItem: defaultFolderItem)
             self?.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }

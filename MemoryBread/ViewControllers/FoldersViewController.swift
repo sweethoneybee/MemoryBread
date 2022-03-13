@@ -16,7 +16,7 @@ final class FoldersViewController: UIViewController {
     
     // MARK: - Views
     private var tableView: UITableView!
-    private var dataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID>!
+    private var dataSource: DataSource!
 
     private var noAnimatationForTableView = false
     private var isTableViewCellSwipeActionShowing = false
@@ -52,16 +52,9 @@ final class FoldersViewController: UIViewController {
         return frc
     }()
     
-    private let pinnnedAtTopCount = 1
-    private let pinnedAtBottomCount = 1
-    
-    private var rootObjectID: NSManagedObjectID? {
-        return fetchedResultsController.fetchedObjects?.first?.objectID
-    }
-    
-    private var trashObjectID: NSManagedObjectID? {
-        return fetchedResultsController.fetchedObjects?.last?.objectID
-    }
+    private let pinnnedAtTopFolderCount = 2
+    private let pinnedAtBottomFolderCount = 1
+    private var allBreadsCount: Int = 0
     
     private let folderModel: FolderModel
     
@@ -74,6 +67,8 @@ final class FoldersViewController: UIViewController {
         self.coreDataStack = coreDataStack
         self.folderModel = FolderModel(context: coreDataStack.writeContext)
         super.init(nibName: nil, bundle: nil)
+        
+        self.folderModel.trashObjectID = coreDataStack.trashFolderObjectID
     }
     
     override func viewDidLoad() {
@@ -82,7 +77,6 @@ final class FoldersViewController: UIViewController {
         configureDataSource()
         
         try? fetchedResultsController.performFetch()
-        self.folderModel.trashObjectID = trashObjectID
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -156,7 +150,7 @@ extension FoldersViewController {
                 guard let self = self,
                       let topFolderIndex = self
                         .fetchedResultsController
-                        .fetchedObjects?[safe: self.pinnnedAtTopCount]?.index else {
+                        .fetchedObjects?[safe: self.pinnnedAtTopFolderCount]?.index else {
                             return
                         }
                 
@@ -237,7 +231,10 @@ extension FoldersViewController {
 
 // MARK: - DataSource
 extension FoldersViewController {
-    class DataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID> {
+    final class DataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID> {
+        var pinnedAtTopItemCount: Int? = 0
+        var pinnedAtBottomItemCount: Int? = 0
+        
         override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
             guard sourceIndexPath != destinationIndexPath else { return }
 
@@ -250,12 +247,16 @@ extension FoldersViewController {
         }
         
         override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-            return (indexPath.item != 0) && (indexPath.item != (snapshot().numberOfItems - 1))
+            guard let pinnedAtTopItemCount = pinnedAtTopItemCount,
+                  let pinnedAtBottomItemCount = pinnedAtBottomItemCount else {
+                return false
+            }
+            return (indexPath.item > pinnedAtTopItemCount - 1) && (indexPath.item < snapshot().numberOfItems - pinnedAtBottomItemCount)
         }
     }
     
     private func configureDataSource() {
-        dataSource = DataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, objectID in
+        dataSource = FoldersViewController.DataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, objectID in
             guard let folderObject = try? self?.viewContext.existingObject(with: objectID) as? Folder else {
                 fatalError("Managed object should be available")
             }
@@ -264,10 +265,19 @@ extension FoldersViewController {
                 fatalError("FolderListCell not available")
             }
             
-            let cellItem = FolderListCell.Item(folderObject: folderObject)
+            let cellItem: FolderListCell.Item
+            switch indexPath.item {
+            case 0:
+                cellItem = FolderListCell.Item(folderObject: folderObject, breadsCount: Int64(self?.allBreadsCount ?? 0))
+            default:
+                cellItem = FolderListCell.Item(folderObject: folderObject)
+            }
             cell.inject(cellItem)
             return cell
         })
+        
+        dataSource.pinnedAtTopItemCount = pinnnedAtTopFolderCount
+        dataSource.pinnedAtBottomItemCount = pinnedAtBottomFolderCount
     }
 }
 
@@ -275,13 +285,13 @@ extension FoldersViewController {
 // MARK: - UITableViewDelegate
 extension FoldersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        return (indexPath.item > pinnnedAtTopCount - 1)
-        && (indexPath.item < (dataSource.snapshot().numberOfItems - pinnedAtBottomCount))
+        return (indexPath.item > pinnnedAtTopFolderCount - 1)
+        && (indexPath.item < (dataSource.snapshot().numberOfItems - pinnedAtBottomFolderCount))
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        if (indexPath.item > pinnnedAtTopCount - 1)
-            && (indexPath.item < (dataSource.snapshot().numberOfItems - pinnedAtBottomCount)) {
+        if (indexPath.item > pinnnedAtTopFolderCount - 1)
+            && (indexPath.item < (dataSource.snapshot().numberOfItems - pinnedAtBottomFolderCount)) {
             return .delete
         }
         return .none
@@ -289,18 +299,12 @@ extension FoldersViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-    
+        
         if let objectID = dataSource.itemIdentifier(for: indexPath),
-           let folderObject = try? viewContext.existingObject(with: objectID) as? Folder,
-           let rootObjectID = rootObjectID,
-           let trashObjectID = trashObjectID {
+           let folderObject = try? viewContext.existingObject(with: objectID) as? Folder {
             
             if folderObject.pinnedAtBottom {
-                let trashVC = TrashViewController(
-                    coreDataStack: coreDataStack,
-                    rootObjectID: rootObjectID,
-                    trashObjectID: trashObjectID
-                )
+                let trashVC = TrashViewController(coreDataStack: coreDataStack)
                 navigationController?.pushViewController(trashVC, animated: true)
                 return
             }
@@ -308,8 +312,7 @@ extension FoldersViewController: UITableViewDelegate {
             let blvc = BreadListViewController(
                 coreDataStack: coreDataStack,
                 currentFolderObjectID: folderObject.objectID,
-                rootObjectID: rootObjectID,
-                trashObjectID: trashObjectID
+                isAllBreadsFolder: folderObject.pinnedAtTop
             )
             navigationController?.pushViewController(blvc, animated: true)
         }
@@ -321,20 +324,20 @@ extension FoldersViewController: UITableViewDelegate {
         
         if sourceIndexPath.section != proposedDestinationIndexPath.section {
             let rowInSourceSection = (sourceIndexPath.section > proposedDestinationIndexPath.section) ?
-            pinnnedAtTopCount : itemsCount - pinnedAtBottomCount - 1
+            pinnnedAtTopFolderCount : itemsCount - pinnedAtBottomFolderCount - 1
             return IndexPath(row: rowInSourceSection, section: sourceIndexPath.section)
-        } else if proposedDestinationIndexPath.row <= pinnnedAtTopCount - 1 {
-            return IndexPath(row: pinnnedAtTopCount, section: sourceIndexPath.section)
-        } else if proposedDestinationIndexPath.row >= itemsCount - pinnedAtBottomCount {
-            return IndexPath(row: itemsCount - pinnnedAtTopCount - 1, section: sourceIndexPath.section)
+        } else if proposedDestinationIndexPath.row <= pinnnedAtTopFolderCount - 1 {
+            return IndexPath(row: pinnnedAtTopFolderCount, section: sourceIndexPath.section)
+        } else if proposedDestinationIndexPath.row >= itemsCount - pinnedAtBottomFolderCount {
+            return IndexPath(row: itemsCount - pinnnedAtTopFolderCount - 1, section: sourceIndexPath.section)
         }
         
         return proposedDestinationIndexPath
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard indexPath.item > pinnnedAtTopCount - 1,
-              indexPath.item < dataSource.snapshot().numberOfItems - pinnedAtBottomCount else {
+        guard indexPath.item > pinnnedAtTopFolderCount - 1,
+              indexPath.item < dataSource.snapshot().numberOfItems - pinnedAtBottomFolderCount else {
                   return nil
               }
         
@@ -430,6 +433,13 @@ extension FoldersViewController: UITableViewDelegate {
 }
 
 extension FoldersViewController: NSFetchedResultsControllerDelegate {
+    private func fetchAllBreadsCount() -> Int {
+        let fr = Bread.fetchRequest()
+        fr.predicate = NSPredicate(format: "folder.pinnedAtBottom = NO")
+        let breadsCount = (try? coreDataStack.writeContext.count(for: fr)) ?? 0
+        return breadsCount
+    }
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         
         var shouldAnimate = true
@@ -438,6 +448,10 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
             shouldAnimate = false
         }
         
+        allBreadsCount = fetchAllBreadsCount()
+        if let allBreadsFolderObjectID = fetchedResultsController.fetchedObjects?.first?.objectID {
+            snapshot.reloadItems(withIdentifiers: [allBreadsFolderObjectID])
+        }
         dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Section, NSManagedObjectID>, animatingDifferences: shouldAnimate)
     }
 }

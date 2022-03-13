@@ -15,8 +15,7 @@ final class RemoteDriveAuthViewController: UIViewController {
     private var tableView: UITableView!
     
     // MARK: - Model
-    var folderObjectID: NSManagedObjectID?
-    var rootObjectID: NSManagedObjectID?
+    private let folderObjectID: NSManagedObjectID
     
     private var model = DriveAuthModel()
     private var gdDownloader: GDDownloader?
@@ -47,8 +46,9 @@ final class RemoteDriveAuthViewController: UIViewController {
         fatalError("not implemented")
     }
     
-    init(context: NSManagedObjectContext) {
+    init(context: NSManagedObjectContext, folderObjectID: NSManagedObjectID) {
         self.writeContext = context
+        self.folderObjectID = folderObjectID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -214,10 +214,13 @@ extension RemoteDriveAuthViewController {
         case .googleDrive:
             gdDownloader = GDDownloader()
             gdDownloader?.authorizer = DriveAuthStorage.shared.googleDrive
-            let vc = DriveFileListViewController(context: writeContext, dirID: "root", dirName: nil)
+            let vc = DriveFileListViewController(
+                context: writeContext,
+                folderObjectID: folderObjectID,
+                dirID: "root",
+                dirName: nil
+            )
             vc.downloader = gdDownloader
-            vc.folderObjectID = folderObjectID
-            vc.rootObjectID = rootObjectID
             fileListVC = vc
         }
         navigationController?.pushViewController(fileListVC, animated: true)

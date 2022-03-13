@@ -24,24 +24,7 @@ extension Bread {
     @NSManaged public var separatedContent: [String]?
     @NSManaged public var filterIndexes: [[Int]]?
     @NSManaged public var selectedFilters: [Int]?
-    @NSManaged public var folders: NSSet?
-}
-
-// MARK: Generated accessors for breads
-extension Bread {
-
-    @objc(addFoldersObject:)
-    @NSManaged public func addToFolders(_ value: Folder)
-
-    @objc(removeFoldersObject:)
-    @NSManaged public func removeFromFolders(_ value: Folder)
-
-    @objc(addFolders:)
-    @NSManaged public func addToFolders(_ values: NSSet)
-
-    @objc(removeFolders:)
-    @NSManaged public func removeFromFolders(_ values: NSSet)
-
+    @NSManaged public var folder: Folder
 }
 
 extension Bread : Identifiable {
@@ -49,32 +32,8 @@ extension Bread : Identifiable {
 }
 
 extension Bread {
-    var currentFolder: Folder? {
-        guard let folders = folders?.allObjects as? [Folder] else {
-            return nil
-        }
-        
-        return folders.filter {
-            $0.pinnedAtTop != true
-        }.first
-    }
-    
-    func move(toTrash trash: Folder) {
-        guard let folders = folders else { return }
-        removeFromFolders(folders)
-        addToFolders(trash)
-    }
-    
-    func move(from src: Folder, to dest: Folder) {
-        removeFromFolders(src)
-        addToFolders(dest)
-    }
-    
-    func move(to dest: Folder, root: Folder) {
-        guard let folders = folders else { return }
-        removeFromFolders(folders)
-        addToFolders(dest)
-        addToFolders(root)
+    func move(to destFolder: Folder) {
+        folder = destFolder
     }
 }
 

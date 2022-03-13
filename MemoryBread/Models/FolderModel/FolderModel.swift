@@ -26,6 +26,7 @@ final class FolderModel {
         
         do {
             try moc.save()
+            try moc.parent?.save()
             return newFolder
         } catch {
             moc.rollback()
@@ -71,7 +72,6 @@ final class FolderModel {
     }
     
     func delete(_ folderObjectID: NSManagedObjectID) {
-        print("trashObject=\(trashObjectID)")
         moc.perform { [moc, trashObjectID] in
             guard let folder = try? moc.existingObject(with: folderObjectID) as? Folder,
                   let allBreadsInFolder = folder.breads?.allObjects as? [Bread],
@@ -81,7 +81,7 @@ final class FolderModel {
                   }
             
             allBreadsInFolder.forEach {
-                $0.move(toTrash: trash)
+                $0.move(to: trash)
             }
             
             moc.delete(folder)

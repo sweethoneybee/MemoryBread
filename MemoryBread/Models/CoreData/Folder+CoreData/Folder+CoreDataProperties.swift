@@ -39,7 +39,7 @@ extension Folder {
     
     @NSManaged public var breadsCount: Int64
     @NSManaged public var breads: NSSet?
-    
+    @NSManaged public var isSystemFolder: Bool
 }
 
 // MARK: Generated accessors for breads

@@ -14,7 +14,11 @@ struct UserDefault<T> {
     
     var wrappedValue: T {
         get {
-            UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+            if let ret = UserDefaults.standard.object(forKey: key) as? T {
+                return ret
+            }
+            UserDefaults.standard.set(defaultValue, forKey: key)
+            return defaultValue
         }
         set {
             UserDefaults.standard.set(newValue, forKey: key)
@@ -42,4 +46,10 @@ final class UserManager {
     
     @UserDefault<Bool>(key: "firstLaunch", defaultValue: true)
     static var firstLaunch: Bool
+    
+    @UserDefault<String>(key: "defaultFolderID", defaultValue: UUID().uuidString)
+    static var defaultFolderID: String
+    
+    @UserDefault<String>(key: "trashFolderID", defaultValue: UUID().uuidString)
+    static var trashFolderID: String
 }

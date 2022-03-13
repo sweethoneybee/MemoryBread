@@ -39,6 +39,27 @@ final class CoreDataStack {
         return container
     }()
     
+    lazy var defaultFolderObjectID: NSManagedObjectID = fetchFolderObjectID(of: UserManager.defaultFolderID)
+    lazy var trashFolderObjectID: NSManagedObjectID = fetchFolderObjectID(of: UserManager.trashFolderID)
+
+    private func fetchFolderObjectID(of id: String) -> NSManagedObjectID {
+        guard let folderID = UUID(uuidString: id) else {
+            fatalError("UUIDString casting failed")
+        }
+        let fr: NSFetchRequest<NSManagedObjectID> = NSFetchRequest(entityName: "Folder")
+        fr.resultType = .managedObjectIDResultType
+        fr.predicate = NSPredicate(format: "id = %@", folderID as CVarArg)
+        do {
+            let result: Array<NSManagedObjectID> = try writeContext.fetch(fr)
+            guard let objectID = result.first else {
+                fatalError("Folder fetching has no results.")
+            }
+            return objectID
+        } catch {
+            fatalError("Folder fetching has failed.")
+        }
+    }
+    
     private var notificationTokens: [NSObjectProtocol] = []
     
     init(modelName: String) {

@@ -9,8 +9,7 @@ import UIKit
 import CoreData
 
 protocol MoveBreadViewControllerPresentable where Self: UIViewController {
-    var sourceFolderObjectID: NSManagedObjectID { get }
-    var rootFolderObjectID: NSManagedObjectID { get }
+    var sourceFolderObjectID: NSManagedObjectID? { get }
     var trashFolderObjectID: NSManagedObjectID { get }
     
     func presentMoveBreadViewControllerWith(context: NSManagedObjectContext, targetBreadObjectIDs: [NSManagedObjectID])
@@ -21,8 +20,7 @@ extension MoveBreadViewControllerPresentable {
         let model = MoveBreadModel(
             context: context,
             selectedBreadObjectIDs: targetBreadObjectIDs,
-            currentFolderObjectID: sourceFolderObjectID,
-            rootObjectID: rootFolderObjectID,
+            shouldDisabledFolderObjectID: sourceFolderObjectID,
             trashObjectID: trashFolderObjectID
         )
         let mbvc = MoveBreadViewController(model: model, moveDoneHandler: { [weak self] in

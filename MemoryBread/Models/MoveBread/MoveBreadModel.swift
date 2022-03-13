@@ -14,25 +14,10 @@ final class MoveBreadModel {
     
     private let moc: NSManagedObjectContext
     private let selectedBreadObjectIDs: [NSManagedObjectID]
-    private let currentFolderObjectID: NSManagedObjectID
-    private let rootObjectID: NSManagedObjectID
+    private let shouldDisabledFolderObjectID: NSManagedObjectID?
     private let trashObjectID: NSManagedObjectID
     
     private let folderModel: FolderModel
-    
-    private lazy var currentFolcerObject: Folder = {
-        guard let currentFolder = moc.object(with: currentFolderObjectID) as? Folder else {
-            fatalError("Folder casting error")
-        }
-        return currentFolder
-    }()
-    
-    private lazy var rootObject: Folder = {
-        guard let root = moc.object(with: rootObjectID) as? Folder else {
-            fatalError("Folder casting error")
-        }
-        return root
-    }()
     
     private lazy var trashObject: Folder = {
         guard let trash = moc.object(with: trashObjectID) as? Folder else {
@@ -54,10 +39,12 @@ final class MoveBreadModel {
     private lazy var foldersFetchRequest: NSFetchRequest<Folder> = {
         let fr = Folder.fetchRequest()
         
-        let notPinned = NSPredicate(format: "pinnedAtTop == NO && pinnedAtBottom == NO")
-        fr.predicate = notPinned
+        let notSystemFolder = NSPredicate(format: "isSystemFolder = NO")
+        fr.predicate = notSystemFolder
+        fr.shouldRefreshRefetchedObjects = true
+        let pinnedAtTopSort = NSSortDescriptor(key: "pinnedAtTop", ascending: false)
         let orderingIndexSort = NSSortDescriptor(key: "index", ascending: true)
-        fr.sortDescriptors = [orderingIndexSort]
+        fr.sortDescriptors = [pinnedAtTopSort, orderingIndexSort]
         
         return fr
     }()
@@ -66,20 +53,20 @@ final class MoveBreadModel {
         (try? moc.fetch(foldersFetchRequest)) ?? []
     }()
     
+    private var createdFolderCount = 0
+    
     var didCreateFolderHandler: ((Item) -> Void)?
     
     // MARK: - init
     init(
         context: NSManagedObjectContext,
         selectedBreadObjectIDs: [NSManagedObjectID],
-        currentFolderObjectID: NSManagedObjectID,
-        rootObjectID: NSManagedObjectID,
+        shouldDisabledFolderObjectID: NSManagedObjectID?,
         trashObjectID: NSManagedObjectID
     ) {
         self.moc = context
         self.selectedBreadObjectIDs = selectedBreadObjectIDs
-        self.currentFolderObjectID = currentFolderObjectID
-        self.rootObjectID = rootObjectID
+        self.shouldDisabledFolderObjectID = shouldDisabledFolderObjectID
         self.trashObjectID = trashObjectID
         
         self.folderModel = FolderModel(context: context)
@@ -140,11 +127,11 @@ extension MoveBreadModel {
         return String(format: LocalizingHelper.selectedTheNumberOfMemoryBreads, selectedBreadNames.count)
     }
     
-    var folderItems: [Item] {
-        folders.map {
+    func makeFolderItems() -> [Item] {
+        return folders.map {
             Item(
                 name: $0.name ?? "",
-                disabled: ($0.objectID == currentFolderObjectID) ? true : false,
+                disabled: ($0.objectID == shouldDisabledFolderObjectID) ? true : false,
                 objectID: $0.objectID
             )
         }
@@ -158,46 +145,13 @@ extension MoveBreadModel {
             return
         }
         
-        if isInTrash() {
-            moveFromTrash(to: destFolder)
-            moc.saveContextAndParentIfNeeded()
-            return
-        }
-        
-        if isInRoot() {
-            moveFromRoot(to: destFolder)
-            moc.saveContextAndParentIfNeeded()
-            return
-        }
-        
-        moveSelectedBreads(from: currentFolcerObject, to: destFolder)
+        moveSelectedBreads(to: destFolder)
         moc.saveContextAndParentIfNeeded()
     }
- 
-    private func isInTrash() -> Bool {
-        return currentFolderObjectID == trashObjectID
-    }
-    
-    private func isInRoot() -> Bool {
-        return currentFolderObjectID == rootObjectID
-    }
-    
-    private func moveFromTrash(to dest: Folder) {
-        selectedBreads.forEach {
-            $0.addToFolders(rootObject)
-            $0.move(from: trashObject, to: dest)
-        }
-    }
 
-    private func moveFromRoot(to dest: Folder) {
+    private func moveSelectedBreads(to dest: Folder) {
         selectedBreads.forEach {
-            $0.move(to: dest, root: rootObject)
-        }
-    }
-
-    private func moveSelectedBreads(from src: Folder, to dest: Folder) {
-        selectedBreads.forEach {
-            $0.move(from: src, to: dest)
+            $0.move(to: dest)
         }
     }
 }
@@ -206,7 +160,8 @@ extension MoveBreadModel {
 extension MoveBreadModel {
     func createFolder(withName name: String) throws {
         let topIndex = folders.first?.index ?? 0
-        let newIndex = topIndex - 1
+        let newIndex = topIndex - Int64(folders.count + createdFolderCount)
+        createdFolderCount += 1
         do {
             let newFolder = try folderModel.createFolderWith(name: name, index: newIndex)
             let newFolderItem = Item(

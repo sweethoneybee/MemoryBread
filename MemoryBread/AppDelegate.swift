@@ -63,25 +63,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
     private func createInitialObjects() {
-        let context = coreDataStack.viewContext
+        let context = coreDataStack.writeContext
         
-        let folderWithAllMemoryBread = Folder(context: context)
-        folderWithAllMemoryBread.id = UUID()
-        folderWithAllMemoryBread.name = LocalizingHelper.allMemoryBreads
-        folderWithAllMemoryBread.index = 0
-        folderWithAllMemoryBread.pinnedAtTop = true
+        let allMemoryBreadFolder = Folder(context: context)
+        allMemoryBreadFolder.id = UUID()
+        allMemoryBreadFolder.name = LocalizingHelper.allMemoryBreads
+        allMemoryBreadFolder.index = 0
+        allMemoryBreadFolder.pinnedAtTop = true
+        allMemoryBreadFolder.isSystemFolder = true
+        
+        let defaultFolder = Folder(context: context)
+        defaultFolder.id = UUID(uuidString: UserManager.defaultFolderID)
+        defaultFolder.name = LocalizingHelper.appTitle
+        defaultFolder.index = 1
+        defaultFolder.pinnedAtTop = true
         
         let trash = Folder(context: context)
-        trash.id = UUID()
+        trash.id = UUID(uuidString: UserManager.trashFolderID)
         trash.name = LocalizingHelper.trash
-        trash.index = 1
+        trash.index = 2
         trash.pinnedAtBottom = true
+        trash.isSystemFolder = true
         
         Tutorial().infos.forEach {
             let tutorialBread = Bread.makeBasicBread(context: context)
             tutorialBread.title = $0.title
             tutorialBread.updateContent(with: $0.content)
             tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
+            tutorialBread.folder = defaultFolder
         }
         context.saveContextAndParentIfNeeded()
     }

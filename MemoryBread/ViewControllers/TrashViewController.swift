@@ -38,8 +38,9 @@ final class TrashViewController: UIViewController {
     private var folderID: UUID? {
         trash.id
     }
-    private let rootObjectID: NSManagedObjectID
-    private let trashObjectID: NSManagedObjectID
+    private var trashObjectID: NSManagedObjectID {
+        coreDataStack.trashFolderObjectID
+    }
     
     private let coreDataStack: CoreDataStack
     private var viewContext: NSManagedObjectContext {
@@ -50,7 +51,7 @@ final class TrashViewController: UIViewController {
         let fetchRequest = Bread.fetchRequest()
 
         if let folderID = folderID {
-            fetchRequest.predicate = NSPredicate(format: "ANY folders.id = %@", folderID as CVarArg)
+            fetchRequest.predicate = NSPredicate(format: "folder.id = %@", folderID as CVarArg)
         }
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "touch", ascending: false)]
         fetchRequest.fetchBatchSize = 50
@@ -80,13 +81,9 @@ final class TrashViewController: UIViewController {
     }
     
     init(
-        coreDataStack: CoreDataStack,
-        rootObjectID: NSManagedObjectID,
-        trashObjectID: NSManagedObjectID
+        coreDataStack: CoreDataStack
     ) {
         self.coreDataStack = coreDataStack
-        self.rootObjectID = rootObjectID
-        self.trashObjectID = trashObjectID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -316,12 +313,8 @@ extension TrashViewController: NSFetchedResultsControllerDelegate {
 
 // MARK: - MoveBreadViewControllerPresentable
 extension TrashViewController: MoveBreadViewControllerPresentable {
-    var sourceFolderObjectID: NSManagedObjectID {
+    var sourceFolderObjectID: NSManagedObjectID? {
         trashObjectID
-    }
-    
-    var rootFolderObjectID: NSManagedObjectID {
-        rootObjectID
     }
     
     var trashFolderObjectID: NSManagedObjectID {
