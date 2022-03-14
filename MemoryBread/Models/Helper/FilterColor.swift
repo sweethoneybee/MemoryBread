@@ -40,4 +40,8 @@ enum FilterColor: Int, CaseIterable {
         default: return nil
         }
     }
+//
+//    static func makeEmptyFilterIndexes() -> [[Int]] {
+//        return Array(repeating: [], count: FilterColor.count)
+//    }
 }

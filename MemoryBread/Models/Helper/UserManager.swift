@@ -26,24 +26,7 @@ struct UserDefault<T> {
     }
 }
 
-@propertyWrapper
-struct AutoIncreaseId {
-    @UserDefault<Int64>(key: "breadId", defaultValue: 0)
-    private(set) var breadId: Int64
-    
-    var wrappedValue: Int64 {
-        mutating get {
-            let value = breadId
-            breadId = value + 1
-            return value
-        }
-    }
-}
-
 final class UserManager {
-    @AutoIncreaseId
-    static var autoIncreaseId: Int64
-    
     @UserDefault<Bool>(key: "firstLaunch", defaultValue: true)
     static var firstLaunch: Bool
     

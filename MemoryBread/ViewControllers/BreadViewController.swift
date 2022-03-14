@@ -84,19 +84,17 @@ final class BreadViewController: UIViewController {
         toolbarViewController.delegate = self
         toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
         
-        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
+        sectionTitleViewHeight = bread.title.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font)
         
-        if let selectedFilters = bread.selectedFilters {
-            toolbarViewController.select(selectedFilters)
-        }
+        toolbarViewController.select(bread.selectedFilters)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         let selectedFiltersArray = Array(selectedFilters)
-        if let latestSelectedFilters = bread.selectedFilters,
-           latestSelectedFilters != selectedFiltersArray {
+        let latestSelectedFilters = bread.selectedFilters
+        if latestSelectedFilters != selectedFiltersArray {
             bread.selectedFilters = Array(selectedFilters)
             managedObjectContext.saveContextAndParentIfNeeded()
         }
@@ -127,7 +125,7 @@ final class BreadViewController: UIViewController {
     
     @objc
     private func orientationDidChange(_ notification: Notification) {
-        sectionTitleViewHeight = bread.title?.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) ?? 0
+        sectionTitleViewHeight = bread.title.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font)
         updateNaviTitleViewShowingIfNeeded()
     }
 }
@@ -220,11 +218,7 @@ extension BreadViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        guard let title = bread.title else {
-            return CGSize(width: collectionViewContentWidth, height: SupplemantaryTitleView.UIConstants.minimumHeight)
-        }
-        
-        let calculatedHeight = title.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) + SupplemantaryTitleView.UIConstants.bottomInset
+        let calculatedHeight = bread.title.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font) + SupplemantaryTitleView.UIConstants.bottomInset
         return CGSize(width: collectionViewContentWidth, height: calculatedHeight)
     }
 }
@@ -471,10 +465,11 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
 extension BreadViewController {
     @objc
     private func showEditContentViewController() {
-        guard isEditing == false,
-              let content = bread.content else { return }
+        guard isEditing == false else {
+            return
+        }
         
-        let editContentViewController = EditContentViewController(content: content)
+        let editContentViewController = EditContentViewController(content: bread.content)
         editContentViewController.didCompleteEditing = didCompleteContentEditing(_:)
         let nvc = UINavigationController(rootViewController: editContentViewController)
         navigationController?.present(nvc, animated: true)

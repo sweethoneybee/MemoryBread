@@ -332,8 +332,13 @@ extension DriveFileListViewController: FileListCellDelegate {
                                 for row in rows {
                                     let title = row.first
                                     let content = row.last
-                                    let newBread = Bread.makeBread(context: self.writeContext, title: title ?? LocalizingHelper.freshBread, content: content ?? "")
-                                    newBread.folder = folder
+                                    _ = Bread(
+                                        context: self.writeContext,
+                                        title: title ?? LocalizingHelper.freshBread,
+                                        content: content ?? "",
+                                        selectedFilters: [],
+                                        folder: folder
+                                    )
                                 }
 
                                 self.writeContext.saveContextAndParentIfNeeded()

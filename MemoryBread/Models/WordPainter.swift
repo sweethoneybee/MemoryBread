@@ -89,7 +89,7 @@ final class WordPainter {
     
     func updateFilterOfItems(using filterValue: Int, isFiltered: Bool) -> [UUID] {
         var updatedKeys: [UUID] = []
-        bread.filterIndexes?[filterValue].forEach {
+        bread.filterIndexes[filterValue].forEach {
             let id = items[$0].id
             itemsWithKey[id]?.isFiltered = isFiltered
             updatedKeys.append(items[$0].id)
@@ -112,14 +112,9 @@ final class WordPainter {
     }
     
     private func populateItems() -> [Item] {
-        guard let separatedContent = bread.separatedContent,
-              let filterIndexes = bread.filterIndexes else {
-                  return []
-              }
+        var items = bread.separatedContent.map { Item(word: $0) }
         
-        var items = separatedContent.map { Item(word: $0) }
-        
-        filterIndexes.enumerated().forEach { (filterValue, wordIndexes) in
+        bread.filterIndexes.enumerated().forEach { (filterValue, wordIndexes) in
             wordIndexes.forEach {
                 items[$0].filterColor = FilterColor(rawValue: filterValue)?.color()
             }

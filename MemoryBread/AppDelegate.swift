@@ -86,11 +86,14 @@ extension AppDelegate {
         trash.isSystemFolder = true
         
         Tutorial().infos.forEach {
-            let tutorialBread = Bread.makeBasicBread(context: context)
-            tutorialBread.title = $0.title
-            tutorialBread.updateContent(with: $0.content)
+            let tutorialBread = Bread(
+                context: context,
+                title: $0.title,
+                content: $0.content,
+                selectedFilters: [],
+                folder: defaultFolder
+            )
             tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
-            tutorialBread.folder = defaultFolder
         }
         context.saveContextAndParentIfNeeded()
     }

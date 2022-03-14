@@ -223,10 +223,17 @@ extension BreadListViewController: BreadListViewDelegate {
         isAdding = true
         let writeContext = coreDataStack.writeContext
         writeContext.perform {
-            let newBread = Bread.makeBasicBread(context: writeContext)
-            if let folder = try? writeContext.existingObject(with: self.folderObjectIDForCreating) as? Folder {
-                newBread.folder = folder
+            guard let folder = try? writeContext.existingObject(with: self.folderObjectIDForCreating) as? Folder else {
+                self.isAdding = false
+                return
             }
+            let newBread = Bread(
+                context: writeContext,
+                title: LocalizingHelper.freshBread,
+                content: "",
+                selectedFilters: [],
+                folder: folder
+            )
             
             writeContext.saveContextAndParentIfNeeded()
             
