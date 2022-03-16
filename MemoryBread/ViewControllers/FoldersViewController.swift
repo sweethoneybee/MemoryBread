@@ -312,7 +312,7 @@ extension FoldersViewController: UITableViewDelegate {
             let blvc = BreadListViewController(
                 coreDataStack: coreDataStack,
                 currentFolderObjectID: folderObject.objectID,
-                isAllBreadsFolder: folderObject.pinnedAtTop
+                isAllBreadsFolder: folderObject.pinnedAtTop && folderObject.isSystemFolder
             )
             navigationController?.pushViewController(blvc, animated: true)
         }
@@ -354,14 +354,9 @@ extension FoldersViewController: UITableViewDelegate {
 
     private func makeRenamingTrailingSwipeAction(for folder: Folder) -> UIContextualAction {
         let action = UIContextualAction(style: .normal, title: nil) { _, _, completionHandler in
-            guard let folderName = folder.name else {
-                completionHandler(false)
-                return
-            }
-            
             let textFieldAlert = self.makeTextFieldAlert(
                 title: LocalizingHelper.renameFolder,
-                textInTextField: folderName,
+                textInTextField: folder.name,
                 cancelHandler: { _ in
                     completionHandler(false)
                 },

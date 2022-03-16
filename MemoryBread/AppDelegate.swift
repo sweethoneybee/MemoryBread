@@ -65,25 +65,41 @@ extension AppDelegate {
     private func createInitialObjects() {
         let context = coreDataStack.writeContext
         
-        let allMemoryBreadFolder = Folder(context: context)
-        allMemoryBreadFolder.id = UUID()
-        allMemoryBreadFolder.name = LocalizingHelper.allMemoryBreads
-        allMemoryBreadFolder.index = 0
-        allMemoryBreadFolder.pinnedAtTop = true
-        allMemoryBreadFolder.isSystemFolder = true
+        let _ = Folder(
+            context: context,
+            id: UUID(),
+            isSystemFolder: true,
+            pinnedAtTop: true,
+            pinnedAtBottom: false,
+            name: LocalizingHelper.allMemoryBreads,
+            index: 0,
+            breads: nil
+        )
         
-        let defaultFolder = Folder(context: context)
-        defaultFolder.id = UUID(uuidString: UserManager.defaultFolderID)
-        defaultFolder.name = LocalizingHelper.appTitle
-        defaultFolder.index = 1
-        defaultFolder.pinnedAtTop = true
         
-        let trash = Folder(context: context)
-        trash.id = UUID(uuidString: UserManager.trashFolderID)
-        trash.name = LocalizingHelper.trash
-        trash.index = 2
-        trash.pinnedAtBottom = true
-        trash.isSystemFolder = true
+        let defaultFolder = Folder(
+            context: context,
+            id: UUID(),
+            isSystemFolder: false,
+            pinnedAtTop: true,
+            pinnedAtBottom: false,
+            name: LocalizingHelper.appTitle,
+            index: 1,
+            breads: nil
+        )
+        UserManager.defaultFolderID = defaultFolder.id.uuidString
+        
+        let trash = Folder(
+            context: context,
+            id: UUID(),
+            isSystemFolder: true,
+            pinnedAtTop: false,
+            pinnedAtBottom: true,
+            name: LocalizingHelper.trash,
+            index: 2,
+            breads: nil
+        )
+        UserManager.trashFolderID = trash.id.uuidString
         
         Tutorial().infos.forEach {
             let tutorialBread = Bread(

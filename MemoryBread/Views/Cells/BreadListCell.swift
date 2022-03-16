@@ -89,9 +89,8 @@ extension BreadListCell {
         subTitleLabel.attributedText = secondaryAttributedString
         
         folderLine.isHidden = !showFolder || bread.folder.name == nil
-        if showFolder,
-           let folderName = bread.folder.name {
-            folderLabel.text = folderName
+        if showFolder {
+            folderLabel.text = bread.folder.name
         }
     }
 }

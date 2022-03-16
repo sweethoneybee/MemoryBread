@@ -19,7 +19,6 @@
 		4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */; };
 		4015CD0F2797F7B400D14EDB /* FoldersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */; };
 		401AD42C277EB8B60038C9FD /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401AD42B277EB8B60038C9FD /* BottomToolbar.swift */; };
-		40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */; };
 		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		402981FF27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402981FE27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift */; };
 		4029820127D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4029820027D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift */; };
@@ -58,7 +57,6 @@
 		40C8DE3D27259F6700B8C5FC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3C27259F6700B8C5FC /* SnapKit */; };
 		40C8DE4027259F7300B8C5FC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3F27259F7300B8C5FC /* Then */; };
 		40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE4127259F8500B8C5FC /* WordCell.swift */; };
-		40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */; };
 		40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */; };
 		40D0DF55279BF8AC00F4448E /* FolderMigrationV1toV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */; };
 		40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */; };
@@ -93,7 +91,6 @@
 		4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizingHelper.swift; sourceTree = "<group>"; };
 		4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersViewController.swift; sourceTree = "<group>"; };
 		401AD42B277EB8B60038C9FD /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
-		40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		402981FE27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertActionEnabling.swift; sourceTree = "<group>"; };
 		4029820027D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveBreadViewControllerPresentable.swift; sourceTree = "<group>"; };
@@ -133,7 +130,6 @@
 		40C8DE3527259F5500B8C5FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40C8DE4127259F8500B8C5FC /* WordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCell.swift; sourceTree = "<group>"; };
 		40D0DF47279BDAB900F4448E /* MemoryBread v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MemoryBread v2.xcdatamodel"; sourceTree = "<group>"; };
-		40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMigrationV1toV2.swift; sourceTree = "<group>"; };
 		40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewDataSource+Reload.swift"; sourceTree = "<group>"; };
@@ -201,7 +197,6 @@
 		40245D05272940EE002E84A8 /* Bread+CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				40245CFF27293547002E84A8 /* Bread+CoreDataProperties.swift */,
 				40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */,
 			);
 			path = "Bread+CoreData";
@@ -338,7 +333,6 @@
 		40D0DF4E279BF85600F4448E /* Folder+CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				40D0DF4F279BF85600F4448E /* Folder+CoreDataProperties.swift */,
 				40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */,
 			);
 			path = "Folder+CoreData";
@@ -587,12 +581,10 @@
 				408B204627C65E5D0067687D /* FolderModel.swift in Sources */,
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40B0C1E927AA5F94005F2C6E /* BreadListView.swift in Sources */,
-				40D0DF51279BF85600F4448E /* Folder+CoreDataProperties.swift in Sources */,
 				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
 				40743F9C27A50004009748EC /* FolderListCell.swift in Sources */,
 				40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */,
 				409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */,
-				40245D0127293547002E84A8 /* Bread+CoreDataProperties.swift in Sources */,
 				4029820127D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift in Sources */,
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				402981FF27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift in Sources */,

@@ -48,11 +48,12 @@ class FolderMigrationV1toV2: NSEntityMigrationPolicy {
             let entity = NSEntityDescription.entity(forEntityName: "Folder", in: manager.destinationContext)!
             defaultFolderInstance = NSManagedObject(entity: entity, insertInto: manager.destinationContext)
             
-            let defaultFolderID = UUID(uuidString: UserManager.defaultFolderID)!
+            let defaultFolderID = UUID()
             defaultFolderInstance.setValue(defaultFolderID, forKey: "id")
             defaultFolderInstance.setValue(LocalizingHelper.appTitle, forKey: "name")
             defaultFolderInstance.setValue(1, forKey: "index")
             defaultFolderInstance.setValue(true, forKey: "pinnedAtTop")
+            UserManager.defaultFolderID = defaultFolderID.uuidString
         }
         
         dInstance.setValue(defaultFolderInstance, forKey: "folder")
@@ -67,12 +68,13 @@ class FolderMigrationV1toV2: NSEntityMigrationPolicy {
             let entity = NSEntityDescription.entity(forEntityName: "Folder", in: manager.destinationContext)!
             let trashInstance = NSManagedObject(entity: entity, insertInto: manager.destinationContext)
             
-            let trashFolderID = UUID(uuidString: UserManager.trashFolderID)!
+            let trashFolderID = UUID()
             trashInstance.setValue(trashFolderID, forKey: "id")
             trashInstance.setValue(LocalizingHelper.trash, forKey: "name")
             trashInstance.setValue(2, forKey: "index")
             trashInstance.setValue(true, forKey: "pinnedAtBottom")
             trashInstance.setValue(true, forKey: "isSystemFolder")
+            UserManager.trashFolderID = trashFolderID.uuidString
         }
     }
 }

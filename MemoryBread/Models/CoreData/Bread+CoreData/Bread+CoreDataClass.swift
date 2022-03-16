@@ -98,3 +98,21 @@ public class Bread: NSManagedObject {
         touch = Date()
     }
 }
+
+// MARK: -
+extension Bread {
+
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Bread> {
+        return NSFetchRequest<Bread>(entityName: "Bread")
+    }
+}
+
+extension Bread : Identifiable {
+
+}
+
+extension Bread {
+    func move(to destFolder: Folder) {
+        folder = destFolder
+    }
+}

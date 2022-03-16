@@ -19,10 +19,12 @@ final class FolderModel {
    
     @discardableResult
     func createFolderWith(name: String, index: Int64) throws -> Folder {
-        let newFolder = Folder(context: moc)
-        newFolder.id = UUID()
-        newFolder.name = name
-        newFolder.index = index
+        let newFolder = Folder(
+            context: moc,
+            name: name,
+            index: index,
+            breads: nil
+        )
         
         do {
             try moc.save()
