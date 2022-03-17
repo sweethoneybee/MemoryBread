@@ -91,7 +91,12 @@ extension EditContentViewController {
             $0.adjustsFontForContentSizeCategory = true
             $0.font = .preferredFont(forTextStyle: .body)
             $0.text = content
-            $0.contentInset = UIEdgeInsets(top: 0, left: UIConstants.contentInset, bottom: 0, right: UIConstants.contentInset)
+            $0.textContainerInset = UIEdgeInsets(
+                top: 8, // default value
+                left: UIConstants.contentInset,
+                bottom: 8,
+                right: UIConstants.contentInset
+            )
             $0.keyboardDismissMode = .interactive
         }
         
