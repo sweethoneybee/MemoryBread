@@ -303,9 +303,7 @@ extension TrashViewController: UITableViewDelegate {
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrashViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        let shouldAnimate = mainView.tableView.numberOfSections != 0
-        
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>)
         mainView.headerLabelText = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)
         moresItem.isEnabled = snapshot.numberOfItems != 0
     }
