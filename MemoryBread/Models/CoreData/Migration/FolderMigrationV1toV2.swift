@@ -50,7 +50,7 @@ class FolderMigrationV1toV2: NSEntityMigrationPolicy {
             
             let defaultFolderID = UUID()
             defaultFolderInstance.setValue(defaultFolderID, forKey: "id")
-            defaultFolderInstance.setValue(LocalizingHelper.appTitle, forKey: "name")
+            defaultFolderInstance.setValue(LocalizingHelper.defaultFolder, forKey: "name")
             defaultFolderInstance.setValue(1, forKey: "index")
             defaultFolderInstance.setValue(true, forKey: "pinnedAtTop")
             UserManager.defaultFolderID = defaultFolderID.uuidString

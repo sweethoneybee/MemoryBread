@@ -22,7 +22,7 @@ final class FolderListCell: UITableViewCell {
         }
                 
         init(folderObject: Folder, breadsCount: Int64) {
-            self.title = folderObject.name ?? ""
+            self.title = folderObject.localizedName
             self.pinnedAtTop = folderObject.pinnedAtTop
             self.pinnedAtBottom = folderObject.pinnedAtBottom
             self.count = breadsCount

@@ -356,7 +356,7 @@ extension FoldersViewController: UITableViewDelegate {
         let action = UIContextualAction(style: .normal, title: nil) { _, _, completionHandler in
             let textFieldAlert = self.makeTextFieldAlert(
                 title: LocalizingHelper.renameFolder,
-                textInTextField: folder.name,
+                textInTextField: folder.localizedName,
                 cancelHandler: { _ in
                     completionHandler(false)
                 },

@@ -83,7 +83,7 @@ extension AppDelegate {
             isSystemFolder: false,
             pinnedAtTop: true,
             pinnedAtBottom: false,
-            name: LocalizingHelper.appTitle,
+            name: LocalizingHelper.defaultFolder,
             index: 1,
             breads: nil
         )

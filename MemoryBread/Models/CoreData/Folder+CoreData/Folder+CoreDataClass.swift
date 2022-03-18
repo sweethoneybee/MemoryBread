@@ -30,7 +30,7 @@ public class Folder: NSManagedObject {
     @NSManaged public var isSystemFolder: Bool
     @NSManaged public var pinnedAtTop: Bool
     @NSManaged public var pinnedAtBottom: Bool
-    @NSManaged public var name: String
+    @NSManaged private var name: String
     @NSManaged public var index: Int64
     @NSManaged public var breads: NSSet?
     @NSManaged public var breadsCount: Int64
@@ -99,4 +99,26 @@ extension Folder {
 
 extension Folder : Identifiable {
 
+}
+
+extension Folder {
+    var localizedName: String {
+        guard isSystemFolder || pinnedAtTop else {
+            return name
+        }
+        
+        switch (isSystemFolder, pinnedAtTop) {
+        case (true, true): return LocalizingHelper.allMemoryBreads
+        case (false, true): return LocalizingHelper.defaultFolder
+        case (true, false): return LocalizingHelper.trash
+        default: return "Unknown Folder"
+        }
+    }
+    
+    func setName(_ name: String) {
+        guard !name.isEmpty else {
+            fatalError("Folder name cannot be empty.")
+        }
+        self.name = name
+    }
 }

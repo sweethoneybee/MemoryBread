@@ -81,16 +81,16 @@ extension BreadListCell {
     }
 
     func configure(using bread: Bread, showFolder: Bool = false) {
-        titleLabel.text = bread.title ?? ""
+        titleLabel.text = bread.title
         
-        let dateString = DateHelper.default.string(from: bread.touch ?? Date())
+        let dateString = DateHelper.default.string(from: bread.touch)
         let secondaryAttributedString = NSMutableAttributedString(string: dateString + " ", attributes: dateAttribute)
-        secondaryAttributedString.append(NSAttributedString(string: String((bread.content ?? "").prefix(200)), attributes: bodyAttribute))
+        secondaryAttributedString.append(NSAttributedString(string: String((bread.content).prefix(200)), attributes: bodyAttribute))
         subTitleLabel.attributedText = secondaryAttributedString
         
-        folderLine.isHidden = !showFolder || bread.folder.name == nil
+        folderLine.isHidden = !showFolder
         if showFolder {
-            folderLabel.text = bread.folder.name
+            folderLabel.text = bread.folder.localizedName
         }
     }
 }

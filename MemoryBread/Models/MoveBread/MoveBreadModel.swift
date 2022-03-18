@@ -130,7 +130,7 @@ extension MoveBreadModel {
     func makeFolderItems() -> [Item] {
         return folders.map {
             Item(
-                name: $0.name ?? "",
+                name: $0.localizedName,
                 disabled: ($0.objectID == shouldDisabledFolderObjectID) ? true : false,
                 objectID: $0.objectID
             )
@@ -165,7 +165,7 @@ extension MoveBreadModel {
         do {
             let newFolder = try folderModel.createFolderWith(name: name, index: newIndex)
             let newFolderItem = Item(
-                name: newFolder.name ?? "",
+                name: newFolder.localizedName,
                 disabled: false,
                 objectID: newFolder.objectID
             )

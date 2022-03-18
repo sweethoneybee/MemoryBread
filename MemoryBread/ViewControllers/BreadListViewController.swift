@@ -43,8 +43,8 @@ final class BreadListViewController: UIViewController {
         return folder
     }()
     
-    private var folderName: String? {
-        folderObject.name
+    private var folderName: String {
+        folderObject.localizedName
     }
     
     private var folderID: UUID? {
@@ -140,7 +140,7 @@ final class BreadListViewController: UIViewController {
 extension BreadListViewController {
     
     private func setNavigationItem() {
-        navigationItem.title = folderName ?? LocalizingHelper.appTitle
+        navigationItem.title = folderName
         navigationItem.backButtonDisplayMode = .minimal
         
         remoteDriveItem = UIBarButtonItem(

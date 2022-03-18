@@ -63,7 +63,7 @@ final class FolderModel {
                 fatalError("Folder casting fail")
             }
             
-            folder.name = newFolderName
+            folder.setName(newFolderName)
             do {
                 try moc.save()
             } catch {

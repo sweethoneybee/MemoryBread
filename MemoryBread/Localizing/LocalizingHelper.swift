@@ -17,6 +17,7 @@ struct LocalizingHelper {
     static let save = "save".localized
     
     static let allMemoryBreads = "all_memory_breads".localized
+    static let defaultFolder = "default_folder".localized
     static let trash = "trash".localized
     
     static let folders = "folders".localized
