@@ -9,14 +9,8 @@ import Foundation
 import Then
 import UIKit
 
-extension Locale {
-    var localeFromIdentifier: Locale {
-        switch languageCode {
-        case "en": return Locale(identifier: "en")
-        case "ko": return Locale(identifier: "ko-KR")
-        default: return Locale(identifier: "en")
-        }
-    }
+extension Notification.Name {
+    static let updateViewsForTimeChange = Notification.Name("updateViewsForTimeChange")
 }
 
 final class DateHelper {
@@ -27,7 +21,7 @@ final class DateHelper {
     private let todayDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
-        $0.locale = Locale.current.localeFromIdentifier
+        $0.locale = Locale.current
         $0.setLocalizedDateFormatFromTemplate("hm")
     }
     
@@ -35,7 +29,7 @@ final class DateHelper {
     private let lastWeekDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
-        $0.locale = Locale.current.localeFromIdentifier
+        $0.locale = Locale.current
         $0.setLocalizedDateFormatFromTemplate("EEEE")
     }
     
@@ -43,7 +37,7 @@ final class DateHelper {
     private let normalDateFormatter = DateFormatter().then {
         $0.dateStyle = .medium
         $0.timeStyle = .short
-        $0.locale = Locale.current.localeFromIdentifier
+        $0.locale = Locale.current
         $0.setLocalizedDateFormatFromTemplate("yyyy M d")
     }
     

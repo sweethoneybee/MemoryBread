@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import CoreData
+import Combine
 
 final class BreadListViewController: UIViewController {
 
@@ -88,7 +89,8 @@ final class BreadListViewController: UIViewController {
         return controller
     }()
 
-    private var diffableDataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
+    private var diffableDataSource: BreadListViewController.DataSource!
+    private var cancellable: Cancellable?
 
     // MARK: - Life Cycle
     override func loadView() {
@@ -117,6 +119,15 @@ final class BreadListViewController: UIViewController {
         mainView.tableView.delegate = self
         
         try? fetchedResultsController.performFetch()
+        
+        cancellable = NotificationCenter.default
+            .publisher(for: .updateViewsForTimeChange)
+            .sink() { [weak self] _ in
+                guard let self = self else { return }
+                var snp = self.diffableDataSource.snapshot()
+                snp.reloadSections(snp.sectionIdentifiers)
+                self.diffableDataSource.apply(snp)
+            }
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -191,7 +202,7 @@ extension BreadListViewController {
 
 // MARK: - DataSource
 extension BreadListViewController {
-    class DataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID> {
+    class DataSource: UITableViewDiffableDataSource<String, NSManagedObjectID> {
         override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
             return true
         }
@@ -384,7 +395,7 @@ extension BreadListViewController: UITableViewDelegate {
 // MARK: - NSFetchedResultsControllerDelegate
 extension BreadListViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        diffableDataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>)
+        diffableDataSource.apply(snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>)
         mainView.headerLabelText = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)
         moresItem.isEnabled = snapshot.numberOfItems != 0
     }

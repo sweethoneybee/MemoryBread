@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import Combine
 
 final class TrashViewController: UIViewController {
     
@@ -67,7 +68,8 @@ final class TrashViewController: UIViewController {
         return controller
     }()
     
-    private var dataSource: UITableViewDiffableDataSource<Int, NSManagedObjectID>!
+    private var dataSource: BreadListViewController.DataSource!
+    private var cancellable: Cancellable?
     
     // MARK: - Life Cycle
     override func loadView() {
@@ -97,6 +99,15 @@ final class TrashViewController: UIViewController {
         mainView.tableView.delegate = self
         
         try? fetchedResultsController.performFetch()
+
+        cancellable = NotificationCenter.default
+            .publisher(for: .updateViewsForTimeChange)
+            .sink() { [weak self] _ in
+                guard let self = self else { return }
+                var snp = self.dataSource.snapshot()
+                snp.reloadSections(snp.sectionIdentifiers)
+                self.dataSource.apply(snp)
+            }
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -303,7 +314,7 @@ extension TrashViewController: UITableViewDelegate {
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrashViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>)
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>)
         mainView.headerLabelText = String(format: LocalizingHelper.numberOfMemoryBread, snapshot.numberOfItems)
         moresItem.isEnabled = snapshot.numberOfItems != 0
     }

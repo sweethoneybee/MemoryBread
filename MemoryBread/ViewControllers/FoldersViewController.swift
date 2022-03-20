@@ -231,7 +231,7 @@ extension FoldersViewController {
 
 // MARK: - DataSource
 extension FoldersViewController {
-    final class DataSource: UITableViewDiffableDataSource<Section, NSManagedObjectID> {
+    final class DataSource: UITableViewDiffableDataSource<String, NSManagedObjectID> {
         var pinnedAtTopItemCount: Int? = 0
         var pinnedAtBottomItemCount: Int? = 0
         
@@ -447,7 +447,7 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
         if let allBreadsFolderObjectID = fetchedResultsController.fetchedObjects?.first?.objectID {
             snapshot.reloadItems(withIdentifiers: [allBreadsFolderObjectID])
         }
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Section, NSManagedObjectID>, animatingDifferences: shouldAnimate)
+        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>, animatingDifferences: shouldAnimate)
     }
 }
 
