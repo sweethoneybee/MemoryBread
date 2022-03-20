@@ -295,6 +295,7 @@
 		40C8DE1827259F5300B8C5FC = {
 			isa = PBXGroup;
 			children = (
+				404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */,
 				40C8DE2327259F5300B8C5FC /* MemoryBread */,
 				40C8DE2227259F5300B8C5FC /* Products */,
 				04F2A1521BA72F93F09BC605 /* Pods */,
@@ -316,7 +317,6 @@
 				40C8DE2427259F5300B8C5FC /* AppDelegate.swift */,
 				40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */,
 				409D9663276B12DC00EB8220 /* APIKeys.swift */,
-				404F0EE82757799A002FEE82 /* MemoryBread-Bridging-Header.h */,
 				40C8DE3027259F5500B8C5FC /* Assets.xcassets */,
 				40C8DE3527259F5500B8C5FC /* Info.plist */,
 				409D966B276CD2FC00EB8220 /* Localizing */,
@@ -794,6 +794,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YJQB6Z2VPH;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MemoryBread/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "암기빵";
@@ -812,10 +816,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread/MemoryBread-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -847,10 +852,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread/MemoryBread-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/aratishappy/developer/MemoryBread/MemoryBread-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "$(SWIFT_MODULE_NAME)-Swift.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
