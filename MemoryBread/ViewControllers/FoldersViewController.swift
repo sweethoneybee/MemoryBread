@@ -157,13 +157,15 @@ extension FoldersViewController {
                 let newIndex = topFolderIndex - 1
                 do {
                     try self.folderModel.createFolderWith(name: folderName, index: newIndex)
-                } catch let nserror as NSError {
-                    switch nserror.code {
-                    case NSManagedObjectConstraintMergeError:
+                } catch let saveError as ContextSaveError {
+                    switch saveError {
+                    case .folderNameIsDuplicated, .folderNameIsInBlackList:
                         self.presentDuplicatedFolderNameAlert()
-                    default:
+                    case .unknown(let nserror):
                         fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
                     }
+                } catch let nserror as NSError {
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
                 }
             }
         )
@@ -369,14 +371,16 @@ extension FoldersViewController: UITableViewDelegate {
                     do {
                         try self.folderModel.renameFolder(of: folder.objectID, to: newFolderName)
                         completionHandler(true)
-                    } catch let nserror as NSError {
-                        switch nserror.code {
-                        case NSManagedObjectConstraintMergeError:
+                    } catch let saveError as ContextSaveError {
+                        switch saveError {
+                        case .folderNameIsDuplicated, .folderNameIsInBlackList:
                             self.presentDuplicatedFolderNameAlert()
-                        default:
+                        case .unknown(let nserror):
                             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
                         }
-                    }                    
+                    } catch let nserror as NSError {
+                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                    }
                 }
             )
             

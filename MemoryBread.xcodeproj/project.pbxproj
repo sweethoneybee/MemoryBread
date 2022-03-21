@@ -39,6 +39,8 @@
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		408B204627C65E5D0067687D /* FolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408B204527C65E5D0067687D /* FolderModel.swift */; };
 		40953946279084930047B72F /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40953945279084930047B72F /* RoundedButton.swift */; };
+		40992F3827E8D8DE0010E0A5 /* ContextSaveError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40992F3727E8D8DE0010E0A5 /* ContextSaveError.swift */; };
+		40992F3A27E8E0210010E0A5 /* FolderNameBlackList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40992F3927E8E0210010E0A5 /* FolderNameBlackList.swift */; };
 		409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB152780744C00F00E52 /* GDDownloaderError.swift */; };
 		409BFB1827808FB800F00E52 /* Notification.Name+RemoteDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
@@ -111,6 +113,8 @@
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		408B204527C65E5D0067687D /* FolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModel.swift; sourceTree = "<group>"; };
 		40953945279084930047B72F /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
+		40992F3727E8D8DE0010E0A5 /* ContextSaveError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextSaveError.swift; sourceTree = "<group>"; };
+		40992F3927E8E0210010E0A5 /* FolderNameBlackList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderNameBlackList.swift; sourceTree = "<group>"; };
 		409BFB152780744C00F00E52 /* GDDownloaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloaderError.swift; sourceTree = "<group>"; };
 		409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+RemoteDrive.swift"; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -227,6 +231,7 @@
 				40F1D609273E65020053AB73 /* DateHelper.swift */,
 				405EC17D27661E200031C19D /* ExcelReader.swift */,
 				409CC8FD27327311009B9AA1 /* UserManager.swift */,
+				40992F3927E8E0210010E0A5 /* FolderNameBlackList.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -254,6 +259,7 @@
 			children = (
 				40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */,
 				409BFB152780744C00F00E52 /* GDDownloaderError.swift */,
+				40992F3727E8D8DE0010E0A5 /* ContextSaveError.swift */,
 			);
 			path = Errors;
 			sourceTree = "<group>";
@@ -591,6 +597,7 @@
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordPainter.swift in Sources */,
 				40D87E9A277B440A00CCB28D /* CoreDataStack.swift in Sources */,
+				40992F3827E8D8DE0010E0A5 /* ContextSaveError.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
 				401AD42C277EB8B60038C9FD /* BottomToolbar.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
@@ -631,6 +638,7 @@
 				405EC185276738C60031C19D /* FileObject.swift in Sources */,
 				405EC184276738C40031C19D /* GDDownloader.swift in Sources */,
 				40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */,
+				40992F3A27E8E0210010E0A5 /* FolderNameBlackList.swift in Sources */,
 				409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */,
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
 				405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */,

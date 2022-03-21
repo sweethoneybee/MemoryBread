@@ -19,6 +19,8 @@ final class FolderModel {
    
     @discardableResult
     func createFolderWith(name: String, index: Int64) throws -> Folder {
+        try isInBlackList(name)
+        
         let newFolder = Folder(
             context: moc,
             name: name,
@@ -27,12 +29,15 @@ final class FolderModel {
         )
         
         do {
-            try moc.save()
-            try moc.parent?.save()
+            try saveContextAndItsParentIfNeeded()
             return newFolder
-        } catch {
-            moc.rollback()
-            throw error
+        } catch let nserror as NSError{
+            switch nserror.code {
+            case NSManagedObjectConstraintMergeError:
+                throw ContextSaveError.folderNameIsDuplicated
+            default:
+                throw ContextSaveError.unknown(nserror)
+            }
         }
     }
     
@@ -59,16 +64,23 @@ final class FolderModel {
     
     func renameFolder(of folderObjectID: NSManagedObjectID, to newFolderName: String) throws {
         do {
+            try isInBlackList(newFolderName)
+            
             guard let folder = try moc.existingObject(with: folderObjectID) as? Folder else {
                 fatalError("Folder casting fail")
             }
             
+            
             folder.setName(newFolderName)
             do {
-                try moc.save()
-            } catch {
-                moc.rollback()
-                throw error
+                try saveContextAndItsParentIfNeeded()
+            } catch let nserror as NSError {
+                switch nserror.code {
+                case NSManagedObjectConstraintMergeError:
+                    throw ContextSaveError.folderNameIsDuplicated
+                default:
+                    throw ContextSaveError.unknown(nserror)
+                }
             }
         }
     }
@@ -87,14 +99,30 @@ final class FolderModel {
             }
             
             moc.delete(folder)
-            
-            if moc.hasChanges {
-                do {
-                    try moc.save()
-                } catch {
-                    fatalError("Saving for deleting folder is failed.")
-                }
+            do {
+                try self.saveContextAndItsParentIfNeeded()
+            } catch {
+                fatalError("Saving for deleting folder is failed.")
             }
+        }
+    }
+    
+    private func saveContextAndItsParentIfNeeded() throws {
+        if moc.hasChanges {
+            do {
+                try moc.save()
+                try moc.parent?.save()
+            } catch {
+                moc.parent?.rollback()
+                moc.rollback()
+                throw error
+            }
+        }
+    }
+    
+    private func isInBlackList(_ name: String) throws {
+        if FolderNameBlackList.standard.isInBlackList(name) {
+            throw ContextSaveError.folderNameIsInBlackList
         }
     }
 }

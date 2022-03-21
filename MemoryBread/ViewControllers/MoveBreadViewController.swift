@@ -192,18 +192,19 @@ extension MoveBreadViewController {
                 
                 do {
                     try self.model.createFolder(withName: folderName)
-                    
-                } catch let nserror as NSError {
-                    switch nserror.code {
-                    case NSManagedObjectConstraintMergeError:
+                } catch let saveError as ContextSaveError {
+                    switch saveError {
+                    case .folderNameIsDuplicated, .folderNameIsInBlackList:
                         let errorAlert = BasicAlert.makeConfirmAlert(
                             title: LocalizingHelper.nameIsAlreadyInUse,
                             message: LocalizingHelper.enterDifferentName
                         )
                         self.present(errorAlert, animated: true)
-                    default:
+                    case .unknown(let nserror):
                         fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
                     }
+                } catch let nserror as NSError {
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
                 }
             })
         
