@@ -72,6 +72,8 @@
 		40F1D608273D70320053AB73 /* String+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D607273D70320053AB73 /* String+Helper.swift */; };
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
 		40F644AF27EDFA1200258BFD /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644AE27EDFA1200258BFD /* SettingViewController.swift */; };
+		40F644B127EE29D600258BFD /* UIFont+FontSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644B027EE29D600258BFD /* UIFont+FontSize.swift */; };
+		40F644B327EE2A0B00258BFD /* FontSizeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */; };
 		40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift */; };
 		40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */; };
 		40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B7F272BD7880085224E /* ScrollableTitleView.swift */; };
@@ -148,6 +150,8 @@
 		40F1D607273D70320053AB73 /* String+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Helper.swift"; sourceTree = "<group>"; };
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		40F644AE27EDFA1200258BFD /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		40F644B027EE29D600258BFD /* UIFont+FontSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+FontSize.swift"; sourceTree = "<group>"; };
+		40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeCalculator.swift; sourceTree = "<group>"; };
 		40F7589D272AFA5A000ADD4F /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
 		40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorFilterToolbarViewController.swift; sourceTree = "<group>"; };
 		40F92B7F272BD7880085224E /* ScrollableTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTitleView.swift; sourceTree = "<group>"; };
@@ -196,6 +200,7 @@
 				405EC18227661E9C0031C19D /* Helper */,
 				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
 				4013F5BA2748B55100E03F5F /* WordPainter.swift */,
+				40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -437,6 +442,7 @@
 				40F1D607273D70320053AB73 /* String+Helper.swift */,
 				40D0DF5B279FD0B500F4448E /* Array+subscript.swift */,
 				40370D6A27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift */,
+				40F644B027EE29D600258BFD /* UIFont+FontSize.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -597,6 +603,7 @@
 				4029820127D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift in Sources */,
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				402981FF27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift in Sources */,
+				40F644B127EE29D600258BFD /* UIFont+FontSize.swift in Sources */,
 				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordPainter.swift in Sources */,
 				40D87E9A277B440A00CCB28D /* CoreDataStack.swift in Sources */,
@@ -637,6 +644,7 @@
 				40953946279084930047B72F /* RoundedButton.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
 				4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */,
+				40F644B327EE2A0B00258BFD /* FontSizeCalculator.swift in Sources */,
 				409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */,
 				405EC185276738C60031C19D /* FileObject.swift in Sources */,

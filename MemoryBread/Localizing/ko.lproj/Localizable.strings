@@ -91,5 +91,6 @@
 "and_the_number_of_breads" = "외 %d개";
 "selected_the_number_of_memory_breads" = "%d개의 암기빵이 선택됨";
 
+"pangram" = "다람쥐 헌 쳇바퀴에 타고파";
 "editing_folders" = "폴더 편집";
-"setting" = "설정";
+"word_size_setting" = "단어 크기 설정";

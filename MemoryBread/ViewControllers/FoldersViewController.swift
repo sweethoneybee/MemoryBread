@@ -148,16 +148,16 @@ extension FoldersViewController {
             image: UIImage(systemName: "folder.badge.gearshape")) { [weak self] _ in
                 self?.setEditing(true, animated: true)
             }
-        let settingAction = UIAction(
-            title: LocalizingHelper.setting,
-            image: UIImage(systemName: "slider.horizontal.below.rectangle")) { [weak self] _ in
+        let wordSizeSettingAction = UIAction(
+            title: LocalizingHelper.wordSizeSetting,
+            image: UIImage(systemName: "textformat.size")) { [weak self] _ in
                 self?.showSettingView()
             }
         settingMenu = UIBarButtonItem(
             title: nil,
             image: UIImage(systemName: "gearshape"),
             primaryAction: nil,
-            menu: UIMenu(title: "", children: [editAction, settingAction])
+            menu: UIMenu(title: "", children: [editAction, wordSizeSettingAction])
         )
         
         navigationItem.rightBarButtonItems = [settingMenu, createFolderItem]
@@ -206,7 +206,7 @@ extension FoldersViewController {
     
     @objc
     private func showSettingView() {
-        let settingVC = SettingViewController()
+        let settingVC = SettingViewController(currentFontSize: WordCell.labelFont.makeFontSize())
         navigationController?.pushViewController(settingVC, animated: true)
     }
     

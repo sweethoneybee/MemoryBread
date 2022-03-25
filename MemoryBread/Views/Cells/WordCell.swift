@@ -10,7 +10,7 @@ import SnapKit
 import Then
 
 final class WordCell: UICollectionViewCell {
-    static let labelFont = UIFont.systemFont(ofSize: 18, weight: .regular)
+    static var labelFont = UIFont.systemFont(ofSize: 18, weight: .regular)
     
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true

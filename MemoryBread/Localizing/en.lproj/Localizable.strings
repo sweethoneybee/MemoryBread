@@ -91,5 +91,6 @@
 "and_the_number_of_breads" = "and %d breads";
 "selected_the_number_of_memory_breads" = "%d Memory bread selected";
 
+"pangram" = "The Quick Brown Fox Jumps Over The Lazy Dog";
 "editing_folders" = "Editing folders";
-"setting" = "Setting";
+"word_size_setting" = "Setting words size";
