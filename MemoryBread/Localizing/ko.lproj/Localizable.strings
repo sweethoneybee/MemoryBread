@@ -90,3 +90,6 @@
 "no_selected_memory_bread" = "선택된 암기빵이 없습니다.";
 "and_the_number_of_breads" = "외 %d개";
 "selected_the_number_of_memory_breads" = "%d개의 암기빵이 선택됨";
+
+"editing_folders" = "폴더 편집";
+"setting" = "설정";

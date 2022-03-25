@@ -92,4 +92,7 @@ struct LocalizingHelper {
     static let noSelectedMemoryBread = "no_selected_memory_bread".localized
     static let andTheNumberOfBreads = "and_the_number_of_breads".localized
     static let selectedTheNumberOfMemoryBreads = "selected_the_number_of_memory_breads".localized
+    
+    static let editingFolders = "editing_folders".localized
+    static let setting = "setting".localized
 }

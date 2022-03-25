@@ -26,6 +26,7 @@ final class FoldersViewController: UIViewController {
     
     // MARK: - Buttons
     private var createFolderItem: UIBarButtonItem!
+    private var settingMenu: UIBarButtonItem!
     
     // MARK: - Data
     private let coreDataStack: CoreDataStack
@@ -81,6 +82,7 @@ final class FoldersViewController: UIViewController {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        updateRightBarButtonItems(isEditing: editing)
         
         if isTableViewCellSwipeActionShowing {
             isTableViewCellSwipeActionShowing = false
@@ -97,6 +99,18 @@ final class FoldersViewController: UIViewController {
                 noAnimatationForTableView = true
             }
         }
+    }
+    
+    private func updateRightBarButtonItems(isEditing editing: Bool) {
+        var updatedRightItems = [UIBarButtonItem]()
+        if editing {
+            updatedRightItems.append(editButtonItem)
+        } else {
+            updatedRightItems.append(settingMenu)
+        }
+        updatedRightItems.append(createFolderItem)
+        
+        navigationItem.rightBarButtonItems = updatedRightItems
     }
 }
 
@@ -129,7 +143,24 @@ extension FoldersViewController {
             action: #selector(createFolderItemTapped)
         )
         
-        navigationItem.rightBarButtonItems = [editButtonItem, createFolderItem]
+        let editAction = UIAction(
+            title: LocalizingHelper.editingFolders,
+            image: UIImage(systemName: "folder.badge.gearshape")) { [weak self] _ in
+                self?.setEditing(true, animated: true)
+            }
+        let settingAction = UIAction(
+            title: LocalizingHelper.setting,
+            image: UIImage(systemName: "slider.horizontal.below.rectangle")) { [weak self] _ in
+                self?.showSettingView()
+            }
+        settingMenu = UIBarButtonItem(
+            title: nil,
+            image: UIImage(systemName: "gearshape"),
+            primaryAction: nil,
+            menu: UIMenu(title: "", children: [editAction, settingAction])
+        )
+        
+        navigationItem.rightBarButtonItems = [settingMenu, createFolderItem]
         navigationItem.title = LocalizingHelper.folders
     }
 }
@@ -171,6 +202,12 @@ extension FoldersViewController {
         )
         
         present(createFolderAlert, animated: true)
+    }
+    
+    @objc
+    private func showSettingView() {
+        let settingVC = SettingViewController()
+        navigationController?.pushViewController(settingVC, animated: true)
     }
     
     private func makeTextFieldAlert(
