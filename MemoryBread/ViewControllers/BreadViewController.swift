@@ -181,7 +181,21 @@ extension BreadViewController {
             target: self,
             action: #selector(showEditContentViewController)
         )
-        navigationItem.rightBarButtonItems = [editButtonItem, editContentButtonItem]
+        
+        let adjustWordsSizeButtonItem = UIBarButtonItem(
+            title: LocalizingHelper.adjustWordsSize,
+            image: UIImage(systemName: "textformat.size"),
+            primaryAction: UIAction(handler: { [weak self] _ in
+                let adjustVC = AdjustWordsSizeViewController(currentFontSize: WordCell.getLabelFont().makeFontSize())
+                adjustVC.didEndAdjusting = { [weak self] in
+                    self?.collectionView.reloadData()
+                    self?.collectionView.collectionViewLayout.invalidateLayout()
+                }
+                self?.navigationController?.pushViewController(adjustVC, animated: true)
+            }),
+            menu: nil
+        )
+        navigationItem.rightBarButtonItems = [editButtonItem, editContentButtonItem, adjustWordsSizeButtonItem]
         navigationItem.largeTitleDisplayMode = .never
 
         naviTitleView = ScrollableTitleView(frame: .zero).then {
@@ -207,7 +221,7 @@ extension BreadViewController: UICollectionViewDelegateFlowLayout {
         if let id = dataSource.itemIdentifier(for: indexPath),
            let item = wordPainter.item(forKey: id) {
             
-            let att = [NSAttributedString.Key.font: WordCell.labelFont]
+            let att = [NSAttributedString.Key.font: WordCell.getLabelFont()]
             return wordCellSizeWith(word: item.word, attributes: att, maxWidth: collectionViewContentWidth)
         }
         return CGSize.zero

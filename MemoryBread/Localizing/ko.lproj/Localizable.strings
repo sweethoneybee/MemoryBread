@@ -93,4 +93,5 @@
 
 "pangram" = "다람쥐 헌 쳇바퀴에 타고파";
 "editing_folders" = "폴더 편집";
-"word_size_setting" = "단어 크기 설정";
+"adjust_words_size" = "단어 크기 설정";
+"help_message_for_adjusting_words_size" = "필터로 가려지는 단어의 크기를 조절합니다.";

@@ -95,5 +95,6 @@ struct LocalizingHelper {
     
     static let pangram = "pangram".localized
     static let editingFolders = "editing_folders".localized
-    static let wordSizeSetting = "word_size_setting".localized
+    static let adjustWordsSize = "adjust_words_size".localized
+    static let helpMessageForAdjustingWordsSize = "help_message_for_adjusting_words_size".localized
 }

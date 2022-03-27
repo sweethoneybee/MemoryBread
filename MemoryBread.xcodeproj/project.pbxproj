@@ -71,7 +71,7 @@
 		40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D91BF12773474A002E588D /* DriveFileHelper.swift */; };
 		40F1D608273D70320053AB73 /* String+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D607273D70320053AB73 /* String+Helper.swift */; };
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
-		40F644AF27EDFA1200258BFD /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644AE27EDFA1200258BFD /* SettingViewController.swift */; };
+		40F644AF27EDFA1200258BFD /* AdjustWordsSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644AE27EDFA1200258BFD /* AdjustWordsSizeViewController.swift */; };
 		40F644B127EE29D600258BFD /* UIFont+FontSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644B027EE29D600258BFD /* UIFont+FontSize.swift */; };
 		40F644B327EE2A0B00258BFD /* FontSizeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */; };
 		40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift */; };
@@ -149,7 +149,7 @@
 		40D91BF12773474A002E588D /* DriveFileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileHelper.swift; sourceTree = "<group>"; };
 		40F1D607273D70320053AB73 /* String+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Helper.swift"; sourceTree = "<group>"; };
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
-		40F644AE27EDFA1200258BFD /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		40F644AE27EDFA1200258BFD /* AdjustWordsSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustWordsSizeViewController.swift; sourceTree = "<group>"; };
 		40F644B027EE29D600258BFD /* UIFont+FontSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+FontSize.swift"; sourceTree = "<group>"; };
 		40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeCalculator.swift; sourceTree = "<group>"; };
 		40F7589D272AFA5A000ADD4F /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
@@ -404,7 +404,7 @@
 			children = (
 				40F9689D27B231E6008CBA49 /* TrashViewController.swift */,
 				4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */,
-				40F644AE27EDFA1200258BFD /* SettingViewController.swift */,
+				40F644AE27EDFA1200258BFD /* AdjustWordsSizeViewController.swift */,
 				40060F94272D9EEE00BA7A34 /* BreadListViewController.swift */,
 				40F92B81272BD7B10085224E /* BreadViewController.swift */,
 				40534A1027B69E89002C7E6B /* MoveBreadViewController.swift */,
@@ -613,7 +613,7 @@
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
 				40534A1627B6CCB4002C7E6B /* MoveFolderListCell.swift in Sources */,
-				40F644AF27EDFA1200258BFD /* SettingViewController.swift in Sources */,
+				40F644AF27EDFA1200258BFD /* AdjustWordsSizeViewController.swift in Sources */,
 				40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */,
 				409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */,
 				40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */,

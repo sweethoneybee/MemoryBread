@@ -42,11 +42,11 @@ final class FontSizeCalculator {
         }
     }
     
-    func fontSize(for value: Float) -> FontSize {
-        let sliderValue = lroundf(value * 100)
+    func fontSize(of sliderValue: Float) -> FontSize {
+        let roundedValue = lroundf(sliderValue * 100)
         
         let newFontSize: FontSize
-        switch sliderValue {
+        switch roundedValue {
         case 0..<8: newFontSize = .superSmall
         case 8..<26: newFontSize = .verySmall
         case 26..<43: newFontSize = .small

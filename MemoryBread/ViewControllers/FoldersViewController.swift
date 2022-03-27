@@ -149,7 +149,7 @@ extension FoldersViewController {
                 self?.setEditing(true, animated: true)
             }
         let wordSizeSettingAction = UIAction(
-            title: LocalizingHelper.wordSizeSetting,
+            title: LocalizingHelper.adjustWordsSize,
             image: UIImage(systemName: "textformat.size")) { [weak self] _ in
                 self?.showSettingView()
             }
@@ -206,8 +206,8 @@ extension FoldersViewController {
     
     @objc
     private func showSettingView() {
-        let settingVC = SettingViewController(currentFontSize: WordCell.labelFont.makeFontSize())
-        navigationController?.pushViewController(settingVC, animated: true)
+        let adjustVC = AdjustWordsSizeViewController(currentFontSize: WordCell.getLabelFont().makeFontSize())
+        navigationController?.pushViewController(adjustVC, animated: true)
     }
     
     private func makeTextFieldAlert(

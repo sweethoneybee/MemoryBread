@@ -10,7 +10,15 @@ import SnapKit
 import Then
 
 final class WordCell: UICollectionViewCell {
-    static var labelFont = UIFont.systemFont(ofSize: 18, weight: .regular)
+    static private var labelFont = UIFont.systemFont(ofSize: 18, weight: .regular)
+    
+    static func getLabelFont() -> UIFont {
+        return labelFont
+    }
+    
+    static func setLabelFont(_ newLabelFont: UIFont) {
+        WordCell.labelFont = newLabelFont
+    }
     
     let label = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
@@ -46,6 +54,7 @@ extension WordCell {
     }
     
     func configure(using item: WordPainter.Item, isEditing: Bool) {
+        label.font = WordCell.labelFont
         if isEditing {
             label.text = item.word
             overlayView.backgroundColor = item.filterColor?.withAlphaComponent(0.5) ?? .clear

@@ -7,14 +7,15 @@
 
 import UIKit
 
-final class SettingViewController: UIViewController {
+final class AdjustWordsSizeViewController: UIViewController {
     typealias FontSize = FontSizeCalculator.FontSize
     
+    private let oldFontSize: FontSize
     private var currentFontSize: FontSize {
         didSet {
             let newFont = exampleLabel.font.withSize(currentFontSize.fontSize)
             exampleLabel.font = newFont
-            WordCell.labelFont = newFont
+            WordCell.setLabelFont(newFont)
         }
     }
     
@@ -29,13 +30,24 @@ final class SettingViewController: UIViewController {
     
     private let exampleLabel = UILabel(frame: .zero).then {
         $0.numberOfLines = 0
-        $0.textAlignment = .left
-        $0.font = WordCell.labelFont
+        $0.textAlignment = .center
+        $0.font = WordCell.getLabelFont()
         $0.text = LocalizingHelper.pangram
     }
     
+    private let helpMessageLabel = UILabel(frame: .zero).then {
+        $0.numberOfLines = 0
+        $0.textAlignment = .center
+        $0.font = .preferredFont(forTextStyle: .headline)
+        $0.text = LocalizingHelper.helpMessageForAdjustingWordsSize
+    }
+    
+    var didEndAdjusting: (() -> Void)?
+    
+    // MARK: - Methods
     init(currentFontSize: FontSize) {
         self.currentFontSize = currentFontSize
+        self.oldFontSize = currentFontSize
         super.init(nibName: nil, bundle: nil)
         fontSizeSlider.setValue(currentFontSize.sliderValue, animated: false)
     }
@@ -51,7 +63,7 @@ final class SettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = LocalizingHelper.wordSizeSetting
+        navigationItem.title = LocalizingHelper.adjustWordsSize
         navigationItem.largeTitleDisplayMode = .never
         setViews()
         
@@ -61,7 +73,7 @@ final class SettingViewController: UIViewController {
                 return
             }
             
-            let fontSize = self.fontSizeCalculator.fontSize(for: slider.value)
+            let fontSize = self.fontSizeCalculator.fontSize(of: slider.value)
             slider.setValue(fontSize.sliderValue, animated: false)
             if fontSize != self.currentFontSize {
                 self.currentFontSize = fontSize
@@ -72,14 +84,19 @@ final class SettingViewController: UIViewController {
     private func setViews() {
         view.addSubview(fontSizeSlider)
         fontSizeSlider.snp.makeConstraints { make in
-            make.center.equalToSuperview()
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(50)
+        }
+        
+        view.addSubview(helpMessageLabel)
+        helpMessageLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.bottom.equalTo(fontSizeSlider.snp.top).offset(-10)
         }
         
         view.addSubview(exampleLabel)
         exampleLabel.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
-            make.bottom.equalTo(fontSizeSlider.snp.top)
         }
     }
     
@@ -98,6 +115,13 @@ final class SettingViewController: UIViewController {
             fontSizeSlider.tintColor = .black
         @unknown default:
             fontSizeSlider.tintColor = .black
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if oldFontSize != currentFontSize {
+            didEndAdjusting?()            
         }
     }
 }
