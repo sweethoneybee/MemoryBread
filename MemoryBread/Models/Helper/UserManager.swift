@@ -35,4 +35,7 @@ final class UserManager {
     
     @UserDefault<String>(key: "trashFolderID", defaultValue: UUID().uuidString)
     static var trashFolderID: String
+    
+    @UserDefault<Int>(key: "wordSize", defaultValue: WordSize.medium.rawValue)
+    static var wordSize: Int
 }

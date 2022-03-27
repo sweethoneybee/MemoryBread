@@ -206,7 +206,7 @@ extension FoldersViewController {
     
     @objc
     private func showSettingView() {
-        let adjustVC = AdjustWordsSizeViewController(currentFontSize: WordCell.getLabelFont().makeFontSize())
+        let adjustVC = AdjustWordsSizeViewController(currentWordSize: WordCell.getLabelFont().makeWordSize())
         navigationController?.pushViewController(adjustVC, animated: true)
     }
     

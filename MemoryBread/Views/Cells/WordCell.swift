@@ -10,14 +10,21 @@ import SnapKit
 import Then
 
 final class WordCell: UICollectionViewCell {
-    static private var labelFont = UIFont.systemFont(ofSize: 18, weight: .regular)
+    static private var labelFont = UIFont.systemFont(
+        ofSize: WordSize.init(rawValue: UserManager.wordSize).fontSize,
+        weight: .regular
+    )
     
     static func getLabelFont() -> UIFont {
         return labelFont
     }
     
-    static func setLabelFont(_ newLabelFont: UIFont) {
-        WordCell.labelFont = newLabelFont
+    static func setLabelFont(using wordSize: WordSize) {
+        if !Thread.isMainThread {
+            fatalError("\(#function) should run in main thread.")
+        }
+        UserManager.wordSize = wordSize.rawValue
+        WordCell.labelFont = WordCell.labelFont.withSize(wordSize.fontSize)        
     }
     
     let label = UILabel().then {

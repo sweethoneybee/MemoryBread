@@ -8,18 +8,16 @@
 import UIKit
 
 final class AdjustWordsSizeViewController: UIViewController {
-    typealias FontSize = FontSizeCalculator.FontSize
     
-    private let oldFontSize: FontSize
-    private var currentFontSize: FontSize {
+    private let oldWordSize: WordSize
+    private var currentWordSize: WordSize {
         didSet {
-            let newFont = exampleLabel.font.withSize(currentFontSize.fontSize)
-            exampleLabel.font = newFont
-            WordCell.setLabelFont(newFont)
+            exampleLabel.font = exampleLabel.font.withSize(currentWordSize.fontSize)
+            WordCell.setLabelFont(using: self.currentWordSize)
         }
     }
     
-    private let fontSizeCalculator = FontSizeCalculator()
+    private let wordSizeCalculator = WordSizeCalculator()
     private let fontSizeSlider = UISlider(frame: .zero).then {
         $0.minimumValueImage = UIImage(systemName: "textformat.size.smaller")
         $0.maximumValueImage = UIImage(systemName: "textformat.size.larger")
@@ -42,14 +40,14 @@ final class AdjustWordsSizeViewController: UIViewController {
         $0.text = LocalizingHelper.helpMessageForAdjustingWordsSize
     }
     
-    var didEndAdjusting: (() -> Void)?
+    var didFinishAdjustingHandler: (() -> Void)?
     
     // MARK: - Methods
-    init(currentFontSize: FontSize) {
-        self.currentFontSize = currentFontSize
-        self.oldFontSize = currentFontSize
+    init(currentWordSize: WordSize) {
+        self.currentWordSize = currentWordSize
+        self.oldWordSize = currentWordSize
         super.init(nibName: nil, bundle: nil)
-        fontSizeSlider.setValue(currentFontSize.sliderValue, animated: false)
+        fontSizeSlider.setValue(currentWordSize.sliderValue, animated: false)
     }
     
     required init?(coder: NSCoder) {
@@ -73,10 +71,10 @@ final class AdjustWordsSizeViewController: UIViewController {
                 return
             }
             
-            let fontSize = self.fontSizeCalculator.fontSize(of: slider.value)
+            let fontSize = self.wordSizeCalculator.wordSize(of: slider.value)
             slider.setValue(fontSize.sliderValue, animated: false)
-            if fontSize != self.currentFontSize {
-                self.currentFontSize = fontSize
+            if fontSize != self.currentWordSize {
+                self.currentWordSize = fontSize
             }
         }), for: .valueChanged)
     }
@@ -120,8 +118,8 @@ final class AdjustWordsSizeViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if oldFontSize != currentFontSize {
-            didEndAdjusting?()            
+        if oldWordSize != currentWordSize {
+            didFinishAdjustingHandler?()            
         }
     }
 }

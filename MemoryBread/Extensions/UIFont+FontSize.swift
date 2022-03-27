@@ -8,16 +8,15 @@
 import UIKit
 
 extension UIFont {
-    func makeFontSize() -> FontSizeCalculator.FontSize {
-        typealias FontSize = FontSizeCalculator.FontSize
+    func makeWordSize() -> WordSize {
         switch pointSize {
-        case FontSize.superSmall.fontSize: return .superSmall
-        case FontSize.verySmall.fontSize: return .verySmall
-        case FontSize.small.fontSize: return .small
-        case FontSize.medium.fontSize: return .medium
-        case FontSize.big.fontSize: return .big
-        case FontSize.veryBig.fontSize: return .veryBig
-        case FontSize.superBig.fontSize: return .superBig
+        case WordSize.superSmall.fontSize: return .superSmall
+        case WordSize.verySmall.fontSize: return .verySmall
+        case WordSize.small.fontSize: return .small
+        case WordSize.medium.fontSize: return .medium
+        case WordSize.big.fontSize: return .big
+        case WordSize.veryBig.fontSize: return .veryBig
+        case WordSize.superBig.fontSize: return .superBig
         default: return .medium
         }
     }

@@ -73,7 +73,7 @@
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
 		40F644AF27EDFA1200258BFD /* AdjustWordsSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644AE27EDFA1200258BFD /* AdjustWordsSizeViewController.swift */; };
 		40F644B127EE29D600258BFD /* UIFont+FontSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644B027EE29D600258BFD /* UIFont+FontSize.swift */; };
-		40F644B327EE2A0B00258BFD /* FontSizeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */; };
+		40F644B327EE2A0B00258BFD /* WordSizeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644B227EE2A0B00258BFD /* WordSizeCalculator.swift */; };
 		40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589D272AFA5A000ADD4F /* CircleCell.swift */; };
 		40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */; };
 		40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F92B7F272BD7880085224E /* ScrollableTitleView.swift */; };
@@ -151,7 +151,7 @@
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		40F644AE27EDFA1200258BFD /* AdjustWordsSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustWordsSizeViewController.swift; sourceTree = "<group>"; };
 		40F644B027EE29D600258BFD /* UIFont+FontSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+FontSize.swift"; sourceTree = "<group>"; };
-		40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeCalculator.swift; sourceTree = "<group>"; };
+		40F644B227EE2A0B00258BFD /* WordSizeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordSizeCalculator.swift; sourceTree = "<group>"; };
 		40F7589D272AFA5A000ADD4F /* CircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCell.swift; sourceTree = "<group>"; };
 		40F7589F272B053A000ADD4F /* ColorFilterToolbarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorFilterToolbarViewController.swift; sourceTree = "<group>"; };
 		40F92B7F272BD7880085224E /* ScrollableTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableTitleView.swift; sourceTree = "<group>"; };
@@ -200,7 +200,7 @@
 				405EC18227661E9C0031C19D /* Helper */,
 				4013F5BD274BDB0700E03F5F /* Tutorial.swift */,
 				4013F5BA2748B55100E03F5F /* WordPainter.swift */,
-				40F644B227EE2A0B00258BFD /* FontSizeCalculator.swift */,
+				40F644B227EE2A0B00258BFD /* WordSizeCalculator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -644,7 +644,7 @@
 				40953946279084930047B72F /* RoundedButton.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
 				4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */,
-				40F644B327EE2A0B00258BFD /* FontSizeCalculator.swift in Sources */,
+				40F644B327EE2A0B00258BFD /* WordSizeCalculator.swift in Sources */,
 				409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */,
 				405EC185276738C60031C19D /* FileObject.swift in Sources */,

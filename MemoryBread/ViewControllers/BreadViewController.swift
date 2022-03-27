@@ -186,8 +186,8 @@ extension BreadViewController {
             title: LocalizingHelper.adjustWordsSize,
             image: UIImage(systemName: "textformat.size"),
             primaryAction: UIAction(handler: { [weak self] _ in
-                let adjustVC = AdjustWordsSizeViewController(currentFontSize: WordCell.getLabelFont().makeFontSize())
-                adjustVC.didEndAdjusting = { [weak self] in
+                let adjustVC = AdjustWordsSizeViewController(currentWordSize: WordCell.getLabelFont().makeWordSize())
+                adjustVC.didFinishAdjustingHandler = { [weak self] in
                     self?.collectionView.reloadData()
                     self?.collectionView.collectionViewLayout.invalidateLayout()
                 }
