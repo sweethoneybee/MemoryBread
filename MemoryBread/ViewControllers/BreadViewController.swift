@@ -23,7 +23,7 @@ final class BreadViewController: UIViewController {
     }
     
     private var collectionViewContentWidth: CGFloat {
-        return view.safeAreaLayoutGuide.layoutFrame.width - UIConstants.edgeInset * 2
+        return floor(view.safeAreaLayoutGuide.layoutFrame.width - UIConstants.edgeInset * 2)
     }
     
     // MARK: - Views
@@ -206,7 +206,8 @@ extension BreadViewController {
 
 extension BreadViewController: UICollectionViewDelegateFlowLayout {
     private func wordCellSizeWith(word: String, attributes: [NSAttributedString.Key: Any]?, maxWidth: CGFloat) -> CGSize {
-        let wordSize = word.size(withAttributes: attributes).applying(.init(scaleX: 1.01, y: 1.01))
+        let fractionalWordSize = word.size(withAttributes: attributes)
+        let wordSize = CGSize(width: ceil(fractionalWordSize.width), height: ceil(fractionalWordSize.height))
         let wordWidth = wordSize.width
         
         if wordWidth <= maxWidth {
