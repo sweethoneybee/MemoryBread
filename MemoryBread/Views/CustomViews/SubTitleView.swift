@@ -22,12 +22,14 @@ final class SubTitleView: UIView {
         $0.distribution = .fill
     }
     
-    private let titleLabel = UILabel().then {
+    private lazy var titleLabel = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
+        $0.font = titleFont
     }
     
     private let subTitleLabel = UILabel().then {
         $0.adjustsFontForContentSizeCategory = true
+        $0.font = .preferredFont(forTextStyle: .callout)
     }
     
     var content: SubTitleViewContent? {
@@ -39,16 +41,8 @@ final class SubTitleView: UIView {
         }
     }
     
-    var titleFont = UIFont.preferredFont(forTextStyle: .title2) {
-        didSet {
-            titleLabel.font = titleFont
-        }
-    }
-    
-    var subTitleFont = UIFont.preferredFont(forTextStyle: .callout) {
-        didSet {
-            subTitleLabel.font = subTitleFont
-        }
+    var titleFont: UIFont {
+        UIFont.preferredFont(forTextStyle: .title2)
     }
     
     override init(frame: CGRect) {
@@ -78,9 +72,6 @@ extension SubTitleView {
             make.top.bottom.equalToSuperview().inset(SubTitleView.verticalMargin)
             make.leading.trailing.equalToSuperview().inset(SubTitleView.horizontalMargin)
         }
-
-        titleLabel.font = titleFont
-        subTitleLabel.font = subTitleFont
     }
     
     private func update(using content: SubTitleViewContent) {

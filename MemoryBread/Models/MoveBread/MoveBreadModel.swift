@@ -80,18 +80,12 @@ extension MoveBreadModel {
             return LocalizingHelper.noSelectedMemoryBread
         }
         
-        let connectedNames = selectedBreadNames.reduce("") { partialResult, nextName in
-            if partialResult.isEmpty {
-                return nextName
-            }
-            return partialResult + ", \(nextName)"
-        }
-        
+        let connectedNames = selectedBreadNames.joined(separator: ", ")
         if ceil(connectedNames.size(withAttributes: attributes).width) <= maxWidth {
             return connectedNames
         }
         
-        let trailingText = selectedBreads.count != 1 ? " " + String(format: LocalizingHelper.andTheNumberOfBreads, selectedBreadNames.count) : ""
+        let trailingText = selectedBreads.count != 1 ? " " + String(format: LocalizingHelper.andTheNumberOfBreads, selectedBreadNames.count - 1) : ""
         let omittedNames = lastName + trailingText
         if ceil(omittedNames.size(withAttributes: attributes).width) <= maxWidth {
             return omittedNames

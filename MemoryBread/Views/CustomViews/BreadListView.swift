@@ -43,19 +43,27 @@ final class BreadListView: UIView {
     private let bottomDeleteButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.delete, for: .normal)
         $0.isHidden = true
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
     
     private let bottomDeleteAllButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.deleteAll, for: .normal)
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
 
     private let bottomMoveButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.move, for: .normal)
         $0.isHidden = true
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
     
     private let bottomMoveAllButton = UIButton(type: .system).then {
         $0.setTitle(LocalizingHelper.moveAll, for: .normal)
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
     
     required init?(coder: NSCoder) {
