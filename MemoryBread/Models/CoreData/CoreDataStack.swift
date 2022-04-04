@@ -60,16 +60,8 @@ final class CoreDataStack {
         }
     }
     
-    private var notificationTokens: [NSObjectProtocol] = []
-    
     init(modelName: String) {
         self.modelName = modelName
-    }
-    
-    deinit  {
-        notificationTokens.forEach {
-            NotificationCenter.default.removeObserver($0)
-        }
     }
 }
 

@@ -22,8 +22,13 @@ final class SubTitleView: UIView {
         $0.distribution = .fill
     }
     
-    private let titleLabel = UILabel()
-    private let subTitleLabel = UILabel()
+    private let titleLabel = UILabel().then {
+        $0.adjustsFontForContentSizeCategory = true
+    }
+    
+    private let subTitleLabel = UILabel().then {
+        $0.adjustsFontForContentSizeCategory = true
+    }
     
     var content: SubTitleViewContent? {
         didSet {
@@ -55,6 +60,12 @@ final class SubTitleView: UIView {
         super.init(coder: coder)
         setup()
     }
+    
+    override var intrinsicContentSize: CGSize {
+        let width = titleLabel.frame.width + Self.horizontalMargin * 2
+        let height = titleLabel.frame.height + subTitleLabel.frame.height + Self.verticalMargin * 2
+        return CGSize(width: width, height: height)
+    }
 }
 
 extension SubTitleView {
@@ -75,9 +86,12 @@ extension SubTitleView {
     private func update(using content: SubTitleViewContent) {
         titleLabel.text = content.text
         subTitleLabel.text = content.secondaryText
+        
+        titleLabel.sizeToFit()
+        subTitleLabel.sizeToFit()
     }
     
-    func titleWidth() -> CGFloat {
-        return frame.width - CGFloat(40)
+    func titleWidth(inWidth width: CGFloat) -> CGFloat {
+        return width - Self.horizontalMargin * 2
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import Combine
 
 final class MoveBreadViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .insetGrouped).then {
@@ -31,6 +32,8 @@ final class MoveBreadViewController: UIViewController {
     private var dataSource: UITableViewDiffableDataSource<Int, FolderItem>!
     private let moveDoneHandler: DoneHandler
     
+    private var subscriptions = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -44,7 +47,6 @@ final class MoveBreadViewController: UIViewController {
         view.addSubview(selectedBreadsView)
         selectedBreadsView.snp.makeConstraints { make in
             make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(70)
         }
         
         view.addSubview(tableView)
@@ -55,11 +57,17 @@ final class MoveBreadViewController: UIViewController {
         tableView.delegate = self
         
         configureDataSource()
+        
+        NotificationCenter.default
+            .publisher(for: UIContentSizeCategory.didChangeNotification)
+            .sink { [weak self] _ in
+                self?.updateSelectedBreadsView()
+            }
+            .store(in: &subscriptions)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        updateViews()
+    override func viewWillLayoutSubviews() {
+        updateSelectedBreadsView()
     }
     
     init(model: MoveBreadModel, moveDoneHandler handler: @escaping DoneHandler) {
@@ -102,19 +110,16 @@ extension MoveBreadViewController {
         }
     }
     
-    private func updateViews() {
-        updateSelectedBreadsView()
-    }
-    
     private func updateSelectedBreadsView() {
         let titleAttributes = [NSAttributedString.Key.font: selectedBreadsView.titleFont]
         selectedBreadsView.content = .init(
             text: model.selectedBreadNames(
-                inWidth: selectedBreadsView.titleWidth(),
+                inWidth: selectedBreadsView.titleWidth(inWidth: view.frame.width),
                 withAttributes: titleAttributes
             ),
             secondaryText: model.selectedBreadsCount()
         )
+        selectedBreadsView.invalidateIntrinsicContentSize()
     }
     
 }

@@ -87,13 +87,13 @@ extension MoveBreadModel {
             return partialResult + ", \(nextName)"
         }
         
-        if connectedNames.size(withAttributes: attributes).width < maxWidth {
+        if ceil(connectedNames.size(withAttributes: attributes).width) <= maxWidth {
             return connectedNames
         }
         
         let trailingText = selectedBreads.count != 1 ? " " + String(format: LocalizingHelper.andTheNumberOfBreads, selectedBreadNames.count) : ""
         let omittedNames = lastName + trailingText
-        if omittedNames.size(withAttributes: attributes).width < maxWidth {
+        if ceil(omittedNames.size(withAttributes: attributes).width) <= maxWidth {
             return omittedNames
         }
         
@@ -114,7 +114,7 @@ extension MoveBreadModel {
     ) -> String {
         var trimmedText = text
         var resultText = trimmedText + "..." + trailingText
-        while resultText.size(withAttributes: attributes).width >= maxWidth,
+        while ceil(resultText.size(withAttributes: attributes).width) > maxWidth,
               trimmedText.isEmpty != true {
             _ = trimmedText.popLast()
             resultText = trimmedText + "..." + trailingText
