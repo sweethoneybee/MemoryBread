@@ -18,13 +18,7 @@ final class BottomToolbar: UIView {
     private let containerView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .top
-        $0.distribution = .fill
-        $0.spacing = UIConstants.spacing
-    }
-    
-    private let spaceFillView = UIView().then {
-        $0.backgroundColor = .clear
-        $0.setContentHuggingPriority(.init(1), for: .horizontal)
+        $0.distribution = .equalSpacing
     }
     
     // MARK: - Life Cycle
@@ -44,7 +38,6 @@ extension BottomToolbar {
         backgroundColor = .systemGray5.withAlphaComponent(0.99)
         
         addSubview(containerView)
-        containerView.addArrangedSubview(spaceFillView)
         
         // MARK: - layouts
         containerView.snp.makeConstraints { make in

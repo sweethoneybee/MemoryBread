@@ -33,6 +33,7 @@ final class BreadListViewController: UIViewController {
     private var isTableViewSwipeActionShowing = false
     
     // MARK: - Models
+    private var subscriptions = Set<AnyCancellable>()
     private let coreDataStack: CoreDataStack
     private let currentFolderObjectID: NSManagedObjectID
     private let isAllBreadsFolder: Bool
@@ -319,6 +320,38 @@ extension BreadListViewController: BreadListViewDelegate {
         presentMoveBreadViewControllerWith(context: childContext, targetBreadObjectIDs: allObjectIDs)
     }
     
+    func copyButtonTouched(selectedIndexPaths rows: [IndexPath]?) {
+        guard let rows = rows,
+              !rows.isEmpty else {
+            return
+        }
+        
+        askUser(
+            for: LocalizingHelper.copyMemoryBreads,
+            message: String(format: LocalizingHelper.copyNumberOfMemoryBreads, rows.count)
+        )
+        .map{ self.breads(at: rows) }
+        .flatMap(copy)
+        .receive(on: DispatchQueue.main)
+        .sink { result in
+            switch result {
+            case .finished:
+                self.setEditing(false, animated: true)
+            case .failure(let copyError):
+                switch copyError {
+                case .cancel:
+                    break
+                case .copyFail(let errorCode):
+                    let errorAlert = BasicAlert.makeErrorAlert(
+                        message: String(format: LocalizingHelper.failedToCopy, errorCode)
+                    )
+                    self.present(errorAlert, animated: true)
+                }
+            }
+        } receiveValue: { _ in }
+        .store(in: &subscriptions)
+    }
+    
     private func bread(at indexPath: IndexPath) -> Bread {
         return fetchedResultsController.object(at: indexPath)
     }
@@ -409,5 +442,57 @@ extension BreadListViewController: MoveBreadViewControllerPresentable {
     
     var trashFolderObjectID: NSManagedObjectID {
         trashObjectID
+    }
+}
+
+// MARK: - Bread Copy
+extension BreadListViewController {
+    enum CopyError: Error {
+        typealias errorCode = Int
+        case cancel
+        case copyFail(errorCode)
+    }
+    
+    private func askUser(for title: String, message: String) -> AnyPublisher<Void, CopyError> {
+        Future<Void, CopyError> { promise in
+            let alert = BasicAlert.makeCancelAndConfirmAlert(
+                title: title,
+                message: message,
+                cancelHandler: { _ in promise(.failure(.cancel)) },
+                completionHandler: { _ in promise(.success(())) }
+            )
+            self.present(alert, animated: true)
+        }
+        .eraseToAnyPublisher()
+    }
+    
+    private func copy(_ breads: [Bread]) -> AnyPublisher<Void, CopyError> {
+        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
+        return Future<Void, CopyError> { promise in
+            let breadIds = breads.map{ $0.objectID }
+            childContext.perform {
+                let originalBreads = breadIds.compactMap {
+                    return (try? childContext.existingObject(with:$0)) as? Bread
+                }
+                originalBreads.forEach {
+                    _ = Bread(
+                        context: childContext,
+                        title: $0.title,
+                        content: $0.content,
+                        filterIndexes: $0.filterIndexes,
+                        selectedFilters: [],
+                        folder: $0.folder
+                    )
+                }
+                
+                do {
+                    try childContext.saveContextAndParentIfNeededThrows()
+                    promise(.success(()))
+                } catch let nserror as NSError {
+                    promise(.failure(.copyFail(nserror.code)))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 }

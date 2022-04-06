@@ -13,10 +13,12 @@ protocol BreadListViewDelegate: AnyObject {
     func deleteAllButtonTouched()
     func moveButtonTouched(selectedIndexPaths rows: [IndexPath]?)
     func moveAllButtonTouched()
+    func copyButtonTouched(selectedIndexPaths rows: [IndexPath]?)
 }
 
 extension BreadListViewDelegate {
     func createBreadButtonTouched() {}
+    func copyButtonTouched(selectedIndexPaths: [IndexPath]?) {}
 }
 
 final class BreadListView: UIView {
@@ -66,19 +68,27 @@ final class BreadListView: UIView {
         $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setUp()
-        configureLayouts()
+    private let bottomCopyButton = UIButton(type: .system).then {
+        $0.setTitle(LocalizingHelper.copy, for: .normal)
+        $0.titleLabel?.adjustsFontForContentSizeCategory = true
+        $0.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
     }
     
-    init(isCreateButtonAvailable: Bool = true) {
+    required init?(coder: NSCoder) {
+        fatalError("\(#function) is not implemented")
+    }
+    
+    private let isCopyButtonHidden: Bool
+    init(isCreateButtonAvailable: Bool = true, isCopyButtonHidden: Bool = false) {
+        self.isCopyButtonHidden = isCopyButtonHidden
         super.init(frame: .zero)
         if isCreateButtonAvailable {
             self.createBreadButton = UIButton(type: .system).then {
                 $0.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
             }
         }
+        
+        bottomCopyButton.isHidden = isCopyButtonHidden
         
         setUp()
         configureLayouts()
@@ -104,11 +114,13 @@ extension BreadListView {
         tableView.tableHeaderView = tableViewHeaderLabel
         
         addSubview(bottomToolbar)
+        bottomToolbar.addArrangedSubview(bottomCopyButton, to: .right)
         bottomToolbar.addArrangedSubview(bottomDeleteButton, to: .right)
         bottomToolbar.addArrangedSubview(bottomDeleteAllButton, to: .right)
         bottomToolbar.addArrangedSubview(bottomMoveButton, to: .left)
         bottomToolbar.addArrangedSubview(bottomMoveAllButton, to: .left)
         
+        bottomCopyButton.addTarget(self, action: #selector(bottomCopyButtonTouched), for: .touchUpInside)
         bottomDeleteButton.addTarget(self, action: #selector(bottomDeleteButtonTouched), for: .touchUpInside)
         bottomDeleteAllButton.addTarget(self, action: #selector(bottomDeleteAllButtonTouched), for: .touchUpInside)
         bottomMoveButton.addTarget(self, action: #selector(bottomMoveButtonTouched), for: .touchUpInside)
@@ -170,6 +182,7 @@ extension BreadListView {
         bottomDeleteAllButton.isHidden = !(bottomDeleteButton.isHidden)
         bottomMoveButton.isHidden = (state.numberOfSelectedRows == 0)
         bottomMoveAllButton.isHidden = !(bottomMoveButton.isHidden)
+        bottomCopyButton.isHidden = isCopyButtonHidden || (state.numberOfSelectedRows == 0)
     }
 }
 
@@ -197,6 +210,11 @@ extension BreadListView {
     @objc
     func bottomMoveAllButtonTouched() {
         delegate?.moveAllButtonTouched()
+    }
+    
+    @objc
+    func bottomCopyButtonTouched() {
+        delegate?.copyButtonTouched(selectedIndexPaths: tableView.indexPathsForSelectedRows)
     }
 }
 

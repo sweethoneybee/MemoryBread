@@ -30,6 +30,7 @@ public class Bread: NSManagedObject {
         touch: Date = Date(),
         title: String,
         content: String,
+        filterIndexes: [[Int]]? = nil,
         selectedFilters: [Int],
         folder: Folder
     ) {
@@ -41,7 +42,7 @@ public class Bread: NSManagedObject {
         self.title = title
         self.content = content
         self.separatedContent = content.components(separatedBy: ["\n", " ", "\t"])
-        self.filterIndexes = Array(repeating: [], count: FilterColor.count)
+        self.filterIndexes = filterIndexes ?? Array(repeating: [], count: FilterColor.count)
         self.selectedFilters = selectedFilters
         self.folder = folder
     }

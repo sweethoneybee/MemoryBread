@@ -12,7 +12,7 @@ import Combine
 final class TrashViewController: UIViewController {
     
     // MARK: - Views
-    private lazy var mainView = BreadListView(isCreateButtonAvailable: false)
+    private lazy var mainView = BreadListView(isCreateButtonAvailable: false, isCopyButtonHidden: true)
     
     private var moresItem = UIBarButtonItem().then {
         $0.image = UIImage(systemName: "ellipsis.circle")

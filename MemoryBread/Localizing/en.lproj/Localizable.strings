@@ -86,6 +86,7 @@
 "move" = "Move";
 "move_all" = "Move All";
 "folder_move" = "Folder Move";
+"copy" = "Copy";
 
 "no_selected_memory_bread" = "No selected Memory bread";
 "and_the_number_of_breads" = "and %d breads";
@@ -95,3 +96,7 @@
 "editing_folders" = "Editing folders";
 "adjust_words_size" = "Adjust words size";
 "help_message_for_adjusting_words_size" = "Adjust the size of the words covered by the filter.";
+
+"copy_memory_breads" = "Copy Memory Breads";
+"copy_number_of_memory_breads" = "Copy %d breads";
+"failed_to_copy" = "Failed to copy breads. Error code=%d";

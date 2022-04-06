@@ -18,4 +18,11 @@ extension NSManagedObjectContext {
             }
         }
     }
+    
+    func saveContextAndParentIfNeededThrows() throws {
+        if hasChanges {
+                try save()
+                try parent?.save()
+        }
+    }
 }

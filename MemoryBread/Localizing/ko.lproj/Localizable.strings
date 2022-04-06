@@ -86,6 +86,7 @@
 "move" = "이동";
 "move_all" = "모두 이동";
 "folder_move" = "폴더 이동";
+"copy" = "복사";
 
 "no_selected_memory_bread" = "선택된 암기빵이 없습니다.";
 "and_the_number_of_breads" = "외 %d개";
@@ -95,3 +96,7 @@
 "editing_folders" = "폴더 편집";
 "adjust_words_size" = "단어 크기 설정";
 "help_message_for_adjusting_words_size" = "필터로 가려지는 단어의 크기를 조절합니다.";
+
+"copy_memory_breads" = "암기빵 복사하기";
+"copy_number_of_memory_breads" = "%d개의 암기빵을 복사합니다.";
+"failed_to_copy" = "암기빵 복사에 실패했습니다. 에러코드=%d";

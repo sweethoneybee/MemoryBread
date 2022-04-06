@@ -88,6 +88,7 @@ struct LocalizingHelper {
     static let move = "move".localized
     static let moveAll = "move_all".localized
     static let folderMove = "folder_move".localized
+    static let copy = "copy".localized
     
     static let noSelectedMemoryBread = "no_selected_memory_bread".localized
     static let andTheNumberOfBreads = "and_the_number_of_breads".localized
@@ -97,4 +98,8 @@ struct LocalizingHelper {
     static let editingFolders = "editing_folders".localized
     static let adjustWordsSize = "adjust_words_size".localized
     static let helpMessageForAdjustingWordsSize = "help_message_for_adjusting_words_size".localized
+    
+    static let copyMemoryBreads = "copy_memory_breads".localized
+    static let copyNumberOfMemoryBreads = "copy_number_of_memory_breads".localized
+    static let failedToCopy = "failed_to_copy".localized
 }

@@ -15,10 +15,11 @@ final class BasicAlert {
         title: String?,
         message: String?,
         confirmActionTitle: String? = LocalizingHelper.confirm,
+        cancelHandler: BasicAlertCompletionHandler? = nil,
         completionHandler: BasicAlertCompletionHandler? = nil
     ) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: cancelHandler))
         alert.addAction(UIAlertAction(title: confirmActionTitle, style: .default, handler: completionHandler))
         return alert
     }
