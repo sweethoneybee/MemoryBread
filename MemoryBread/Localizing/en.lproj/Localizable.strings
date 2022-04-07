@@ -53,9 +53,11 @@
 
 "delete" = "Delete";
 "delete_all" = "Delete All";
+"delete_all_memory_bread_message" = "Delete all Memory breads";
 "delete_selected_memory_bread" = "Delete selected items";
 "selected_number_of_items" = "%d Selected";
-"delete_number_of_memory_bread_title" = "These %d Memory breads will be deleted. This action can not be rollbacked.";
+"delete_number_of_memory_bread" = "Delete %d Memory bread?";
+"delete_number_of_memory_bread_title" = "These %d Memory breads will be deleted. This action cannot be undone.";
 "delete_number_of_memory_bread_destructive_title" = "Delete %d Memory breads";
 
 "error_not_connected_to_the_internet" = "Not connected to the internet. Please check your internet connection.";

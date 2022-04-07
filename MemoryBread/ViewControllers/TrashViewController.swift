@@ -180,9 +180,23 @@ extension TrashViewController: BreadListViewDelegate {
             return
         }
         
-        let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
-            alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, rows.count),
-            destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, rows.count),
+        let alertTitle: String
+        let message: String?
+        let destructiveTitle: String
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alertTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBread, rows.count)
+            message = String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, rows.count)
+            destructiveTitle = LocalizingHelper.delete
+        } else {
+            alertTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, rows.count)
+            message = nil
+            destructiveTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, rows.count)
+        }
+        
+        let askingToDeleteAlert = BasicAlert.makeDestructiveAlert(
+            alertTitle: alertTitle,
+            message: message,
+            destructiveTitle: destructiveTitle,
             completionHandler: { [weak self] _ in
                 let objectIDs = rows.compactMap {
                     self?.bread(at: $0).objectID
@@ -190,21 +204,36 @@ extension TrashViewController: BreadListViewDelegate {
                 self?.deleteBreads(of: objectIDs)
                 self?.setEditing(false, animated: true)
             })
-        present(askingToDeleteSheet, animated: true)
+        present(askingToDeleteAlert, animated: true)
     }
     
     func deleteAllButtonTouched() {
         let numberOfAllBreads = dataSource.snapshot().numberOfItems
-        let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
-            alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, numberOfAllBreads),
-            destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, numberOfAllBreads),
+        
+        let alertTitle: String
+        let message: String?
+        let destructiveTitle: String
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alertTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBread, numberOfAllBreads)
+            message = String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, numberOfAllBreads)
+            destructiveTitle = LocalizingHelper.delete
+        } else {
+            alertTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, numberOfAllBreads)
+            message = nil
+            destructiveTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, numberOfAllBreads)
+        }
+        
+        let askingToDeleteAlert = BasicAlert.makeDestructiveAlert(
+            alertTitle: alertTitle,
+            message: message,
+            destructiveTitle: destructiveTitle,
             completionHandler: { [weak self] _ in
                 if let objectIDs = self?.dataSource.snapshot().itemIdentifiers {
                     self?.deleteBreads(of: objectIDs)
                     self?.setEditing(false, animated: true)
                 }
             })
-        present(askingToDeleteSheet, animated: true)
+        present(askingToDeleteAlert, animated: true)
     }
     
     func moveButtonTouched(selectedIndexPaths rows: [IndexPath]?) {
@@ -284,9 +313,23 @@ extension TrashViewController: UITableViewDelegate {
                 return
             }
             
-            let askingToDeleteSheet = BasicAlert.makeDestructiveAlertSheet(
-                alertTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, 1),
-                destructiveTitle: String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, 1),
+            let alertTitle: String
+            let message: String?
+            let destructiveTitle: String
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                alertTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBread, 1)
+                message = String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, 1)
+                destructiveTitle = LocalizingHelper.delete
+            } else {
+                alertTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBreadTitle, 1)
+                message = nil
+                destructiveTitle = String(format: LocalizingHelper.deleteNumberOfMemoryBreadDestructiveTitle, 1)
+            }
+            
+            let askingToDeleteAlert = BasicAlert.makeDestructiveAlert(
+                alertTitle: alertTitle,
+                message: message,
+                destructiveTitle: destructiveTitle,
                 completionHandler: { [weak self] _ in
                     if let objectID = self?.bread(at: indexPath).objectID {
                         self?.deleteBreads(of: [objectID])
@@ -298,7 +341,7 @@ extension TrashViewController: UITableViewDelegate {
                 }
             )
             
-            self.present(askingToDeleteSheet, animated: true)
+            self.present(askingToDeleteAlert, animated: true)
         }
         deleteAction.image = UIImage(systemName: "trash")
         deleteAction.backgroundColor = .systemRed
