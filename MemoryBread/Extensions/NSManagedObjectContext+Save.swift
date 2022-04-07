@@ -12,7 +12,9 @@ extension NSManagedObjectContext {
         if forcing || hasChanges {
             do {
                 try save()
-                try parent?.save()
+                if (parent?.hasChanges ?? false) {
+                    try parent?.save()
+                }
             } catch let nserror as NSError {
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
@@ -22,7 +24,9 @@ extension NSManagedObjectContext {
     func saveContextAndParentIfNeededThrows() throws {
         if hasChanges {
                 try save()
-                try parent?.save()
+            if (parent?.hasChanges ?? false) {
+                try parent?.save()                
+            }
         }
     }
 }
