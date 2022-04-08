@@ -51,7 +51,9 @@ final class FolderModel {
             }
         }
         
-        moc.saveContextAndParentIfNeeded()
+        moc.perform {
+            self.moc.saveContextAndParentIfNeeded()
+        }
     }
     
     func isFoldersIndexChanged() -> Bool {

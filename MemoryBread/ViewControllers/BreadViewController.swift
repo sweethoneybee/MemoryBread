@@ -52,7 +52,7 @@ final class BreadViewController: UIViewController {
     }
     
     // MARK: - Models
-    private let managedObjectContext: NSManagedObjectContext
+    private let viewContext: NSManagedObjectContext
     private let bread: Bread
     private let wordPainter: WordPainter
     
@@ -62,7 +62,7 @@ final class BreadViewController: UIViewController {
     }
     
     init(context: NSManagedObjectContext, bread: Bread) {
-        self.managedObjectContext = context
+        self.viewContext = context
         self.bread = bread
         self.wordPainter = WordPainter(bread: bread)
         super.init(nibName: nil, bundle: nil)
@@ -96,7 +96,7 @@ final class BreadViewController: UIViewController {
         let latestSelectedFilters = bread.selectedFilters
         if latestSelectedFilters != selectedFiltersArray {
             bread.selectedFilters = Array(selectedFilters)
-            managedObjectContext.saveContextAndParentIfNeeded()
+            viewContext.saveContextAndParentIfNeeded()
         }
     }
     
@@ -112,7 +112,7 @@ final class BreadViewController: UIViewController {
         }
         
         wordPainter.makeFilterIndexesUpToDate()
-        managedObjectContext.saveContextAndParentIfNeeded()
+        viewContext.saveContextAndParentIfNeeded()
 
         dataSource.reconfigure(wordPainter.idsHavingFilter(), animatingDifferences: true)
         editContentButtonItem.isEnabled = true
@@ -458,7 +458,7 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
             NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: titleEditAlert?.textFields?.first)
             if let inputText = titleEditAlert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) {
                 self.bread.updateTitle(inputText)
-                self.managedObjectContext.saveContextAndParentIfNeeded()
+                self.viewContext.saveContextAndParentIfNeeded()
                 self.updateNaviTitleView(using: inputText)
             }
         }
@@ -495,7 +495,7 @@ extension BreadViewController {
         guard bread.content != newContent else { return }
 
         bread.updateContent(with: newContent)
-        managedObjectContext.saveContextAndParentIfNeeded()
+        viewContext.saveContextAndParentIfNeeded()
         
         wordPainter.refreshItems()
         
