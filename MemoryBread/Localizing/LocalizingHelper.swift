@@ -55,8 +55,10 @@ struct LocalizingHelper {
     
     static let delete = "delete".localized
     static let deleteAll = "delete_all".localized
+    static let deleteAllMemoryBreadMessage = "delete_all_memory_bread_message".localized
     static let deleteSelectedMemoryBread = "delete_selected_memory_bread".localized
     static let selectedNumberOfItems = "selected_number_of_items".localized
+    static let deleteNumberOfMemoryBread = "delete_number_of_memory_bread".localized
     static let deleteNumberOfMemoryBreadTitle = "delete_number_of_memory_bread_title".localized
     static let deleteNumberOfMemoryBreadDestructiveTitle =  "delete_number_of_memory_bread_destructive_title".localized
     

@@ -443,10 +443,10 @@ extension FoldersViewController: UITableViewDelegate {
                 completionHandler(true)
                 return
             }
-            
-            let deletingActionSheet = BasicAlert.makeDestructiveAlertSheet(
+
+            let deletingAlert = BasicAlert.makeDestructiveAlert(
                 alertTitle: LocalizingHelper.folderAndMemoryBreadWillBeDeleted,
-                destructiveTitle: LocalizingHelper.deleteFolder,
+                destructiveTitle: UIDevice.current.userInterfaceIdiom == .pad ? LocalizingHelper.delete : LocalizingHelper.deleteFolder,
                 completionHandler: { [weak self] _ in
                     guard let self = self else {
                         completionHandler(false)
@@ -459,7 +459,7 @@ extension FoldersViewController: UITableViewDelegate {
                     completionHandler(false)
                 }
             )
-            self.present(deletingActionSheet, animated: true)
+            self.present(deletingAlert, animated: true)
         }
         
         action.image = UIImage(systemName: "trash")

@@ -276,9 +276,20 @@ extension BreadListViewController: BreadListViewDelegate {
     }
     
     func deleteAllButtonTouched() {
-        let askingToDeleteAllSheet = BasicAlert.makeDestructiveAlertSheet(
+        let message: String?
+        let destructiveTitle: String?
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            message = LocalizingHelper.deleteAllMemoryBreadMessage
+            destructiveTitle = LocalizingHelper.delete
+        } else {
+            message = nil
+            destructiveTitle = LocalizingHelper.deleteAll
+        }
+        
+        let askingToDeleteAlert = BasicAlert.makeDestructiveAlert(
             alertTitle: nil,
-            destructiveTitle: LocalizingHelper.deleteAll,
+            message: message,
+            destructiveTitle: destructiveTitle,
             completionHandler: { [weak self] _ in
                 if let objectIDs = self?.diffableDataSource.snapshot().itemIdentifiers {
                     self?.moveToTrash(of: objectIDs)
@@ -286,7 +297,7 @@ extension BreadListViewController: BreadListViewDelegate {
                 }
             }
         )
-        present(askingToDeleteAllSheet, animated: true)
+        present(askingToDeleteAlert, animated: true)
     }
     
     private func moveToTrash(of objectIDs: [NSManagedObjectID]) {

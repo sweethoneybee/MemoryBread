@@ -36,16 +36,23 @@ final class BasicAlert {
         return alert
     }
     
-    static func makeDestructiveAlertSheet(
+    static func makeDestructiveAlert(
         alertTitle: String? = nil,
+        message: String? = nil,
         destructiveTitle: String? = nil,
         completionHandler: BasicAlertCompletionHandler? = nil,
         cancelHandler: BasicAlertCompletionHandler? = nil
     ) -> UIAlertController {
-        let actionSheet = UIAlertController(title: alertTitle, message: nil, preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: completionHandler))
-        actionSheet.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: cancelHandler))
-        return actionSheet
+        let alertStyle: UIAlertController.Style
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alertStyle = .alert
+        } else {
+            alertStyle = .actionSheet
+        }
+        let alert = UIAlertController(title: alertTitle, message: message, preferredStyle: alertStyle)
+        alert.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: completionHandler))
+        alert.addAction(UIAlertAction(title: LocalizingHelper.cancel, style: .cancel, handler: cancelHandler))
+        return alert
     }
 }
 
