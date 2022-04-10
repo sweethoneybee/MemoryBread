@@ -97,7 +97,6 @@ struct LocalizingHelper {
     static let selectedTheNumberOfMemoryBreads = "selected_the_number_of_memory_breads".localized
     
     static let pangram = "pangram".localized
-    static let editingFolders = "editing_folders".localized
     static let adjustWordsSize = "adjust_words_size".localized
     static let helpMessageForAdjustingWordsSize = "help_message_for_adjusting_words_size".localized
     

@@ -26,7 +26,7 @@ final class FoldersViewController: UIViewController {
     
     // MARK: - Buttons
     private var createFolderItem: UIBarButtonItem!
-    private var settingMenu: UIBarButtonItem!
+    private var moresItem: UIBarButtonItem!
     
     // MARK: - Data
     private let coreDataStack: CoreDataStack
@@ -102,15 +102,11 @@ final class FoldersViewController: UIViewController {
     }
     
     private func updateRightBarButtonItems(isEditing editing: Bool) {
-        var updatedRightItems = [UIBarButtonItem]()
         if editing {
-            updatedRightItems.append(editButtonItem)
+            navigationItem.rightBarButtonItems = [editButtonItem]
         } else {
-            updatedRightItems.append(settingMenu)
+            navigationItem.rightBarButtonItems = [moresItem, createFolderItem]
         }
-        updatedRightItems.append(createFolderItem)
-        
-        navigationItem.rightBarButtonItems = updatedRightItems
     }
 }
 
@@ -143,30 +139,25 @@ extension FoldersViewController {
             action: #selector(createFolderItemTapped)
         )
         
-        let editAction = UIAction(
-            title: LocalizingHelper.editingFolders,
-            image: UIImage(systemName: "folder.badge.gearshape")) { [weak self] _ in
-                self?.setEditing(true, animated: true)
-            }
-        let wordSizeSettingAction = UIAction(
-            title: LocalizingHelper.adjustWordsSize,
-            image: UIImage(systemName: "textformat.size")) { [weak self] _ in
-                self?.showSettingView()
-            }
-        settingMenu = UIBarButtonItem(
-            title: nil,
-            image: UIImage(systemName: "gearshape"),
-            primaryAction: nil,
-            menu: UIMenu(title: "", children: [editAction, wordSizeSettingAction])
+        moresItem = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(moresItemTouched)
         )
         
-        navigationItem.rightBarButtonItems = [settingMenu, createFolderItem]
+        navigationItem.rightBarButtonItems = [moresItem, createFolderItem]
         navigationItem.title = LocalizingHelper.folders
     }
 }
 
 // MARK: - Target Action
 extension FoldersViewController {
+    @objc
+    private func moresItemTouched() {
+        setEditing(true, animated: true)
+    }
+    
     @objc
     private func createFolderItemTapped() {
         let createFolderAlert = makeTextFieldAlert(
@@ -202,12 +193,6 @@ extension FoldersViewController {
         )
         
         present(createFolderAlert, animated: true)
-    }
-    
-    @objc
-    private func showSettingView() {
-        let adjustVC = AdjustWordsSizeViewController(currentWordSize: WordCell.getLabelFont().makeWordSize())
-        navigationController?.pushViewController(adjustVC, animated: true)
     }
     
     private func makeTextFieldAlert(
