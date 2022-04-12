@@ -23,6 +23,8 @@ final class TrashViewController: UIViewController {
         $0.title = LocalizingHelper.done
         $0.style = .done
     }
+
+    private var feedbackGenerator: UISelectionFeedbackGenerator? = nil
     
     // MARK: - States
     private var isTableViewSwipeActionShowing = false
@@ -98,6 +100,10 @@ final class TrashViewController: UIViewController {
         mainView.delegate = self
         mainView.tableView.delegate = self
         
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(setEditMode(_:)))
+        gesture.delegate = self
+        mainView.tableView.addGestureRecognizer(gesture)
+        
         try? fetchedResultsController.performFetch()
 
         cancellable = NotificationCenter.default
@@ -142,8 +148,10 @@ extension TrashViewController {
         
         navigationItem.rightBarButtonItem = moresItem
     }
-    
-    // MARK: - UIBarButtonItem Actions
+}
+
+// MARK: - Target Actions
+extension TrashViewController {
     @objc
     private func moresItemTouched() {
         setEditing(true, animated: true)
@@ -152,6 +160,19 @@ extension TrashViewController {
     @objc
     private func doneItemTouched() {
         setEditing(false, animated: true)
+    }
+    
+    @objc
+    private func setEditMode(_ sender: UILongPressGestureRecognizer) {
+        if .began == sender.state && !isEditing {
+            setEditing(true, animated: true)
+            feedHaptic()
+            let tableView = mainView.tableView
+            let location = sender.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: location) {
+                tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            }
+        }
     }
 }
 
@@ -371,5 +392,22 @@ extension TrashViewController: MoveBreadViewControllerPresentable {
     
     var trashFolderObjectID: NSManagedObjectID {
         trashObjectID
+    }
+}
+
+// MARK: - UIFeedbackGenerator
+extension TrashViewController {
+    func feedHaptic() {
+        feedbackGenerator = UISelectionFeedbackGenerator()
+        feedbackGenerator?.prepare()
+        feedbackGenerator?.selectionChanged()
+        feedbackGenerator = nil
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension TrashViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return !isEditing
     }
 }

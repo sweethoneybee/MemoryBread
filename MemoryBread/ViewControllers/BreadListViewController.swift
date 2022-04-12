@@ -28,6 +28,8 @@ final class BreadListViewController: UIViewController {
         return [doneItem]
     }
     
+    private var feedbackGenerator: UISelectionFeedbackGenerator? = nil
+    
     // MARK: - States
     private var isAdding = false
     private var isTableViewSwipeActionShowing = false
@@ -119,6 +121,10 @@ final class BreadListViewController: UIViewController {
         mainView.delegate = self
         mainView.tableView.delegate = self
         
+        let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(setEditMode(_:)))
+        gestureRecognizer.delegate = self
+        mainView.tableView.addGestureRecognizer(gestureRecognizer)
+        
         try? fetchedResultsController.performFetch()
         
         cancellable = NotificationCenter.default
@@ -178,8 +184,10 @@ extension BreadListViewController {
         
         navigationItem.rightBarButtonItems = normalRightBarButtonItems
     }
-    
-    // MARK: - UIButton Target Actions
+}
+
+// MARK: - Target Actions
+extension BreadListViewController {
     @objc
     func remoteDriveItemTouched() {
         let rdaVC = RemoteDriveAuthViewController(
@@ -198,6 +206,19 @@ extension BreadListViewController {
     @objc
     func doneItemTouched() {
         setEditing(false, animated: true)
+    }
+    
+    @objc
+    private func setEditMode(_ sender: UILongPressGestureRecognizer) {
+        if .began == sender.state && !isEditing {
+            setEditing(true, animated: true)
+            feedHaptic()
+            let tableView = mainView.tableView
+            let location = sender.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: location) {
+                tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            }
+        }
     }
 }
 
@@ -505,5 +526,22 @@ extension BreadListViewController {
             }
         }
         .eraseToAnyPublisher()
+    }
+}
+
+// MARK: - UIFeedbackGenerator
+extension BreadListViewController {
+    func feedHaptic() {
+        feedbackGenerator = UISelectionFeedbackGenerator()
+        feedbackGenerator?.prepare()
+        feedbackGenerator?.selectionChanged()
+        feedbackGenerator = nil
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension BreadListViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return !isEditing
     }
 }

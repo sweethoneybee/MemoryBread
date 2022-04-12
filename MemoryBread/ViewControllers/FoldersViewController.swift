@@ -21,6 +21,8 @@ final class FoldersViewController: UIViewController {
     private var noAnimatationForTableView = false
     private var isTableViewCellSwipeActionShowing = false
     
+    private var feedbackGenerator: UISelectionFeedbackGenerator? = nil
+    
     // MARK: - Alert Action
     private weak var textFieldAlertDoneAction: UIAlertAction?
     
@@ -120,6 +122,9 @@ extension FoldersViewController {
             $0.delegate = self
         }
         view.addSubview(tableView)
+        let gestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(setEditMode(_:)))
+        gestureRecognizer.delegate = self
+        tableView.addGestureRecognizer(gestureRecognizer)
         
         configureHierarchy()
         setNavigationItem()
@@ -156,6 +161,18 @@ extension FoldersViewController {
     @objc
     private func moresItemTouched() {
         setEditing(true, animated: true)
+    }
+    
+    @objc
+    private func setEditMode(_ sender: UILongPressGestureRecognizer) {
+        if .began == sender.state && !isEditing {
+            setEditing(true, animated: true)
+            feedHaptic()
+            let location = sender.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: location) {
+                tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+            }
+        }
     }
     
     @objc
@@ -486,5 +503,22 @@ extension FoldersViewController: TextFieldAlertActionEnabling {
     @objc
     private func textDidChange(_ notification: Notification) {
         enableAlertActionByTextCount(notification)
+    }
+}
+
+// MARK: - UIFeedbackGenerator
+extension FoldersViewController {
+    func feedHaptic() {
+        feedbackGenerator = UISelectionFeedbackGenerator()
+        feedbackGenerator?.prepare()
+        feedbackGenerator?.selectionChanged()
+        feedbackGenerator = nil
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension FoldersViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return !isEditing
     }
 }
