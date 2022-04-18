@@ -268,10 +268,10 @@ extension BreadViewController {
             return supplementaryView
         }
         
-        applyNewIdentifiers(wordPainter.ids())
+        applyNewSnapshot(using: wordPainter.ids())
     }
     
-    private func applyNewIdentifiers(_ identifiers: [UUID]) {
+    private func applyNewSnapshot(using identifiers: [UUID]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, UUID>()
         snapshot.appendSections([.main])
         snapshot.appendItems(identifiers, toSection: .main)
@@ -282,7 +282,9 @@ extension BreadViewController {
 // MARK: - UICollectionView Delegate
 extension BreadViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
+        guard let id = dataSource.itemIdentifier(for: indexPath) else {
+            return
+        }
         
         if isEditing {
             highlightedItemIndexForEditing = indexPath.item
@@ -290,8 +292,8 @@ extension BreadViewController: UICollectionViewDelegate {
             return
         }
         
-        guard let id = dataSource.itemIdentifier(for: indexPath) else { return }
-        if let colorIndex = wordPainter.ColorIndex(forKey: id),
+        let item = wordPainter.item(forKey: id)
+        if let colorIndex = FilterColor.colorIndex(for: item?.filterColor),
            selectedFilters.contains(colorIndex) {
             wordPainter.togglePeekingOfItem(forKey: id)
             dataSource.reconfigure([id], animatingDifferences: true)
@@ -326,9 +328,11 @@ extension BreadViewController: UICollectionViewDelegate {
         }
         
         if let editingFilterIndex = editingFilterIndex {
-            wordPainter.setFilterOfItem(forKey: id,
-                            to: editingFilterColor,
-                            isFiltered: selectedFilters.contains(editingFilterIndex))
+            wordPainter.setFilterOfItem(
+                forKey: id,
+                to: editingFilterColor,
+                isFiltered: selectedFilters.contains(editingFilterIndex)
+            )
             dataSource.reconfigure([id], animatingDifferences: true)
         }
     }
@@ -418,7 +422,7 @@ extension BreadViewController {
         
         switch sender.state {
         case .began:
-            panGestureCheckerOfItems = Array(repeating: false, count: wordPainter.count)
+            panGestureCheckerOfItems = Array(repeating: false, count: wordPainter.itemCount)
             if let justHighlighted = highlightedItemIndexForEditing {
                 panGestureCheckerOfItems[justHighlighted] = true
                 highlightedItemIndexForEditing = nil
@@ -499,7 +503,7 @@ extension BreadViewController {
         
         wordPainter.refreshItems()
         
-        applyNewIdentifiers(wordPainter.ids())
+        applyNewSnapshot(using: wordPainter.ids())
         
         toolbarViewController.deselectAllFilter()
         toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)

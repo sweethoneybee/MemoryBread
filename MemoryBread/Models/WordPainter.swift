@@ -45,7 +45,7 @@ final class WordPainter {
     }
 
     // MARK: - 쿼리
-    var count: Int {
+    var itemCount: Int {
         return items.count
     }
     
