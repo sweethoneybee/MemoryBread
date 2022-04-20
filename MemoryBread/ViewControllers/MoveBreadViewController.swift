@@ -29,6 +29,8 @@ final class MoveBreadViewController: UIViewController {
     typealias DoneHandler = (() -> Void)
 
     private let model: MoveBreadModel
+    private let viewModel: SubTitleViewModel
+    
     private var dataSource: UITableViewDiffableDataSource<Int, FolderItem>!
     private let moveDoneHandler: DoneHandler
     
@@ -70,8 +72,9 @@ final class MoveBreadViewController: UIViewController {
         updateSelectedBreadsView()
     }
     
-    init(model: MoveBreadModel, moveDoneHandler handler: @escaping DoneHandler) {
+    init<T: SubTitleViewModel>(model: MoveBreadModel, viewModel: T, moveDoneHandler handler: @escaping DoneHandler) {
         self.model = model
+        self.viewModel = viewModel
         self.moveDoneHandler = handler
         super.init(nibName: nil, bundle: nil)
     }
@@ -112,13 +115,12 @@ extension MoveBreadViewController {
     
     private func updateSelectedBreadsView() {
         let titleAttributes = [NSAttributedString.Key.font: selectedBreadsView.titleFont]
-        selectedBreadsView.content = .init(
-            text: model.selectedBreadNames(
-                inWidth: selectedBreadsView.titleWidth(inWidth: view.frame.width),
-                withAttributes: titleAttributes
-            ),
-            secondaryText: model.selectedBreadsCount()
+        selectedBreadsView.content = viewModel.makeSubTitleContent(
+            using: model.selectedBreadNames,
+            inWidth: view.frame.width,
+            titleAttributes: titleAttributes
         )
+        
         selectedBreadsView.invalidateIntrinsicContentSize()
     }
     

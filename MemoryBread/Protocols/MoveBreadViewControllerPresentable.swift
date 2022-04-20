@@ -23,7 +23,11 @@ extension MoveBreadViewControllerPresentable {
             shouldDisabledFolderObjectID: sourceFolderObjectID,
             trashObjectID: trashFolderObjectID
         )
-        let mbvc = MoveBreadViewController(model: model, moveDoneHandler: { [weak self] in
+        let viewModel = MoveBreadViewModel()
+        let mbvc = MoveBreadViewController(
+            model: model,
+            viewModel: viewModel,
+            moveDoneHandler: { [weak self] in
             self?.setEditing(false, animated: true)
         })
         let nvc = UINavigationController(rootViewController: mbvc)

@@ -32,7 +32,7 @@ final class MoveBreadModel {
         }
     }()
     
-    private lazy var selectedBreadNames: [String] = {
+    lazy var selectedBreadNames: [String] = {
         selectedBreads.compactMap { $0.title }
     }()
     
@@ -75,52 +75,6 @@ final class MoveBreadModel {
 
 // MARK: - 폴더 목록 조회 관련
 extension MoveBreadModel {
-    func selectedBreadNames(inWidth maxWidth: CGFloat, withAttributes attributes: [NSAttributedString.Key : Any]) -> String {
-        guard let lastName = selectedBreadNames.last else {
-            return LocalizingHelper.noSelectedMemoryBread
-        }
-        
-        let connectedNames = selectedBreadNames.joined(separator: ", ")
-        if ceil(connectedNames.size(withAttributes: attributes).width) <= maxWidth {
-            return connectedNames
-        }
-        
-        let trailingText = selectedBreads.count != 1 ? " " + String(format: LocalizingHelper.andTheNumberOfBreads, selectedBreadNames.count - 1) : ""
-        let omittedNames = lastName + trailingText
-        if ceil(omittedNames.size(withAttributes: attributes).width) <= maxWidth {
-            return omittedNames
-        }
-        
-        let trimmedNames = iterateTrimmingSuffix(
-            lastName,
-            trailingBy: trailingText,
-            inWidth: maxWidth,
-            withAttributes: attributes
-        )
-        return trimmedNames
-    }
-    
-    private func iterateTrimmingSuffix(
-        _ text: String,
-        trailingBy trailingText: String,
-        inWidth maxWidth: CGFloat,
-        withAttributes attributes: [NSAttributedString.Key : Any]
-    ) -> String {
-        var trimmedText = text
-        var resultText = trimmedText + "..." + trailingText
-        while ceil(resultText.size(withAttributes: attributes).width) > maxWidth,
-              trimmedText.isEmpty != true {
-            _ = trimmedText.popLast()
-            resultText = trimmedText + "..." + trailingText
-        }
-        
-        return resultText
-    }
-    
-    func selectedBreadsCount() -> String {
-        return String(format: LocalizingHelper.selectedTheNumberOfMemoryBreads, selectedBreadNames.count)
-    }
-    
     func makeFolderItems() -> [Item] {
         return folders.map {
             Item(
