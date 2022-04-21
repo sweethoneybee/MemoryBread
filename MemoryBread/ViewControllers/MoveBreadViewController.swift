@@ -117,8 +117,8 @@ extension MoveBreadViewController {
         let titleAttributes = [NSAttributedString.Key.font: selectedBreadsView.titleFont]
         selectedBreadsView.content = viewModel.makeSubTitleContent(
             using: model.selectedBreadNames,
-            inWidth: view.frame.width,
-            titleAttributes: titleAttributes
+            titleAttributes: titleAttributes,
+            inWidth: view.frame.width
         )
         
         selectedBreadsView.invalidateIntrinsicContentSize()

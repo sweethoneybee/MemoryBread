@@ -101,3 +101,5 @@
 "copy_memory_breads" = "Copy Memory Breads";
 "copy_number_of_memory_breads" = "Copy %d breads";
 "failed_to_copy" = "Failed to copy breads. Error code=%d";
+
+"copy_from_folder" = "Copy from %@";

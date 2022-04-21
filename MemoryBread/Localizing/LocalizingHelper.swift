@@ -103,4 +103,6 @@ struct LocalizingHelper {
     static let copyMemoryBreads = "copy_memory_breads".localized
     static let copyNumberOfMemoryBreads = "copy_number_of_memory_breads".localized
     static let failedToCopy = "failed_to_copy".localized
+    
+    static let copyFromFolder = "copy_from_folder".localized
 }
