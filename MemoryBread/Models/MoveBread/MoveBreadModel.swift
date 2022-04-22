@@ -15,25 +15,25 @@ final class MoveBreadModel {
     private let moc: NSManagedObjectContext
     private let selectedBreadObjectIDs: [NSManagedObjectID]
     private let shouldDisabledFolderObjectID: NSManagedObjectID?
-    private let trashObjectID: NSManagedObjectID
     
     private let folderModel: FolderModel
     
-    private lazy var trashObject: Folder = {
-        guard let trash = moc.object(with: trashObjectID) as? Folder else {
-            fatalError("Folder casting error")
-        }
-        return trash
-    }()
-    
     private lazy var selectedBreads: [Bread] = {
-        selectedBreadObjectIDs.compactMap { objectID in
-            moc.object(with: objectID) as? Bread
+        var result: [Bread]?
+        moc.performAndWait {
+            result = selectedBreadObjectIDs.compactMap { objectID in
+                moc.object(with: objectID) as? Bread
+            }
         }
+        return result ?? []
     }()
     
     lazy var selectedBreadNames: [String] = {
-        selectedBreads.compactMap { $0.title }
+        var result: [String]?
+        moc.performAndWait {
+            result = selectedBreads.compactMap { $0.title }
+        }
+        return result ?? []
     }()
     
     private lazy var foldersFetchRequest: NSFetchRequest<Folder> = {
@@ -50,7 +50,11 @@ final class MoveBreadModel {
     }()
     
     private lazy var folders: [Folder] = {
-        (try? moc.fetch(foldersFetchRequest)) ?? []
+        var result: [Folder]?
+        moc.performAndWait {
+            result = try? moc.fetch(foldersFetchRequest)
+        }
+        return result ?? []
     }()
     
     private var createdFolderCount = 0
@@ -61,13 +65,11 @@ final class MoveBreadModel {
     init(
         context: NSManagedObjectContext,
         selectedBreadObjectIDs: [NSManagedObjectID],
-        shouldDisabledFolderObjectID: NSManagedObjectID?,
-        trashObjectID: NSManagedObjectID
+        shouldDisabledFolderObjectID: NSManagedObjectID?
     ) {
         self.moc = context
         self.selectedBreadObjectIDs = selectedBreadObjectIDs
         self.shouldDisabledFolderObjectID = shouldDisabledFolderObjectID
-        self.trashObjectID = trashObjectID
         
         self.folderModel = FolderModel(context: context)
     }
@@ -76,25 +78,31 @@ final class MoveBreadModel {
 // MARK: - 폴더 목록 조회 관련
 extension MoveBreadModel {
     func makeFolderItems() -> [Item] {
-        return folders.map {
-            Item(
-                name: $0.localizedName,
-                disabled: ($0.objectID == shouldDisabledFolderObjectID) ? true : false,
-                objectID: $0.objectID
-            )
+        var items: [Item]?
+        moc.performAndWait {
+            items = folders.map {
+                Item(
+                    name: $0.localizedName,
+                    disabled: ($0.objectID == shouldDisabledFolderObjectID) ? true : false,
+                    objectID: $0.objectID
+                )
+            }
         }
+        return items ?? []
     }
 }
 
 // MARK: - 옮기기 로직
 extension MoveBreadModel {
     func moveBreads(to destObjectID: NSManagedObjectID) {
-        guard let destFolder = moc.object(with: destObjectID) as? Folder else {
-            return
-        }
+        moc.perform {
+            guard let destFolder = self.moc.object(with: destObjectID) as? Folder else {
+                return
+            }
         
-        moveSelectedBreads(to: destFolder)
-        moc.saveContextAndParentIfNeeded()
+            self.moveSelectedBreads(to: destFolder)
+            self.moc.saveContextAndParentIfNeeded()
+        }
     }
 
     private func moveSelectedBreads(to dest: Folder) {
@@ -106,16 +114,32 @@ extension MoveBreadModel {
 
 // MARK: - 폴더 생성
 extension MoveBreadModel {
+    private var foldersFirstIndex: Int64 {
+        var index: Int64?
+        moc.performAndWait {
+            index = self.folders.first?.index
+        }
+        return index ?? 1
+    }
+    
+    private var foldersCount: Int {
+        var count: Int?
+        moc.performAndWait {
+            count = self.folders.count
+        }
+        return count ?? 0
+    }
+    
     func createFolder(withName name: String) throws {
-        let topIndex = folders.first?.index ?? 0
-        let newIndex = topIndex - Int64(folders.count + createdFolderCount)
+        let topIndex = foldersFirstIndex
+        let newIndex = topIndex - Int64(foldersCount + createdFolderCount)
         createdFolderCount += 1
         do {
-            let newFolder = try folderModel.createFolderWith(name: name, index: newIndex)
+            let folderID = try folderModel.createFolderWith(name: name, index: newIndex)
             let newFolderItem = Item(
-                name: newFolder.localizedName,
+                name: name,
                 disabled: false,
-                objectID: newFolder.objectID
+                objectID: folderID
             )
             didCreateFolderHandler?(newFolderItem)
         } catch {

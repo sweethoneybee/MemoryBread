@@ -20,8 +20,7 @@ extension MoveBreadViewControllerPresentable {
         let model = MoveBreadModel(
             context: context,
             selectedBreadObjectIDs: targetBreadObjectIDs,
-            shouldDisabledFolderObjectID: sourceFolderObjectID,
-            trashObjectID: trashFolderObjectID
+            shouldDisabledFolderObjectID: sourceFolderObjectID
         )
         let viewModel = MoveBreadViewModel()
         let mbvc = MoveBreadViewController(

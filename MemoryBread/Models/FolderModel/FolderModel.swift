@@ -18,41 +18,52 @@ final class FolderModel {
     }
    
     @discardableResult
-    func createFolderWith(name: String, index: Int64) throws -> Folder {
+    func createFolderWith(name: String, index: Int64) throws -> NSManagedObjectID {
         try isInBlackList(name)
         
-        let newFolder = Folder(
-            context: moc,
-            name: name,
-            index: index,
-            breads: nil
-        )
-        
-        do {
-            try saveContextAndItsParentIfNeeded()
-            return newFolder
-        } catch let nserror as NSError{
-            switch nserror.code {
-            case NSManagedObjectConstraintMergeError:
-                throw ContextSaveError.folderNameIsDuplicated
-            default:
-                throw ContextSaveError.unknown(nserror)
+        var result: NSManagedObjectID?
+        var saveError: ContextSaveError? = nil
+        moc.performAndWait {
+            let newFolder = Folder(
+                context: moc,
+                name: name,
+                index: index,
+                breads: nil
+            )
+            
+            do {
+                try saveContextAndItsParentIfNeeded()
+                result = newFolder.objectID
+            } catch let nserror as NSError{
+                switch nserror.code {
+                case NSManagedObjectConstraintMergeError:
+                    saveError = ContextSaveError.folderNameIsDuplicated
+                default:
+                    saveError = ContextSaveError.unknown(nserror)
+                }
             }
         }
+        
+        if let saveError = saveError {
+            throw saveError
+        }
+        return result!
     }
     
     func updateFoldersIndexIfNeeded(of folderObjectIDs: [NSManagedObjectID]) {
-        folderObjectIDs.enumerated().forEach { index, objectID in
-            let newIndex = Int64(index)
-            if let folderObject = try? moc.existingObject(with: objectID) as? Folder,
-               folderObject.index != newIndex {
-                folderObject.index = newIndex
-                foldersIndexChangedFlag = true
+        moc.performAndWait {
+            folderObjectIDs.enumerated().forEach { index, objectID in
+                let newIndex = Int64(index)
+                if let folderObject = try? moc.existingObject(with: objectID) as? Folder,
+                   folderObject.index != newIndex {
+                    folderObject.index = newIndex
+                    foldersIndexChangedFlag = true
+                }
             }
-        }
-        
-        moc.perform {
-            self.moc.saveContextAndParentIfNeeded()
+            
+            moc.perform {
+                self.moc.saveContextAndParentIfNeeded()
+            }
         }
     }
     
@@ -65,13 +76,13 @@ final class FolderModel {
     }
     
     func renameFolder(of folderObjectID: NSManagedObjectID, to newFolderName: String) throws {
-        do {
-            try isInBlackList(newFolderName)
-            
-            guard let folder = try moc.existingObject(with: folderObjectID) as? Folder else {
+        try isInBlackList(newFolderName)
+        
+        var saveError: ContextSaveError?
+        moc.performAndWait {
+            guard let folder = moc.object(with: folderObjectID) as? Folder else {
                 fatalError("Folder casting fail")
             }
-            
             
             folder.setName(newFolderName)
             do {
@@ -79,11 +90,15 @@ final class FolderModel {
             } catch let nserror as NSError {
                 switch nserror.code {
                 case NSManagedObjectConstraintMergeError:
-                    throw ContextSaveError.folderNameIsDuplicated
+                    saveError = ContextSaveError.folderNameIsDuplicated
                 default:
-                    throw ContextSaveError.unknown(nserror)
+                    saveError = ContextSaveError.unknown(nserror)
                 }
             }
+        }
+        
+        if let saveError = saveError {
+            throw saveError
         }
     }
     
