@@ -146,10 +146,15 @@ extension RemoteDriveAuthViewController: RemoteDriveCellDelegate {
     }
     func signOutButtonTapped(_ cell: RemoteDriveCell) {
         if let indexPath = tableView.indexPath(for: cell) {
-            let alert = BasicAlert.makeCancelAndConfirmAlert(title: LocalizingHelper.signOut, message: LocalizingHelper.signOutGoogleDrive) { [weak self] _ in
-                self?.model.signOut(at: indexPath.item)
-                self?.reloadCell(at: indexPath)
-            }
+            let alert = BasicAlert.makeCancelAndConfirmAlert(
+                title: LocalizingHelper.signOut,
+                message: LocalizingHelper.signOutGoogleDrive,
+                cancelHandler: nil,
+                completionHandler:  { [weak self] _ in
+                    self?.model.signOut(at: indexPath.item)
+                    self?.reloadCell(at: indexPath)
+                }
+            )
             present(alert, animated: true)
         }
     }

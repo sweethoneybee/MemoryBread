@@ -21,7 +21,7 @@ final class EditContentViewController: UIViewController {
     private var bottomConstraint: Constraint?
     private var keyboardShown = false
     
-    private var cancellableBag: [AnyCancellable] = []
+    private var subscriptions: Set<AnyCancellable> = []
     
     required init?(coder: NSCoder) {
         fatalError("not implemented")
@@ -40,7 +40,7 @@ final class EditContentViewController: UIViewController {
         configureNavigation()
         
         
-        let keyboardShownCancellable = NotificationCenter.default
+        NotificationCenter.default
             .publisher(for: UIResponder.keyboardWillShowNotification, object: nil)
             .sink { [weak self] notification in
                 guard let self = self,
@@ -58,8 +58,9 @@ final class EditContentViewController: UIViewController {
                 }
                 self.keyboardShown = true
             }
+            .store(in: &subscriptions)
         
-        let keyboardHideCancellable = NotificationCenter.default
+        NotificationCenter.default
             .publisher(for: UIResponder.keyboardWillHideNotification, object: nil)
             .sink { [weak self] notification in
                 guard let self = self else { return }
@@ -74,9 +75,7 @@ final class EditContentViewController: UIViewController {
                 }
                 self.keyboardShown = false
             }
-        
-        cancellableBag.append(keyboardShownCancellable)
-        cancellableBag.append(keyboardHideCancellable)
+            .store(in: &subscriptions)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
