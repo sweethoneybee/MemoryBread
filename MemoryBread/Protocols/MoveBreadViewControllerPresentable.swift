@@ -22,10 +22,10 @@ extension MoveBreadViewControllerPresentable {
             selectedBreadObjectIDs: targetBreadObjectIDs,
             shouldDisabledFolderObjectID: sourceFolderObjectID
         )
-        let viewModel = MoveBreadViewModel()
+        let optimizer = MoveBreadViewOptimizer()
         let mbvc = MoveBreadViewController(
             model: model,
-            viewModel: viewModel,
+            optimizer: optimizer,
             moveDoneHandler: { [weak self] in
             self?.setEditing(false, animated: true)
         })

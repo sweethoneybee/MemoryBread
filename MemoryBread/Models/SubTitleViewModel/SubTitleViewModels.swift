@@ -7,21 +7,21 @@
 
 import Foundation
 
-protocol SubTitleViewModel {
-    func makeSubTitleContent(
+protocol SubTitleContentWidthOptimizer {
+    func makeOptimizedSubTitleContent(
         using: [String],
         titleAttributes: [NSAttributedString.Key: Any],
         inWidth: CGFloat
-    ) -> SubTitleViewContent
+    ) -> SubTitleContent
 }
 
-final class MoveBreadViewModel: SubTitleViewModel {
-    func makeSubTitleContent(
+final class MoveBreadViewOptimizer: SubTitleContentWidthOptimizer {
+    func makeOptimizedSubTitleContent(
         using content: [String],
         titleAttributes: [NSAttributedString.Key: Any],
         inWidth maxWidth: CGFloat
-    ) -> SubTitleViewContent {
-        return SubTitleViewContent(
+    ) -> SubTitleContent {
+        return SubTitleContent(
             text: title(for: content, withAttributes: titleAttributes, inWidth: maxWidth),
             secondaryText: breadsCountText(of: content)
         )
@@ -78,18 +78,18 @@ final class MoveBreadViewModel: SubTitleViewModel {
     }
 }
 
-final class CopyAndMoveViewModel: SubTitleViewModel {
+final class CopyAndMoveViewOptimizer: SubTitleContentWidthOptimizer {
     private let sourceFolderName: String
     init(sourceFolderName: String) {
         self.sourceFolderName = sourceFolderName
     }
     
-    func makeSubTitleContent(
+    func makeOptimizedSubTitleContent(
         using content: [String],
         titleAttributes: [NSAttributedString.Key : Any],
         inWidth maxWidth: CGFloat
-    ) -> SubTitleViewContent {
-        return SubTitleViewContent(
+    ) -> SubTitleContent {
+        return SubTitleContent(
             text: title(for: content, withAttributes: titleAttributes, inWidth: maxWidth),
             secondaryText: String(format: LocalizingHelper.copyFromFolder, sourceFolderName)
         )

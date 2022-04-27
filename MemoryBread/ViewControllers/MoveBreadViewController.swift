@@ -29,7 +29,7 @@ final class MoveBreadViewController: UIViewController {
     typealias DoneHandler = (() -> Void)
 
     private let model: MoveBreadModel
-    private let viewModel: SubTitleViewModel
+    private let contentWidthOptimizer: SubTitleContentWidthOptimizer
     
     private var dataSource: UITableViewDiffableDataSource<Int, FolderItem>!
     private let moveDoneHandler: DoneHandler
@@ -72,9 +72,9 @@ final class MoveBreadViewController: UIViewController {
         updateSelectedBreadsView()
     }
     
-    init<T: SubTitleViewModel>(model: MoveBreadModel, viewModel: T, moveDoneHandler handler: @escaping DoneHandler) {
+    init<T: SubTitleContentWidthOptimizer>(model: MoveBreadModel, optimizer: T, moveDoneHandler handler: @escaping DoneHandler) {
         self.model = model
-        self.viewModel = viewModel
+        self.contentWidthOptimizer = optimizer
         self.moveDoneHandler = handler
         super.init(nibName: nil, bundle: nil)
     }
@@ -115,7 +115,7 @@ extension MoveBreadViewController {
     
     private func updateSelectedBreadsView() {
         let titleAttributes = [NSAttributedString.Key.font: selectedBreadsView.titleFont]
-        selectedBreadsView.content = viewModel.makeSubTitleContent(
+        selectedBreadsView.content = contentWidthOptimizer.makeOptimizedSubTitleContent(
             using: model.selectedBreadNames,
             titleAttributes: titleAttributes,
             inWidth: view.frame.width

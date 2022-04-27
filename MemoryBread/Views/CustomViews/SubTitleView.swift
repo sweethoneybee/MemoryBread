@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct SubTitleViewContent {
+struct SubTitleContent {
     var text: String?
     var secondaryText: String?
 }
@@ -32,7 +32,7 @@ final class SubTitleView: UIView {
         $0.font = .preferredFont(forTextStyle: .callout)
     }
     
-    var content: SubTitleViewContent? {
+    var content: SubTitleContent? {
         didSet {
             guard let content = content else {
                 return
@@ -74,7 +74,7 @@ extension SubTitleView {
         }
     }
     
-    private func update(using content: SubTitleViewContent) {
+    private func update(using content: SubTitleContent) {
         titleLabel.text = content.text
         subTitleLabel.text = content.secondaryText
         
