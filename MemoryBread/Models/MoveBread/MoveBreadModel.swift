@@ -114,25 +114,17 @@ extension MoveBreadModel {
 
 // MARK: - 폴더 생성
 extension MoveBreadModel {
-    private var foldersFirstIndex: Int64 {
+    private var secondFolderIndex: Int64 {
         var index: Int64?
         moc.performAndWait {
-            index = self.folders.first?.index
+            index = self.folders[safe: 1]?.index
         }
         return index ?? 1
     }
     
-    private var foldersCount: Int {
-        var count: Int?
-        moc.performAndWait {
-            count = self.folders.count
-        }
-        return count ?? 0
-    }
-    
     func createFolder(withName name: String) throws {
-        let topIndex = foldersFirstIndex
-        let newIndex = topIndex - Int64(foldersCount + createdFolderCount)
+        // 위에서 두 번째 위치에 새로운 Folder가 삽입되도록 index 계산
+        let newIndex = secondFolderIndex - Int64(createdFolderCount + 1)
         createdFolderCount += 1
         do {
             let folderID = try folderModel.createFolderWith(name: name, index: newIndex)
