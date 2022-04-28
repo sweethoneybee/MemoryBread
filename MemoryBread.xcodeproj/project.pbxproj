@@ -43,7 +43,7 @@
 		40992F3A27E8E0210010E0A5 /* FolderNameBlackList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40992F3927E8E0210010E0A5 /* FolderNameBlackList.swift */; };
 		409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB152780744C00F00E52 /* GDDownloaderError.swift */; };
 		409BFB1827808FB800F00E52 /* Notification.Name+RemoteDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */; };
-		409C08B5280FF7ED00AD5EEB /* SubTitleViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409C08B4280FF7ED00AD5EEB /* SubTitleViewModels.swift */; };
+		409C08B5280FF7ED00AD5EEB /* SubTitleContentWidthOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409C08B4280FF7ED00AD5EEB /* SubTitleContentWidthOptimizer.swift */; };
 		409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409CC8FD27327311009B9AA1 /* UserManager.swift */; };
 		409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9663276B12DC00EB8220 /* APIKeys.swift */; };
 		409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9666276B152300EB8220 /* DriveAuthModel.swift */; };
@@ -121,7 +121,7 @@
 		40992F3927E8E0210010E0A5 /* FolderNameBlackList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderNameBlackList.swift; sourceTree = "<group>"; };
 		409BFB152780744C00F00E52 /* GDDownloaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownloaderError.swift; sourceTree = "<group>"; };
 		409BFB1727808FB800F00E52 /* Notification.Name+RemoteDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification.Name+RemoteDrive.swift"; sourceTree = "<group>"; };
-		409C08B4280FF7ED00AD5EEB /* SubTitleViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTitleViewModels.swift; sourceTree = "<group>"; };
+		409C08B4280FF7ED00AD5EEB /* SubTitleContentWidthOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTitleContentWidthOptimizer.swift; sourceTree = "<group>"; };
 		409CC8FD27327311009B9AA1 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		409D9663276B12DC00EB8220 /* APIKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIKeys.swift; sourceTree = "<group>"; };
 		409D9666276B152300EB8220 /* DriveAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthModel.swift; sourceTree = "<group>"; };
@@ -277,7 +277,7 @@
 		409C08B3280FF7D400AD5EEB /* SubTitleViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				409C08B4280FF7ED00AD5EEB /* SubTitleViewModels.swift */,
+				409C08B4280FF7ED00AD5EEB /* SubTitleContentWidthOptimizer.swift */,
 			);
 			path = SubTitleViewModel;
 			sourceTree = "<group>";
@@ -657,7 +657,7 @@
 				4013F5BE274BDB0700E03F5F /* Tutorial.swift in Sources */,
 				40F644B327EE2A0B00258BFD /* WordSizeCalculator.swift in Sources */,
 				409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */,
-				409C08B5280FF7ED00AD5EEB /* SubTitleViewModels.swift in Sources */,
+				409C08B5280FF7ED00AD5EEB /* SubTitleContentWidthOptimizer.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */,
 				405EC185276738C60031C19D /* FileObject.swift in Sources */,
 				405EC184276738C40031C19D /* GDDownloader.swift in Sources */,
