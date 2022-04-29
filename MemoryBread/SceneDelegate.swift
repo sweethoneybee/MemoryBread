@@ -25,5 +25,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = nvc
         window?.makeKeyAndVisible()
     }
+    
+    func sceneWillResignActive(_ scene: UIScene) {
+        let context = AppDelegate.coreDataStack.writeContext
+        context.perform {
+            do {
+                try context.save()
+            } catch let nserror as NSError {
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+    }
 }
 
