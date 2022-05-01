@@ -8,31 +8,12 @@
 import CoreData
 
 extension NSManagedObjectContext {
-    func saveContextAndParentIfNeeded(forcing: Bool = false) {
-        if forcing || hasChanges {
+    func saveIfNeeded() {
+        if hasChanges {
             do {
                 try save()
-                parent?.perform {
-                    self.parent?.saveContextAndParentIfNeeded(forcing: forcing)
-                }
             } catch let nserror as NSError {
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
-    }
-    
-    func saveContextAndParentIfNeededThrows() throws {
-        if hasChanges {
-            try save()
-            
-            if parent?.hasChanges ?? false {
-                parent?.perform {
-                    do {
-                        try self.parent?.save()
-                    } catch let nserror as NSError {
-                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                    }
-                }
+                fatalError("CoreDataStack save failed: \(nserror), \(nserror.userInfo)")
             }
         }
     }

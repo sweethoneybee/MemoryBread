@@ -68,7 +68,7 @@ final class FoldersViewController: UIViewController {
     
     init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
-        self.folderModel = FolderModel(context: coreDataStack.writeContext)
+        self.folderModel = FolderModel(context: coreDataStack.persistentContainer.newBackgroundContext())
         super.init(nibName: nil, bundle: nil)
         
         self.folderModel.trashObjectID = coreDataStack.trashFolderObjectID
@@ -474,7 +474,7 @@ extension FoldersViewController: NSFetchedResultsControllerDelegate {
     private func fetchAllBreadsCount() -> Int {
         let fr = Bread.fetchRequest()
         fr.predicate = NSPredicate(format: "folder.pinnedAtBottom = NO")
-        let breadsCount = (try? coreDataStack.writeContext.count(for: fr)) ?? 0
+        let breadsCount = (try? viewContext.count(for: fr)) ?? 0
         return breadsCount
     }
     

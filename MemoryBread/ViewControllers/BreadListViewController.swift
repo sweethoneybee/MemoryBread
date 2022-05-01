@@ -191,7 +191,7 @@ extension BreadListViewController {
     @objc
     func remoteDriveItemTouched() {
         let rdaVC = RemoteDriveAuthViewController(
-            context: coreDataStack.writeContext,
+            context: coreDataStack.persistentContainer.newBackgroundContext(),
             folderObjectID: folderObjectIDForCreating
         )
         let nvc = UINavigationController(rootViewController: rdaVC)
@@ -254,35 +254,34 @@ extension BreadListViewController: BreadListViewDelegate {
         }
         
         isAdding = true
-        let writeContext = coreDataStack.writeContext
-        writeContext.perform {
-            guard let folder = try? writeContext.existingObject(with: self.folderObjectIDForCreating) as? Folder else {
+        coreDataStack.writeAndSaveIfHasChanges { context in
+            guard let folder = try? context.existingObject(with: self.folderObjectIDForCreating) as? Folder else {
                 self.isAdding = false
                 return
             }
             let newBread = Bread(
-                context: writeContext,
+                context: context,
                 title: LocalizingHelper.freshBread,
                 content: "",
                 selectedFilters: [],
                 folder: folder
             )
             
-            writeContext.saveContextAndParentIfNeeded()
+            context.saveIfNeeded()
             
             DispatchQueue.main.async { [weak self] in
-                if let self = self,
-                   let bread = try? self.viewContext.existingObject(with: newBread.objectID) as? Bread {
-                    
-                    let childContext = self.coreDataStack.makeChildMainQueueContext()
-                    if let childBread = childContext.object(with: bread.objectID) as? Bread {
-                        let breadVC = BreadViewController(context: childContext, bread: childBread)
-                        self.navigationController?.pushViewController(breadVC, animated: true)
-                    }
+                guard let self = self else {
+                    return
+                }
+                
+                if let bread = try? self.viewContext.existingObject(with: newBread.objectID) as? Bread {
+                    let breadVC = BreadViewController(context: self.viewContext, bread: bread)
+                    self.navigationController?.pushViewController(breadVC, animated: true)
                     self.isAdding = false
                 }
             }
         }
+        
     }
     
     func deleteButtonTouched(selectedIndexPaths rows: [IndexPath]?) {
@@ -342,14 +341,18 @@ extension BreadListViewController: BreadListViewDelegate {
         }
         
         let selectedObjectIDs = breads(at: rows).map { $0.objectID }
-        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
-        presentMoveBreadViewControllerWith(context: childContext, targetBreadObjectIDs: selectedObjectIDs)
+        presentMoveBreadViewControllerWith(
+            context: coreDataStack.persistentContainer.newBackgroundContext(),
+            targetBreadObjectIDs: selectedObjectIDs
+        )
     }
     
     func moveAllButtonTouched() {
         let allObjectIDs = diffableDataSource.snapshot().itemIdentifiers
-        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
-        presentMoveBreadViewControllerWith(context: childContext, targetBreadObjectIDs: allObjectIDs)
+        presentMoveBreadViewControllerWith(
+            context: coreDataStack.persistentContainer.newBackgroundContext(),
+            targetBreadObjectIDs: allObjectIDs
+        )
     }
     
     func copyButtonTouched(selectedIndexPaths rows: [IndexPath]?) {
@@ -412,12 +415,8 @@ extension BreadListViewController: UITableViewDelegate {
             return
         }
         
-        let childContext = coreDataStack.makeChildMainQueueContext()
-        let selectedObjectID = bread(at: indexPath).objectID
-        if let childBread = childContext.object(with: selectedObjectID) as? Bread {
-            let breadVC = BreadViewController(context: childContext, bread: childBread)
-            navigationController?.pushViewController(breadVC, animated: true)            
-        }
+        let breadVC = BreadViewController(context: viewContext, bread: bread(at: indexPath))
+        navigationController?.pushViewController(breadVC, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -499,16 +498,15 @@ extension BreadListViewController {
     }
     
     private func copy(_ breads: [Bread]) -> AnyPublisher<Void, CopyError> {
-        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
         return Future<Void, CopyError> { promise in
             let breadIds = breads.map{ $0.objectID }
-            childContext.perform {
+            self.coreDataStack.persistentContainer.performBackgroundTask { context in
                 let originalBreads = breadIds.compactMap {
-                    return (try? childContext.existingObject(with:$0)) as? Bread
+                    return (try? context.existingObject(with:$0)) as? Bread
                 }
                 originalBreads.forEach {
                     _ = Bread(
-                        context: childContext,
+                        context: context,
                         title: $0.title,
                         content: $0.content,
                         filterIndexes: $0.filterIndexes,
@@ -518,7 +516,7 @@ extension BreadListViewController {
                 }
                 
                 do {
-                    try childContext.saveContextAndParentIfNeededThrows()
+                    try context.save()
                     promise(.success(()))
                 } catch let nserror as NSError {
                     promise(.failure(.copyFail(nserror.code)))

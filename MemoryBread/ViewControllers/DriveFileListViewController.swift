@@ -341,7 +341,7 @@ extension DriveFileListViewController: FileListCellDelegate {
                                     )
                                 }
 
-                                self.writeContext.saveContextAndParentIfNeeded()
+                                self.writeContext.saveIfNeeded()
                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                     loadingVC.set(state: .init(isLoading: false))

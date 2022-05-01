@@ -62,7 +62,7 @@ final class FolderModel {
             }
             
             moc.perform {
-                self.moc.saveContextAndParentIfNeeded()
+                self.moc.saveIfNeeded()
             }
         }
     }

@@ -101,7 +101,7 @@ extension MoveBreadModel {
             }
         
             self.moveSelectedBreads(to: destFolder)
-            self.moc.saveContextAndParentIfNeeded()
+            self.moc.saveIfNeeded()
         }
     }
 

@@ -96,7 +96,7 @@ final class BreadViewController: UIViewController {
         let latestSelectedFilters = bread.selectedFilters
         if latestSelectedFilters != selectedFiltersArray {
             bread.selectedFilters = Array(selectedFilters)
-            viewContext.saveContextAndParentIfNeeded()
+            viewContext.saveIfNeeded()
         }
     }
     
@@ -112,7 +112,7 @@ final class BreadViewController: UIViewController {
         }
         
         wordPainter.makeFilterIndexesUpToDate()
-        viewContext.saveContextAndParentIfNeeded()
+        viewContext.saveIfNeeded()
 
         dataSource.reconfigure(wordPainter.idsHavingFilter(), animatingDifferences: true)
         editContentButtonItem.isEnabled = true
@@ -462,7 +462,7 @@ extension BreadViewController: SupplemantaryTitleViewDelegate {
             NotificationCenter.default.removeObserver(self, name: UITextField.textDidChangeNotification, object: titleEditAlert?.textFields?.first)
             if let inputText = titleEditAlert?.textFields?.first?.text?.trimmingCharacters(in: [" "]) {
                 self.bread.updateTitle(inputText)
-                self.viewContext.saveContextAndParentIfNeeded()
+                self.viewContext.saveIfNeeded()
                 self.updateNaviTitleView(using: inputText)
             }
         }
@@ -499,7 +499,7 @@ extension BreadViewController {
         guard bread.content != newContent else { return }
 
         bread.updateContent(with: newContent)
-        viewContext.saveContextAndParentIfNeeded()
+        viewContext.saveIfNeeded()
         
         wordPainter.refreshItems()
         
