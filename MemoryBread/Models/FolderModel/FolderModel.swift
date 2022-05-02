@@ -32,9 +32,10 @@ final class FolderModel {
             )
             
             do {
-                try saveContextAndItsParentIfNeeded()
+                try moc.save()
                 result = newFolder.objectID
             } catch let nserror as NSError{
+                moc.rollback()
                 switch nserror.code {
                 case NSManagedObjectConstraintMergeError:
                     saveError = ContextSaveError.folderNameIsDuplicated
@@ -86,8 +87,9 @@ final class FolderModel {
             
             folder.setName(newFolderName)
             do {
-                try saveContextAndItsParentIfNeeded()
+                try moc.save()
             } catch let nserror as NSError {
+                moc.rollback()
                 switch nserror.code {
                 case NSManagedObjectConstraintMergeError:
                     saveError = ContextSaveError.folderNameIsDuplicated
@@ -116,24 +118,7 @@ final class FolderModel {
             }
             
             moc.delete(folder)
-            do {
-                try self.saveContextAndItsParentIfNeeded()
-            } catch {
-                fatalError("Saving for deleting folder is failed.")
-            }
-        }
-    }
-    
-    private func saveContextAndItsParentIfNeeded() throws {
-        if moc.hasChanges {
-            do {
-                try moc.save()
-                try moc.parent?.save()
-            } catch {
-                moc.parent?.rollback()
-                moc.rollback()
-                throw error
-            }
+            moc.saveIfNeeded()
         }
     }
     
