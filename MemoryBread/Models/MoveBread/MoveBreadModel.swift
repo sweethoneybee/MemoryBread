@@ -11,29 +11,24 @@ import CoreData
 final class MoveBreadModel {
     
     typealias Item = MoveFolderListCell.Item
-    
-    private let moc: NSManagedObjectContext
+
+    private let coreDataStack: CoreDataStack
     private let selectedBreadObjectIDs: [NSManagedObjectID]
     private let shouldDisabledFolderObjectID: NSManagedObjectID?
     
     private let folderModel: FolderModel
     
+    private var container: NSPersistentContainer { coreDataStack.persistentContainer }
+    private var viewContext: NSManagedObjectContext { container.viewContext }
+    
     private lazy var selectedBreads: [Bread] = {
-        var result: [Bread]?
-        moc.performAndWait {
-            result = selectedBreadObjectIDs.compactMap { objectID in
-                moc.object(with: objectID) as? Bread
-            }
+        selectedBreadObjectIDs.compactMap { objectID in
+            viewContext.object(with: objectID) as? Bread
         }
-        return result ?? []
     }()
     
     lazy var selectedBreadNames: [String] = {
-        var result: [String]?
-        moc.performAndWait {
-            result = selectedBreads.compactMap { $0.title }
-        }
-        return result ?? []
+        selectedBreads.compactMap { $0.title }
     }()
     
     private lazy var foldersFetchRequest: NSFetchRequest<Folder> = {
@@ -50,11 +45,7 @@ final class MoveBreadModel {
     }()
     
     private lazy var folders: [Folder] = {
-        var result: [Folder]?
-        moc.performAndWait {
-            result = try? moc.fetch(foldersFetchRequest)
-        }
-        return result ?? []
+        (try? viewContext.fetch(foldersFetchRequest)) ?? []
     }()
     
     private var createdFolderCount = 0
@@ -63,51 +54,47 @@ final class MoveBreadModel {
     
     // MARK: - init
     init(
-        context: NSManagedObjectContext,
+        coreDataStack: CoreDataStack,
         selectedBreadObjectIDs: [NSManagedObjectID],
         shouldDisabledFolderObjectID: NSManagedObjectID?
     ) {
-        self.moc = context
+        self.coreDataStack = coreDataStack
         self.selectedBreadObjectIDs = selectedBreadObjectIDs
         self.shouldDisabledFolderObjectID = shouldDisabledFolderObjectID
-        
-        self.folderModel = FolderModel(context: context)
+        self.folderModel = FolderModel(coreDataStack: coreDataStack)
     }
 }
 
 // MARK: - 폴더 목록 조회 관련
 extension MoveBreadModel {
     func makeFolderItems() -> [Item] {
-        var items: [Item]?
-        moc.performAndWait {
-            items = folders.map {
-                Item(
-                    name: $0.localizedName,
-                    disabled: ($0.objectID == shouldDisabledFolderObjectID) ? true : false,
-                    objectID: $0.objectID
-                )
-            }
+        folders.map {
+            Item(
+                name: $0.localizedName,
+                disabled: ($0.objectID == shouldDisabledFolderObjectID) ? true : false,
+                objectID: $0.objectID
+            )
         }
-        return items ?? []
     }
 }
 
 // MARK: - 옮기기 로직
 extension MoveBreadModel {
     func moveBreads(to destObjectID: NSManagedObjectID) {
-        moc.perform {
-            guard let destFolder = self.moc.object(with: destObjectID) as? Folder else {
+        let writeContext = container.newBackgroundContext()
+        writeContext.perform {
+            guard let destFolder = writeContext.object(with: destObjectID) as? Folder else {
                 return
             }
         
-            self.moveSelectedBreads(to: destFolder)
-            self.moc.saveIfNeeded()
-        }
-    }
-
-    private func moveSelectedBreads(to dest: Folder) {
-        selectedBreads.forEach {
-            $0.move(to: dest)
+            let targetBreads = self.selectedBreadObjectIDs.compactMap {
+                try? writeContext.existingObject(with: $0) as? Bread
+            }
+            for bread in targetBreads {
+                bread.move(to: destFolder)
+            }
+            
+            writeContext.saveIfNeeded()
         }
     }
 }
@@ -115,11 +102,7 @@ extension MoveBreadModel {
 // MARK: - 폴더 생성
 extension MoveBreadModel {
     private var secondFolderIndex: Int64 {
-        var index: Int64?
-        moc.performAndWait {
-            index = self.folders[safe: 1]?.index
-        }
-        return index ?? 1
+        folders[safe: 1]?.index ?? 1
     }
     
     func createFolder(withName name: String) throws {

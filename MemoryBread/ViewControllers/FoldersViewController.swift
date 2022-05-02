@@ -68,10 +68,8 @@ final class FoldersViewController: UIViewController {
     
     init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
-        self.folderModel = FolderModel(context: coreDataStack.persistentContainer.newBackgroundContext())
+        self.folderModel = FolderModel(coreDataStack: coreDataStack)
         super.init(nibName: nil, bundle: nil)
-        
-        self.folderModel.trashObjectID = coreDataStack.trashFolderObjectID
     }
     
     override func viewDidLoad() {

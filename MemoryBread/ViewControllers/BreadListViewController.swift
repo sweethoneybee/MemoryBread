@@ -342,7 +342,7 @@ extension BreadListViewController: BreadListViewDelegate {
         
         let selectedObjectIDs = breads(at: rows).map { $0.objectID }
         presentMoveBreadViewControllerWith(
-            context: coreDataStack.persistentContainer.newBackgroundContext(),
+            coreDataStack: coreDataStack,
             targetBreadObjectIDs: selectedObjectIDs
         )
     }
@@ -350,7 +350,7 @@ extension BreadListViewController: BreadListViewDelegate {
     func moveAllButtonTouched() {
         let allObjectIDs = diffableDataSource.snapshot().itemIdentifiers
         presentMoveBreadViewControllerWith(
-            context: coreDataStack.persistentContainer.newBackgroundContext(),
+            coreDataStack: coreDataStack,
             targetBreadObjectIDs: allObjectIDs
         )
     }
@@ -469,10 +469,6 @@ extension BreadListViewController: NSFetchedResultsControllerDelegate {
 extension BreadListViewController: MoveBreadViewControllerPresentable {
     var sourceFolderObjectID: NSManagedObjectID? {
         isAllBreadsFolder ? nil : currentFolderObjectID
-    }
-    
-    var trashFolderObjectID: NSManagedObjectID {
-        trashObjectID
     }
 }
 

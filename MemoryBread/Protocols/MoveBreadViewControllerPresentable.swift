@@ -10,15 +10,13 @@ import CoreData
 
 protocol MoveBreadViewControllerPresentable where Self: UIViewController {
     var sourceFolderObjectID: NSManagedObjectID? { get }
-    var trashFolderObjectID: NSManagedObjectID { get }
-    
-    func presentMoveBreadViewControllerWith(context: NSManagedObjectContext, targetBreadObjectIDs: [NSManagedObjectID])
+    func presentMoveBreadViewControllerWith(coreDataStack: CoreDataStack, targetBreadObjectIDs: [NSManagedObjectID])
 }
 
 extension MoveBreadViewControllerPresentable {
-    func presentMoveBreadViewControllerWith(context: NSManagedObjectContext, targetBreadObjectIDs: [NSManagedObjectID]) {
+    func presentMoveBreadViewControllerWith(coreDataStack: CoreDataStack, targetBreadObjectIDs: [NSManagedObjectID]) {
         let model = MoveBreadModel(
-            context: context,
+            coreDataStack: coreDataStack,
             selectedBreadObjectIDs: targetBreadObjectIDs,
             shouldDisabledFolderObjectID: sourceFolderObjectID
         )

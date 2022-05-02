@@ -265,7 +265,7 @@ extension TrashViewController: BreadListViewDelegate {
         
         let selectedObjectIDs = breads(at: rows).map { $0.objectID }
         presentMoveBreadViewControllerWith(
-            context: coreDataStack.persistentContainer.newBackgroundContext(),
+            coreDataStack: coreDataStack,
             targetBreadObjectIDs: selectedObjectIDs
         )
     }
@@ -273,7 +273,7 @@ extension TrashViewController: BreadListViewDelegate {
     func moveAllButtonTouched() {
         let allObjectIDs = dataSource.snapshot().itemIdentifiers
         presentMoveBreadViewControllerWith(
-            context: coreDataStack.persistentContainer.newBackgroundContext(),
+            coreDataStack: coreDataStack,
             targetBreadObjectIDs: allObjectIDs
         )
     }
@@ -393,10 +393,6 @@ extension TrashViewController: NSFetchedResultsControllerDelegate {
 // MARK: - MoveBreadViewControllerPresentable
 extension TrashViewController: MoveBreadViewControllerPresentable {
     var sourceFolderObjectID: NSManagedObjectID? {
-        trashObjectID
-    }
-    
-    var trashFolderObjectID: NSManagedObjectID {
         trashObjectID
     }
 }
