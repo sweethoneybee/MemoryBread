@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
     private func createInitialObjects() {
-        let context = coreDataStack.writeContext
+        let context = coreDataStack.viewContext
         
         let _ = Folder(
             context: context,
@@ -115,7 +115,7 @@ extension AppDelegate {
             )
             tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
         }
-        context.saveContextAndParentIfNeeded()
+        context.saveIfNeeded()
     }
 }
 

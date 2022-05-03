@@ -13,15 +13,9 @@ final class CoreDataStack {
     
     private let modelName: String
     
-    lazy var viewContext: NSManagedObjectContext = {
-        let context = makeChildMainQueueContext()
-        context.automaticallyMergesChangesFromParent = true
-        return context
-    }()
-    
-    lazy var writeContext: NSManagedObjectContext = {
-        return persistentContainer.newBackgroundContext()
-    }()
+    var viewContext: NSManagedObjectContext {
+        persistentContainer.viewContext
+    }
     
     lazy var persistentContainer: NSPersistentContainer = {
         
@@ -36,6 +30,8 @@ final class CoreDataStack {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
+        
+        container.viewContext.automaticallyMergesChangesFromParent = true
         return container
     }()
     
@@ -50,7 +46,7 @@ final class CoreDataStack {
         fr.resultType = .managedObjectIDResultType
         fr.predicate = NSPredicate(format: "id = %@", folderID as CVarArg)
         do {
-            let result: Array<NSManagedObjectID> = try writeContext.fetch(fr)
+            let result: Array<NSManagedObjectID> = try viewContext.fetch(fr)
             guard let objectID = result.first else {
                 fatalError("Folder fetching has no results.")
             }
@@ -67,41 +63,12 @@ final class CoreDataStack {
 
 // MARK: - Internal
 extension CoreDataStack {
-    func deleteAndSaveObjects(of objectIDs: [NSManagedObjectID]) {
-        let context = writeContext
-        context.perform {
-            objectIDs.forEach { id in
-                let object = context.object(with: id)
-                context.delete(object)
-            }
-            context.saveContextAndParentIfNeeded()
-        }
-    }
-    
     func writeAndSaveIfHasChanges(block: @escaping (NSManagedObjectContext) -> ()) {
-        let context = writeContext
-        context.perform {
-            block(context)
-            
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch let nserror as NSError {
-                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-                }
+        persistentContainer.performBackgroundTask { context in
+            context.perform {
+                block(context)
+                context.saveIfNeeded()
             }
         }
-    }
-    
-    func makeChildMainQueueContext() -> NSManagedObjectContext {
-        let childContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        childContext.parent = writeContext
-        return childContext
-    }
-    
-    func makeChildConcurrencyQueueContext() -> NSManagedObjectContext {
-        let childContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        childContext.parent = writeContext
-        return childContext
     }
 }

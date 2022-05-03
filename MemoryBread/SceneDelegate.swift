@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
-        let context = AppDelegate.coreDataStack.writeContext
+        let context = AppDelegate.coreDataStack.viewContext
         context.perform {
             do {
                 try context.save()

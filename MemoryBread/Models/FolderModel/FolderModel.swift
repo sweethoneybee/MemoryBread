@@ -9,12 +9,13 @@ import Foundation
 import CoreData
 
 final class FolderModel {
-    private let moc: NSManagedObjectContext
     private var foldersIndexChangedFlag = false
-    var trashObjectID: NSManagedObjectID?
+
+    private let coreDataStack: CoreDataStack
+    var container: NSPersistentContainer { coreDataStack.persistentContainer }
     
-    init(context: NSManagedObjectContext) {
-        self.moc = context
+    init(coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
     }
    
     @discardableResult
@@ -23,18 +24,20 @@ final class FolderModel {
         
         var result: NSManagedObjectID?
         var saveError: ContextSaveError? = nil
-        moc.performAndWait {
+        let writeContext = container.newBackgroundContext()
+        writeContext.performAndWait {
             let newFolder = Folder(
-                context: moc,
+                context: writeContext,
                 name: name,
                 index: index,
                 breads: nil
             )
             
             do {
-                try saveContextAndItsParentIfNeeded()
+                try writeContext.save()
                 result = newFolder.objectID
             } catch let nserror as NSError{
+                writeContext.rollback()
                 switch nserror.code {
                 case NSManagedObjectConstraintMergeError:
                     saveError = ContextSaveError.folderNameIsDuplicated
@@ -51,18 +54,19 @@ final class FolderModel {
     }
     
     func updateFoldersIndexIfNeeded(of folderObjectIDs: [NSManagedObjectID]) {
-        moc.performAndWait {
+        let viewContext = container.viewContext
+        viewContext.performAndWait {
             folderObjectIDs.enumerated().forEach { index, objectID in
                 let newIndex = Int64(index)
-                if let folderObject = try? moc.existingObject(with: objectID) as? Folder,
+                if let folderObject = try? viewContext.existingObject(with: objectID) as? Folder,
                    folderObject.index != newIndex {
                     folderObject.index = newIndex
                     foldersIndexChangedFlag = true
                 }
             }
             
-            moc.perform {
-                self.moc.saveContextAndParentIfNeeded()
+            viewContext.perform {
+                viewContext.saveIfNeeded()
             }
         }
     }
@@ -79,15 +83,17 @@ final class FolderModel {
         try isInBlackList(newFolderName)
         
         var saveError: ContextSaveError?
-        moc.performAndWait {
-            guard let folder = moc.object(with: folderObjectID) as? Folder else {
+        let writeContext = container.newBackgroundContext()
+        writeContext.performAndWait {
+            guard let folder = writeContext.object(with: folderObjectID) as? Folder else {
                 fatalError("Folder casting fail")
             }
             
             folder.setName(newFolderName)
             do {
-                try saveContextAndItsParentIfNeeded()
+                try writeContext.save()
             } catch let nserror as NSError {
+                writeContext.rollback()
                 switch nserror.code {
                 case NSManagedObjectConstraintMergeError:
                     saveError = ContextSaveError.folderNameIsDuplicated
@@ -103,11 +109,12 @@ final class FolderModel {
     }
     
     func delete(_ folderObjectID: NSManagedObjectID) {
-        moc.perform { [moc, trashObjectID] in
-            guard let folder = try? moc.existingObject(with: folderObjectID) as? Folder,
+        let trashObjectID = coreDataStack.trashFolderObjectID
+        let writeContext = container.newBackgroundContext()
+        writeContext.perform {
+            guard let folder = try? writeContext.existingObject(with: folderObjectID) as? Folder,
                   let allBreadsInFolder = folder.breads?.allObjects as? [Bread],
-                  let trashObjectID = trashObjectID,
-                  let trash = try? moc.existingObject(with: trashObjectID) as? Folder else {
+                  let trash = try? writeContext.existingObject(with: trashObjectID) as? Folder else {
                       return
                   }
             
@@ -115,25 +122,8 @@ final class FolderModel {
                 $0.move(to: trash)
             }
             
-            moc.delete(folder)
-            do {
-                try self.saveContextAndItsParentIfNeeded()
-            } catch {
-                fatalError("Saving for deleting folder is failed.")
-            }
-        }
-    }
-    
-    private func saveContextAndItsParentIfNeeded() throws {
-        if moc.hasChanges {
-            do {
-                try moc.save()
-                try moc.parent?.save()
-            } catch {
-                moc.parent?.rollback()
-                moc.rollback()
-                throw error
-            }
+            writeContext.delete(folder)
+            writeContext.saveIfNeeded()
         }
     }
     

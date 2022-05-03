@@ -264,14 +264,18 @@ extension TrashViewController: BreadListViewDelegate {
         }
         
         let selectedObjectIDs = breads(at: rows).map { $0.objectID }
-        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
-        presentMoveBreadViewControllerWith(context: childContext, targetBreadObjectIDs: selectedObjectIDs)
+        presentMoveBreadViewControllerWith(
+            coreDataStack: coreDataStack,
+            targetBreadObjectIDs: selectedObjectIDs
+        )
     }
     
     func moveAllButtonTouched() {
         let allObjectIDs = dataSource.snapshot().itemIdentifiers
-        let childContext = coreDataStack.makeChildConcurrencyQueueContext()
-        presentMoveBreadViewControllerWith(context: childContext, targetBreadObjectIDs: allObjectIDs)
+        presentMoveBreadViewControllerWith(
+            coreDataStack: coreDataStack,
+            targetBreadObjectIDs: allObjectIDs
+        )
     }
     
     private func bread(at indexPath: IndexPath) -> Bread {
@@ -298,12 +302,9 @@ extension TrashViewController: UITableViewDelegate {
             return
         }
         
-        let childContext = coreDataStack.makeChildMainQueueContext()
-        let selectedObjectID = bread(at: indexPath).objectID
-        if let childBread = childContext.object(with: selectedObjectID) as? Bread {
-            let breadVC = BreadViewController(context: childContext, bread: childBread)
-            navigationController?.pushViewController(breadVC, animated: true)
-        }
+        
+        let breadVC = BreadViewController(context: viewContext, bread: bread(at: indexPath))
+        navigationController?.pushViewController(breadVC, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -372,7 +373,12 @@ extension TrashViewController: UITableViewDelegate {
     }
     
     private func deleteBreads(of objectIDs: [NSManagedObjectID]) {
-        coreDataStack.deleteAndSaveObjects(of: objectIDs)
+        coreDataStack.writeAndSaveIfHasChanges { context in
+            for objectID in objectIDs {
+                let object = context.object(with: objectID)
+                context.delete(object)
+            }
+        }
     }
 }
 // MARK: - NSFetchedResultsControllerDelegate
@@ -387,10 +393,6 @@ extension TrashViewController: NSFetchedResultsControllerDelegate {
 // MARK: - MoveBreadViewControllerPresentable
 extension TrashViewController: MoveBreadViewControllerPresentable {
     var sourceFolderObjectID: NSManagedObjectID? {
-        trashObjectID
-    }
-    
-    var trashFolderObjectID: NSManagedObjectID {
         trashObjectID
     }
 }
