@@ -28,3 +28,7 @@ jsjphone8@gmail.com
 [개인정보처리방침]  
 [암기빵 개인정보처리방침](https://www.memorybread.shop/%EA%B0%9C%EC%9D%B8%EC%A0%95%EB%B3%B4%EC%B2%98%EB%A6%AC%EB%B0%A9%EC%B9%A8)  
 
+# 프로젝트 세팅
+SPM과 CocoaPods로 라이브러리 설치 후, 아래 두 이슈를 참고하여 일부 소스코드를 수정해야 합니다.  
+[GoogleSignIn-iOS이 v6.0.0인 경우 additional scope 추가](https://github.com/google/GoogleSignIn-iOS/pull/67)   
+[GoogleAPIClientForREST/Drive를 추가하고 디버거가 동작하지 않음](https://github.com/google/google-api-objectivec-client-for-rest/issues/478)    
