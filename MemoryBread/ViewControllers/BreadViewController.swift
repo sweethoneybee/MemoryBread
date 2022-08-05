@@ -133,9 +133,11 @@ final class BreadViewController: UIViewController {
 // MARK: - Configure Views
 extension BreadViewController {
     private func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
+//        let layout = UICollectionViewFlowLayout()
+        let layout = LeftAlignedCollectionViewFlowLayout()
         layout.minimumInteritemSpacing = UIConstants.wordItemSpacing
         layout.minimumLineSpacing = UIConstants.lineSpacing
+        layout.sectionInset = UIEdgeInsets(top: 0, left: UIConstants.edgeInset, bottom: 0, right: UIConstants.edgeInset)
         return layout
     }
     
@@ -218,18 +220,21 @@ extension BreadViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: maxWidth, height: wordSize.height * heightMultiplier)
     }
     
+    private func wordCellSizeForNewLine() -> CGSize {
+        let newLineSize = CGSize(width: collectionViewContentWidth, height: 0)
+        return newLineSize
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if let id = dataSource.itemIdentifier(for: indexPath),
            let item = wordPainter.item(forKey: id) {
             
             let att = [NSAttributedString.Key.font: WordCell.getLabelFont()]
-            return wordCellSizeWith(word: item.word, attributes: att, maxWidth: collectionViewContentWidth)
+            return item.word != "\n"
+            ? wordCellSizeWith(word: item.word, attributes: att, maxWidth: collectionViewContentWidth)
+            : wordCellSizeForNewLine()
         }
         return CGSize.zero
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: UIConstants.edgeInset, bottom: 0, right: UIConstants.edgeInset)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
