@@ -66,7 +66,12 @@ public class Bread: NSManagedObject {
     
     func updateContent(with newContent: String) {
         content = newContent
-        separatedContent = newContent.components(separatedBy: ["\n", " ", "\t"])
+        
+        var contentWithNewLine = [String]()
+        newContent.components(separatedBy: [" ", "\t"]).forEach {
+            splitWithChar(&contentWithNewLine, for: $0, using: "\n")
+        }
+        separatedContent = contentWithNewLine
         
         filterIndexes = Array(repeating: [], count: FilterColor.count)
         touch = Date()
@@ -74,6 +79,20 @@ public class Bread: NSManagedObject {
         selectedFilters.removeAll()
     }
     
+    private func splitWithChar(_ arr: inout [String], for str: String, using char: Character) {
+        guard !str.isEmpty else { return }
+        var firstIndex = str.firstIndex(of: char) ?? str.endIndex
+        
+        if firstIndex != str.startIndex {
+            arr.append(String(str[..<firstIndex]))
+            splitWithChar(&arr, for: String(str[firstIndex...]), using: char)
+            return
+        }
+        
+        arr.append(String(str[firstIndex]))
+        firstIndex = str.index(after: firstIndex)
+        splitWithChar(&arr, for: String(str[firstIndex...]), using: char)
+    }
     /// 최초 튜토리얼 세팅에만 사용해야 함.
     func updateFilterIndexes(usingIndexes indexes: [(Int, Int)]) {
         var newFilterIndexes: [[Int]] = Array(repeating: [], count: FilterColor.count)

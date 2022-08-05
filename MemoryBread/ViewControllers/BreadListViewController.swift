@@ -93,7 +93,6 @@ final class BreadListViewController: UIViewController {
     }()
 
     private var diffableDataSource: BreadListViewController.DataSource!
-    private var cancellable: Cancellable?
 
     // MARK: - Life Cycle
     override func loadView() {
@@ -127,14 +126,14 @@ final class BreadListViewController: UIViewController {
         
         try? fetchedResultsController.performFetch()
         
-        cancellable = NotificationCenter.default
+        NotificationCenter.default
             .publisher(for: .updateViewsForTimeChange)
             .sink() { [weak self] _ in
                 guard let self = self else { return }
                 var snp = self.diffableDataSource.snapshot()
                 snp.reloadSections(snp.sectionIdentifiers)
                 self.diffableDataSource.apply(snp)
-            }
+            }.store(in: &subscriptions)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
