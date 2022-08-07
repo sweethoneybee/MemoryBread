@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Bread" representedClassName="Bread" syncable="YES">
+        <attribute name="content" attributeType="String" defaultValueString=""/>
+        <attribute name="createdTime" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="filterIndexes" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[[Int]]"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="selectedFilters" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[Int]"/>
+        <attribute name="separatedContent" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
+        <attribute name="title" attributeType="String"/>
+        <attribute name="touch" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Folder" inverseName="breads" inverseEntity="Folder"/>
+    </entity>
+    <entity name="Folder" representedClassName="Folder" syncable="YES">
+        <attribute name="breadsCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="breads.@count" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="index" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isSystemFolder" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString=""/>
+        <attribute name="pinnedAtBottom" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="pinnedAtTop" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <relationship name="breads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Bread" inverseName="folder" inverseEntity="Bread"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <elements>
+        <element name="Bread" positionX="-180.7431640625" positionY="-292.451171875" width="128" height="164"/>
+        <element name="Folder" positionX="204.096435546875" positionY="-157.9742126464844" width="128" height="149"/>
+    </elements>
+</model>
