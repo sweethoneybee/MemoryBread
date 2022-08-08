@@ -13,7 +13,13 @@ import GoogleSignIn
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Core Data stack
-    lazy var coreDataStack = CoreDataStack(modelName: "MemoryBread")
+    lazy var coreDataStack: CoreDataStack = {
+        let manager = DataMigrationManager(
+            modelNamed: "MemoryBread",
+            enableMigrations: true
+        )
+        return manager.stack
+    }()
     static var coreDataStack: CoreDataStack {
         return (UIApplication.shared.delegate as! AppDelegate).coreDataStack
     }

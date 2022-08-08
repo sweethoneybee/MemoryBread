@@ -19,10 +19,8 @@
 		4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */; };
 		4015CD0F2797F7B400D14EDB /* FoldersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */; };
 		401AD42C277EB8B60038C9FD /* BottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401AD42B277EB8B60038C9FD /* BottomToolbar.swift */; };
-		40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */; };
 		402981FF27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402981FE27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift */; };
 		4029820127D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4029820027D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift */; };
-		402D339E27DDF26B00D6B8FD /* Model-V1-to-V2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 402D339D27DDF26B00D6B8FD /* Model-V1-to-V2.xcmappingmodel */; };
 		40370D6B27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40370D6A27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift */; };
 		40370D6F27BD12F700D87BB3 /* SubTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40370D6E27BD12F700D87BB3 /* SubTitleView.swift */; };
 		403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */; };
@@ -35,6 +33,15 @@
 		405EC184276738C40031C19D /* GDDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1772764D5C60031C19D /* GDDownloader.swift */; };
 		405EC185276738C60031C19D /* FileObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC1792766086E0031C19D /* FileObject.swift */; };
 		405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */; };
+		40710BB628A1150500303AB7 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BA728A1150500303AB7 /* CoreDataStack.swift */; };
+		40710BB728A1150500303AB7 /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BA928A1150500303AB7 /* Folder+CoreDataClass.swift */; };
+		40710BB828A1150500303AB7 /* Bread+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BAB28A1150500303AB7 /* Bread+CoreDataClass.swift */; };
+		40710BB928A1150500303AB7 /* MemoryBread.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 40710BAC28A1150500303AB7 /* MemoryBread.xcdatamodeld */; };
+		40710BBB28A1150500303AB7 /* Model-V1-to-V2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40710BB228A1150500303AB7 /* Model-V1-to-V2.xcmappingmodel */; };
+		40710BBC28A1150500303AB7 /* NewLineMigrationV2toV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BB428A1150500303AB7 /* NewLineMigrationV2toV3.swift */; };
+		40710BBD28A1150500303AB7 /* FolderMigrationV1toV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BB528A1150500303AB7 /* FolderMigrationV1toV2.swift */; };
+		40710BC528A11C3D00303AB7 /* DataMigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BC428A11C3D00303AB7 /* DataMigrationManager.swift */; };
+		40710BCB28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40710BCA28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel */; };
 		40743F9C27A50004009748EC /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40743F9B27A50004009748EC /* FolderListCell.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		408B204627C65E5D0067687D /* FolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408B204527C65E5D0067687D /* FolderModel.swift */; };
@@ -54,24 +61,19 @@
 		40B176B9277DD65000F0B46B /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B176B8277DD65000F0B46B /* LoadingViewController.swift */; };
 		40C8DE2527259F5300B8C5FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2427259F5300B8C5FC /* AppDelegate.swift */; };
 		40C8DE2727259F5300B8C5FC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */; };
-		40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */; };
 		40C8DE3127259F5500B8C5FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40C8DE3027259F5500B8C5FC /* Assets.xcassets */; };
 		40C8DE3427259F5500B8C5FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40C8DE3227259F5500B8C5FC /* LaunchScreen.storyboard */; };
 		40C8DE3D27259F6700B8C5FC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3C27259F6700B8C5FC /* SnapKit */; };
 		40C8DE4027259F7300B8C5FC /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 40C8DE3F27259F7300B8C5FC /* Then */; };
 		40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C8DE4127259F8500B8C5FC /* WordCell.swift */; };
-		40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */; };
-		40D0DF55279BF8AC00F4448E /* FolderMigrationV1toV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */; };
 		40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */; };
 		40D0DF5C279FD0B500F4448E /* Array+subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DF5B279FD0B500F4448E /* Array+subscript.swift */; };
 		40D65711276DEA210059A595 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65710276DEA210059A595 /* FileListCell.swift */; };
 		40D65713276DFC470059A595 /* GDDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65712276DFC470059A595 /* GDDownload.swift */; };
 		40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D65715276E3FA20059A595 /* DriveFileListViewController.swift */; };
-		40D87E9A277B440A00CCB28D /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D87E99277B440A00CCB28D /* CoreDataStack.swift */; };
 		40D91BEF27708DDF002E588D /* OrderedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D91BEE27708DDF002E588D /* OrderedDictionary.swift */; };
 		40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D91BF12773474A002E588D /* DriveFileHelper.swift */; };
 		40EBCE54289D0A7F00B1264D /* LeftAlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EBCE53289D0A7F00B1264D /* LeftAlignedCollectionViewFlowLayout.swift */; };
-		40EBCE56289FBF1400B1264D /* NewLineMigrationV2toV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EBCE55289FBF1400B1264D /* NewLineMigrationV2toV3.swift */; };
 		40F1D608273D70320053AB73 /* String+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D607273D70320053AB73 /* String+Helper.swift */; };
 		40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D609273E65020053AB73 /* DateHelper.swift */; };
 		40F644AF27EDFA1200258BFD /* AdjustWordsSizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F644AE27EDFA1200258BFD /* AdjustWordsSizeViewController.swift */; };
@@ -99,10 +101,8 @@
 		4013F5C6274E5C4700E03F5F /* LocalizingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizingHelper.swift; sourceTree = "<group>"; };
 		4015CD0E2797F7B400D14EDB /* FoldersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoldersViewController.swift; sourceTree = "<group>"; };
 		401AD42B277EB8B60038C9FD /* BottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomToolbar.swift; sourceTree = "<group>"; };
-		40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
 		402981FE27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertActionEnabling.swift; sourceTree = "<group>"; };
 		4029820027D336D9004F9C96 /* MoveBreadViewControllerPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveBreadViewControllerPresentable.swift; sourceTree = "<group>"; };
-		402D339D27DDF26B00D6B8FD /* Model-V1-to-V2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V1-to-V2.xcmappingmodel"; sourceTree = "<group>"; };
 		40370D6A27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Save.swift"; sourceTree = "<group>"; };
 		40370D6E27BD12F700D87BB3 /* SubTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTitleView.swift; sourceTree = "<group>"; };
 		403E63F127688F1A00B787A4 /* RemoteDriveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveCell.swift; sourceTree = "<group>"; };
@@ -115,6 +115,17 @@
 		405EC1792766086E0031C19D /* FileObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileObject.swift; sourceTree = "<group>"; };
 		405EC17D27661E200031C19D /* ExcelReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReader.swift; sourceTree = "<group>"; };
 		405EC188276744400031C19D /* RemoteDriveAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDriveAuthViewController.swift; sourceTree = "<group>"; };
+		40710BA728A1150500303AB7 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		40710BA928A1150500303AB7 /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataClass.swift"; sourceTree = "<group>"; };
+		40710BAB28A1150500303AB7 /* Bread+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bread+CoreDataClass.swift"; sourceTree = "<group>"; };
+		40710BAD28A1150500303AB7 /* MemoryBread v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MemoryBread v2.xcdatamodel"; sourceTree = "<group>"; };
+		40710BAE28A1150500303AB7 /* MemoryBread v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MemoryBread v3.xcdatamodel"; sourceTree = "<group>"; };
+		40710BAF28A1150500303AB7 /* MemoryBread.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MemoryBread.xcdatamodel; sourceTree = "<group>"; };
+		40710BB228A1150500303AB7 /* Model-V1-to-V2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V1-to-V2.xcmappingmodel"; sourceTree = "<group>"; };
+		40710BB428A1150500303AB7 /* NewLineMigrationV2toV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewLineMigrationV2toV3.swift; sourceTree = "<group>"; };
+		40710BB528A1150500303AB7 /* FolderMigrationV1toV2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderMigrationV1toV2.swift; sourceTree = "<group>"; };
+		40710BC428A11C3D00303AB7 /* DataMigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMigrationManager.swift; sourceTree = "<group>"; };
+		40710BCA28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V2-to-V3.xcmappingmodel"; sourceTree = "<group>"; };
 		40743F9B27A50004009748EC /* FolderListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		408B204527C65E5D0067687D /* FolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModel.swift; sourceTree = "<group>"; };
@@ -135,25 +146,18 @@
 		40C8DE2127259F5300B8C5FC /* MemoryBread.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoryBread.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40C8DE2427259F5300B8C5FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40C8DE2627259F5300B8C5FC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		40C8DE2E27259F5300B8C5FC /* MemoryBread.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MemoryBread.xcdatamodel; sourceTree = "<group>"; };
 		40C8DE3027259F5500B8C5FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		40C8DE3327259F5500B8C5FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		40C8DE3527259F5500B8C5FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40C8DE4127259F8500B8C5FC /* WordCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCell.swift; sourceTree = "<group>"; };
-		40D0DF47279BDAB900F4448E /* MemoryBread v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MemoryBread v2.xcdatamodel"; sourceTree = "<group>"; };
-		40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Folder+CoreDataClass.swift"; sourceTree = "<group>"; };
-		40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMigrationV1toV2.swift; sourceTree = "<group>"; };
 		40D0DF59279C658300F4448E /* UICollectionViewDataSource+Reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewDataSource+Reload.swift"; sourceTree = "<group>"; };
 		40D0DF5B279FD0B500F4448E /* Array+subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+subscript.swift"; sourceTree = "<group>"; };
 		40D65710276DEA210059A595 /* FileListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListCell.swift; sourceTree = "<group>"; };
 		40D65712276DFC470059A595 /* GDDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GDDownload.swift; sourceTree = "<group>"; };
 		40D65715276E3FA20059A595 /* DriveFileListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileListViewController.swift; sourceTree = "<group>"; };
-		40D87E99277B440A00CCB28D /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		40D91BEE27708DDF002E588D /* OrderedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedDictionary.swift; sourceTree = "<group>"; };
 		40D91BF12773474A002E588D /* DriveFileHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveFileHelper.swift; sourceTree = "<group>"; };
 		40EBCE53289D0A7F00B1264D /* LeftAlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftAlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
-		40EBCE55289FBF1400B1264D /* NewLineMigrationV2toV3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLineMigrationV2toV3.swift; sourceTree = "<group>"; };
-		40EBCE57289FD09E00B1264D /* MemoryBread v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MemoryBread v3.xcdatamodel"; sourceTree = "<group>"; };
 		40F1D607273D70320053AB73 /* String+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Helper.swift"; sourceTree = "<group>"; };
 		40F1D609273E65020053AB73 /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		40F644AE27EDFA1200258BFD /* AdjustWordsSizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustWordsSizeViewController.swift; sourceTree = "<group>"; };
@@ -197,11 +201,11 @@
 		40245CFE27293547002E84A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				40710BA628A1150500303AB7 /* CoreData */,
 				409C08B3280FF7D400AD5EEB /* SubTitleViewModel */,
 				408B204427C65E540067687D /* FolderModel */,
 				40534A1227B6A75C002C7E6B /* MoveBread */,
 				409BFB142780743700F00E52 /* Errors */,
-				40D87E98277B43EB00CCB28D /* CoreData */,
 				40D91BF027709E41002E588D /* DataStructure */,
 				409D9665276B14F100EB8220 /* DriveAuthorization */,
 				405EC18327661EB00031C19D /* Network */,
@@ -211,14 +215,6 @@
 				40F644B227EE2A0B00258BFD /* WordSizeCalculator.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		40245D05272940EE002E84A8 /* Bread+CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				40245D0027293547002E84A8 /* Bread+CoreDataClass.swift */,
-			);
-			path = "Bread+CoreData";
 			sourceTree = "<group>";
 		};
 		402981FD27D11BCC004F9C96 /* Protocols */ = {
@@ -259,6 +255,54 @@
 				405EC1792766086E0031C19D /* FileObject.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		40710BA628A1150500303AB7 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				40710BC428A11C3D00303AB7 /* DataMigrationManager.swift */,
+				40710BA728A1150500303AB7 /* CoreDataStack.swift */,
+				40710BA828A1150500303AB7 /* Folder+CoreData */,
+				40710BAA28A1150500303AB7 /* Bread+CoreData */,
+				40710BAC28A1150500303AB7 /* MemoryBread.xcdatamodeld */,
+				40710BB028A1150500303AB7 /* MappingModels */,
+				40710BB328A1150500303AB7 /* Migration */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		40710BA828A1150500303AB7 /* Folder+CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				40710BA928A1150500303AB7 /* Folder+CoreDataClass.swift */,
+			);
+			path = "Folder+CoreData";
+			sourceTree = "<group>";
+		};
+		40710BAA28A1150500303AB7 /* Bread+CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				40710BAB28A1150500303AB7 /* Bread+CoreDataClass.swift */,
+			);
+			path = "Bread+CoreData";
+			sourceTree = "<group>";
+		};
+		40710BB028A1150500303AB7 /* MappingModels */ = {
+			isa = PBXGroup;
+			children = (
+				40710BB228A1150500303AB7 /* Model-V1-to-V2.xcmappingmodel */,
+				40710BCA28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel */,
+			);
+			path = MappingModels;
+			sourceTree = "<group>";
+		};
+		40710BB328A1150500303AB7 /* Migration */ = {
+			isa = PBXGroup;
+			children = (
+				40710BB428A1150500303AB7 /* NewLineMigrationV2toV3.swift */,
+				40710BB528A1150500303AB7 /* FolderMigrationV1toV2.swift */,
+			);
+			path = Migration;
 			sourceTree = "<group>";
 		};
 		408B204427C65E540067687D /* FolderModel */ = {
@@ -357,44 +401,6 @@
 				40C8DE3227259F5500B8C5FC /* LaunchScreen.storyboard */,
 			);
 			path = MemoryBread;
-			sourceTree = "<group>";
-		};
-		40D0DF4E279BF85600F4448E /* Folder+CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				40D0DF50279BF85600F4448E /* Folder+CoreDataClass.swift */,
-			);
-			path = "Folder+CoreData";
-			sourceTree = "<group>";
-		};
-		40D0DF53279BF86800F4448E /* MappingModels */ = {
-			isa = PBXGroup;
-			children = (
-				402D339D27DDF26B00D6B8FD /* Model-V1-to-V2.xcmappingmodel */,
-			);
-			path = MappingModels;
-			sourceTree = "<group>";
-		};
-		40D0DF56279BF8B500F4448E /* Migration */ = {
-			isa = PBXGroup;
-			children = (
-				40EBCE55289FBF1400B1264D /* NewLineMigrationV2toV3.swift */,
-				40D0DF54279BF8AC00F4448E /* FolderMigrationV1toV2.swift */,
-			);
-			path = Migration;
-			sourceTree = "<group>";
-		};
-		40D87E98277B43EB00CCB28D /* CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */,
-				40D0DF56279BF8B500F4448E /* Migration */,
-				40D0DF53279BF86800F4448E /* MappingModels */,
-				40D0DF4E279BF85600F4448E /* Folder+CoreData */,
-				40245D05272940EE002E84A8 /* Bread+CoreData */,
-				40D87E99277B440A00CCB28D /* CoreDataStack.swift */,
-			);
-			path = CoreData;
 			sourceTree = "<group>";
 		};
 		40D91BF027709E41002E588D /* DataStructure */ = {
@@ -623,6 +629,7 @@
 				40C8DE4227259F8500B8C5FC /* WordCell.swift in Sources */,
 				40B0C1E927AA5F94005F2C6E /* BreadListView.swift in Sources */,
 				40D65713276DFC470059A595 /* GDDownload.swift in Sources */,
+				40710BC528A11C3D00303AB7 /* DataMigrationManager.swift in Sources */,
 				40743F9C27A50004009748EC /* FolderListCell.swift in Sources */,
 				40D0DF5A279C658300F4448E /* UICollectionViewDataSource+Reload.swift in Sources */,
 				409BFB162780744C00F00E52 /* GDDownloaderError.swift in Sources */,
@@ -630,19 +637,21 @@
 				403E63F227688F1A00B787A4 /* RemoteDriveCell.swift in Sources */,
 				402981FF27D11BED004F9C96 /* TextFieldAlertActionEnabling.swift in Sources */,
 				40F644B127EE29D600258BFD /* UIFont+FontSize.swift in Sources */,
-				40245D0227293547002E84A8 /* Bread+CoreDataClass.swift in Sources */,
 				4013F5BB2748B55100E03F5F /* WordPainter.swift in Sources */,
-				40D87E9A277B440A00CCB28D /* CoreDataStack.swift in Sources */,
 				40992F3827E8D8DE0010E0A5 /* ContextSaveError.swift in Sources */,
+				40710BB828A1150500303AB7 /* Bread+CoreDataClass.swift in Sources */,
 				40060F93272D9A3200BA7A34 /* BreadListCell.swift in Sources */,
 				401AD42C277EB8B60038C9FD /* BottomToolbar.swift in Sources */,
 				40F92B89272C3E920085224E /* UICollectionView+Selection.swift in Sources */,
+				40710BBB28A1150500303AB7 /* Model-V1-to-V2.xcmappingmodel in Sources */,
 				4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */,
 				40534A1627B6CCB4002C7E6B /* MoveFolderListCell.swift in Sources */,
 				40F644AF27EDFA1200258BFD /* AdjustWordsSizeViewController.swift in Sources */,
 				40D91BF22773474B002E588D /* DriveFileHelper.swift in Sources */,
+				40710BBC28A1150500303AB7 /* NewLineMigrationV2toV3.swift in Sources */,
+				40710BB928A1150500303AB7 /* MemoryBread.xcdatamodeld in Sources */,
 				409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */,
-				40D0DF52279BF85600F4448E /* Folder+CoreDataClass.swift in Sources */,
+				40710BB628A1150500303AB7 /* CoreDataStack.swift in Sources */,
 				40370D6F27BD12F700D87BB3 /* SubTitleView.swift in Sources */,
 				40F1D608273D70320053AB73 /* String+Helper.swift in Sources */,
 				40060F90272D77F500BA7A34 /* UIColor+CustomColor.swift in Sources */,
@@ -660,13 +669,13 @@
 				40060F95272D9EEE00BA7A34 /* BreadListViewController.swift in Sources */,
 				409D9664276B12DC00EB8220 /* APIKeys.swift in Sources */,
 				40F9689E27B231E6008CBA49 /* TrashViewController.swift in Sources */,
+				40710BBD28A1150500303AB7 /* FolderMigrationV1toV2.swift in Sources */,
 				4013F5C7274E5C4700E03F5F /* LocalizingHelper.swift in Sources */,
 				409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */,
 				40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */,
 				405EC17E27661E200031C19D /* ExcelReader.swift in Sources */,
 				40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */,
 				40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */,
-				40D0DF55279BF8AC00F4448E /* FolderMigrationV1toV2.swift in Sources */,
 				40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */,
 				40953946279084930047B72F /* RoundedButton.swift in Sources */,
 				40F758A0272B053A000ADD4F /* ColorFilterToolbarViewController.swift in Sources */,
@@ -675,19 +684,18 @@
 				409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */,
 				409C08B5280FF7ED00AD5EEB /* SubTitleContentWidthOptimizer.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */,
+				40710BCB28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel in Sources */,
+				40710BB728A1150500303AB7 /* Folder+CoreDataClass.swift in Sources */,
 				405EC185276738C60031C19D /* FileObject.swift in Sources */,
 				405EC184276738C40031C19D /* GDDownloader.swift in Sources */,
-				40C8DE2F27259F5300B8C5FC /* MemoryBread.xcdatamodeld in Sources */,
 				40992F3A27E8E0210010E0A5 /* FolderNameBlackList.swift in Sources */,
 				409CC8FE27327311009B9AA1 /* UserManager.swift in Sources */,
 				40F1D60A273E65020053AB73 /* DateHelper.swift in Sources */,
 				405EC189276744400031C19D /* RemoteDriveAuthViewController.swift in Sources */,
 				40370D6B27BCF64A00D87BB3 /* NSManagedObjectContext+Save.swift in Sources */,
-				40EBCE56289FBF1400B1264D /* NewLineMigrationV2toV3.swift in Sources */,
 				403E63F42768903400B787A4 /* DriveAuthInfo.swift in Sources */,
 				40B176B9277DD65000F0B46B /* LoadingViewController.swift in Sources */,
 				40B176B7277DD0EB00F0B46B /* ExcelReaderError.swift in Sources */,
-				402D339E27DDF26B00D6B8FD /* Model-V1-to-V2.xcmappingmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -978,14 +986,14 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		40C8DE2D27259F5300B8C5FC /* MemoryBread.xcdatamodeld */ = {
+		40710BAC28A1150500303AB7 /* MemoryBread.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				40EBCE57289FD09E00B1264D /* MemoryBread v3.xcdatamodel */,
-				40D0DF47279BDAB900F4448E /* MemoryBread v2.xcdatamodel */,
-				40C8DE2E27259F5300B8C5FC /* MemoryBread.xcdatamodel */,
+				40710BAD28A1150500303AB7 /* MemoryBread v2.xcdatamodel */,
+				40710BAE28A1150500303AB7 /* MemoryBread v3.xcdatamodel */,
+				40710BAF28A1150500303AB7 /* MemoryBread.xcdatamodel */,
 			);
-			currentVersion = 40D0DF47279BDAB900F4448E /* MemoryBread v2.xcdatamodel */;
+			currentVersion = 40710BAE28A1150500303AB7 /* MemoryBread v3.xcdatamodel */;
 			path = MemoryBread.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
