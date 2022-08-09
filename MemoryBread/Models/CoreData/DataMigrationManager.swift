@@ -49,7 +49,7 @@ class DataMigrationManager {
             } else if storeModel.isVersion2 {
                 let destinationModel = NSManagedObjectModel.version3
                 let mappingModel = NSMappingModel(
-                    from: nil,
+                    from: Bundle.allBundles,
                     forSourceModel: storeModel,
                     destinationModel: destinationModel
                 )
@@ -64,7 +64,12 @@ class DataMigrationManager {
         }
     }
     
-    private func migrateStoreAt( URL storeURL: URL, fromModel from: NSManagedObjectModel, toModel to: NSManagedObjectModel, mappingModel: NSMappingModel? = nil ) {
+    private func migrateStoreAt(
+        URL storeURL: URL,
+        fromModel from: NSManagedObjectModel,
+        toModel to: NSManagedObjectModel,
+        mappingModel: NSMappingModel? = nil
+    ) {
         let migrationManager = NSMigrationManager(sourceModel: from, destinationModel: to)
         
         var migrationMappingModel: NSMappingModel
@@ -80,7 +85,7 @@ class DataMigrationManager {
 
         let targetURL = storeURL.deletingLastPathComponent()
         let destinationName = storeURL.lastPathComponent + "~1"
-        let destinationURL = targetURL .appendingPathComponent(destinationName)
+        let destinationURL = targetURL.appendingPathComponent(destinationName)
 
         print("From Model: \(from.entityVersionHashesByName)")
         print("To Model: \(to.entityVersionHashesByName)")
@@ -121,8 +126,6 @@ class DataMigrationManager {
         }
     }
     
-    
-    
     private func store(
         at storeURL: URL,
         isCompatibleWithModel model: NSManagedObjectModel
@@ -140,12 +143,11 @@ class DataMigrationManager {
     ) -> [String: Any] {
         let metadata: [String: Any]
         do {
-            metadata = try NSPersistentStoreCoordinator
-                .metadataForPersistentStore(
-                    ofType: NSSQLiteStoreType,
-                    at: storeURL,
-                    options: nil
-                )
+            metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
+                ofType: NSSQLiteStoreType,
+                at: storeURL,
+                options: nil
+            )
         } catch {
             metadata = [:]
             print("Error retrieving metadata for store at URL: \(storeURL): \(error)")
@@ -182,18 +184,13 @@ extension NSManagedObjectModel {
     private class func modelURLs(
         in modelFolder: String
     ) -> [URL] {
-        Bundle.main
-            .urls(
-                forResourcesWithExtension: "mom",
-                subdirectory: "\(modelFolder).momd"
-            ) ?? []
+        Bundle.main.urls(forResourcesWithExtension: "mom", subdirectory: "\(modelFolder).momd") ?? []
     }
     
     class func modelVersionsFor(
         modelNamed modelName: String
     ) -> [NSManagedObjectModel] {
-        modelURLs(in: modelName)
-            .compactMap(NSManagedObjectModel.init)
+        modelURLs(in: modelName).compactMap(NSManagedObjectModel.init)
     }
     
     class func memoryBreadModel(

@@ -41,7 +41,6 @@
 		40710BBC28A1150500303AB7 /* NewLineMigrationV2toV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BB428A1150500303AB7 /* NewLineMigrationV2toV3.swift */; };
 		40710BBD28A1150500303AB7 /* FolderMigrationV1toV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BB528A1150500303AB7 /* FolderMigrationV1toV2.swift */; };
 		40710BC528A11C3D00303AB7 /* DataMigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40710BC428A11C3D00303AB7 /* DataMigrationManager.swift */; };
-		40710BCB28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40710BCA28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel */; };
 		40743F9C27A50004009748EC /* FolderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40743F9B27A50004009748EC /* FolderListCell.swift */; };
 		4088CEBF272A74030071134E /* HorizontalToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088CEBE272A74030071134E /* HorizontalToolbar.swift */; };
 		408B204627C65E5D0067687D /* FolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 408B204527C65E5D0067687D /* FolderModel.swift */; };
@@ -125,7 +124,6 @@
 		40710BB428A1150500303AB7 /* NewLineMigrationV2toV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewLineMigrationV2toV3.swift; sourceTree = "<group>"; };
 		40710BB528A1150500303AB7 /* FolderMigrationV1toV2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderMigrationV1toV2.swift; sourceTree = "<group>"; };
 		40710BC428A11C3D00303AB7 /* DataMigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMigrationManager.swift; sourceTree = "<group>"; };
-		40710BCA28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Model-V2-to-V3.xcmappingmodel"; sourceTree = "<group>"; };
 		40743F9B27A50004009748EC /* FolderListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderListCell.swift; sourceTree = "<group>"; };
 		4088CEBE272A74030071134E /* HorizontalToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalToolbar.swift; sourceTree = "<group>"; };
 		408B204527C65E5D0067687D /* FolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderModel.swift; sourceTree = "<group>"; };
@@ -291,7 +289,6 @@
 			isa = PBXGroup;
 			children = (
 				40710BB228A1150500303AB7 /* Model-V1-to-V2.xcmappingmodel */,
-				40710BCA28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel */,
 			);
 			path = MappingModels;
 			sourceTree = "<group>";
@@ -684,7 +681,6 @@
 				409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */,
 				409C08B5280FF7ED00AD5EEB /* SubTitleContentWidthOptimizer.swift in Sources */,
 				40F7589E272AFA5A000ADD4F /* CircleCell.swift in Sources */,
-				40710BCB28A1257400303AB7 /* Model-V2-to-V3.xcmappingmodel in Sources */,
 				40710BB728A1150500303AB7 /* Folder+CoreDataClass.swift in Sources */,
 				405EC185276738C60031C19D /* FileObject.swift in Sources */,
 				405EC184276738C40031C19D /* GDDownloader.swift in Sources */,
