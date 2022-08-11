@@ -10,10 +10,10 @@ import CoreData
 
 class NewLineMigrationV2toV3: NSEntityMigrationPolicy {
 
-    // FUNCTION($entityPolicy, "seperatedContentWithNewLineFromContent:", $source.content)
-    // FUNCTION($entityPolicy, "updatedFilterIndexesWithNewLineFromContent:SeperatedContent:filterIndexes:", $source.content, $source.seperatedContent, $source.filterIndexes)
+    // FUNCTION($entityPolicy, "separatedContentWithNewLineFromContent:", $source.content)
+    // FUNCTION($entityPolicy, "updatedFilterIndexesWithNewLineFromContent:SeparatedContent:filterIndexes:", $source.content, $source.separatedContent, $source.filterIndexes)
     @objc
-    func seperatedContentWithNewLine(fromContent: String) -> [String] {
+    func separatedContentWithNewLine(fromContent: String) -> [String] {
         var splittedContentWithNewLine: [String] = []
         splitWithChar(&splittedContentWithNewLine, for: fromContent, using: "\n")
         return splittedContentWithNewLine
@@ -22,13 +22,13 @@ class NewLineMigrationV2toV3: NSEntityMigrationPolicy {
     @objc
     func updatedFilterIndexesWithNewLineFrom(
         content: String,
-        seperatedContent: [String],
+        separatedContent: [String],
         filterIndexes: [[Int]]
     ) -> [[Int]] {
         var splittedContentWithNewLine: [String] = []
         splitWithChar(&splittedContentWithNewLine, for: content, using: "\n")
         
-        let newLineCounter = countNewLine(of: splittedContentWithNewLine, atLength: seperatedContent.count)
+        let newLineCounter = countNewLine(of: splittedContentWithNewLine, atLength: separatedContent.count)
         return filterIndexes.map { row in
             row.map { indexOfItem in
                 indexOfItem + newLineCounter[indexOfItem]
@@ -40,13 +40,13 @@ class NewLineMigrationV2toV3: NSEntityMigrationPolicy {
         try super.createDestinationInstances(forSource: sInstance, in: mapping, manager: manager)
         
         let srcContent = sInstance.value(forKey: "content") as! String
-        let srcSeperatedContentCount = (sInstance.value(forKey: "seperatedContent") as! [String]).count
+        let srcSeparatedContentCount = (sInstance.value(forKey: "separatedContent") as! [String]).count
         let srcFilterIndexes = sInstance.value(forKey: "filterIndexes") as! [[Int]]
 
         var splittedContentWithNewLine: [String] = []
         splitWithChar(&splittedContentWithNewLine, for: srcContent, using: "\n")
 
-        let newLineCounter = countNewLine(of: splittedContentWithNewLine, atLength: srcSeperatedContentCount)
+        let newLineCounter = countNewLine(of: splittedContentWithNewLine, atLength: srcSeparatedContentCount)
         let updatedFilterIndexes = srcFilterIndexes.map { row in
             row.map { indexOfItem in
                 indexOfItem + newLineCounter[indexOfItem]
@@ -55,7 +55,7 @@ class NewLineMigrationV2toV3: NSEntityMigrationPolicy {
 
         let destResults = manager.destinationInstances(forEntityMappingName: mapping.name, sourceInstances: [sInstance])
         if let destinationBread = destResults.last {
-            destinationBread.setValue(splittedContentWithNewLine, forKey: "seperatedContent")
+            destinationBread.setValue(splittedContentWithNewLine, forKey: "separatedContent")
             destinationBread.setValue(updatedFilterIndexes, forKey: "filterIndexes")
         }
     }

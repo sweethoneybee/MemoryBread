@@ -55,6 +55,7 @@
 		409D9667276B152300EB8220 /* DriveAuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9666276B152300EB8220 /* DriveAuthModel.swift */; };
 		409D966A276B66C400EB8220 /* BasicAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409D9669276B66C400EB8220 /* BasicAlert.swift */; };
 		409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */; };
+		40B096D228A5247C00E39FF7 /* ModelV2toV3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40B096D128A5247C00E39FF7 /* ModelV2toV3.xcmappingmodel */; };
 		40B0C1E927AA5F94005F2C6E /* BreadListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0C1E827AA5F94005F2C6E /* BreadListView.swift */; };
 		40B176B7277DD0EB00F0B46B /* ExcelReaderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */; };
 		40B176B9277DD65000F0B46B /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B176B8277DD65000F0B46B /* LoadingViewController.swift */; };
@@ -138,6 +139,7 @@
 		409D9666276B152300EB8220 /* DriveAuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAuthModel.swift; sourceTree = "<group>"; };
 		409D9669276B66C400EB8220 /* BasicAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAlert.swift; sourceTree = "<group>"; };
 		409F1585273AA8E200011DC6 /* SupplemantaryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplemantaryTitleView.swift; sourceTree = "<group>"; };
+		40B096D128A5247C00E39FF7 /* ModelV2toV3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = ModelV2toV3.xcmappingmodel; sourceTree = "<group>"; };
 		40B0C1E827AA5F94005F2C6E /* BreadListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadListView.swift; sourceTree = "<group>"; };
 		40B176B6277DD0EB00F0B46B /* ExcelReaderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExcelReaderError.swift; sourceTree = "<group>"; };
 		40B176B8277DD65000F0B46B /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				40710BB228A1150500303AB7 /* Model-V1-to-V2.xcmappingmodel */,
+				40B096D128A5247C00E39FF7 /* ModelV2toV3.xcmappingmodel */,
 			);
 			path = MappingModels;
 			sourceTree = "<group>";
@@ -671,6 +674,7 @@
 				409F1586273AA8E200011DC6 /* SupplemantaryTitleView.swift in Sources */,
 				40F92B82272BD7B10085224E /* BreadViewController.swift in Sources */,
 				405EC17E27661E200031C19D /* ExcelReader.swift in Sources */,
+				40B096D228A5247C00E39FF7 /* ModelV2toV3.xcmappingmodel in Sources */,
 				40D65716276E3FA20059A595 /* DriveFileListViewController.swift in Sources */,
 				40F92B80272BD7880085224E /* ScrollableTitleView.swift in Sources */,
 				40060F8E272D5D5100BA7A34 /* FilterColor.swift in Sources */,

@@ -48,12 +48,7 @@ class DataMigrationManager {
                 performMigration()
             } else if storeModel.isVersion2 {
                 let destinationModel = NSManagedObjectModel.version3
-                let mappingModel = NSMappingModel(
-                    from: Bundle.allBundles,
-                    forSourceModel: storeModel,
-                    destinationModel: destinationModel
-                )
-                
+                let mappingModel = mappingModelV2toV3()
                 migrateStoreAt(
                     URL: storeURL,
                     fromModel: storeModel,
@@ -90,7 +85,7 @@ class DataMigrationManager {
         print("From Model: \(from.entityVersionHashesByName)")
         print("To Model: \(to.entityVersionHashesByName)")
         print("Migrating store \(storeURL) to \(destinationURL)")
-        print("Mapping model: \(String(describing: mappingModel))")
+        print("Mapping model: \(String(describing: migrationMappingModel))")
 
         let success: Bool
         do {
@@ -177,6 +172,31 @@ class DataMigrationManager {
             .first {
                 self.store(at: storeURL, isCompatibleWithModel: $0)
             }
+    }
+    
+    // FIXME
+    private func mappingModelV2toV3() -> NSMappingModel? {
+        guard let storeModel = storeModel,
+              storeModel.isVersion2 else {
+            return nil
+        }
+
+        let destinationModel = NSManagedObjectModel.version3
+        let mappingModel = try! NSMappingModel.inferredMappingModel(forSourceModel: storeModel, destinationModel: destinationModel)
+        for entityMapping in mappingModel.entityMappings {
+            if entityMapping.sourceEntityName == "Bread" {
+                entityMapping.entityMigrationPolicyClassName = String(describing: NewLineMigrationV2toV3.self)
+                for mapping in entityMapping.attributeMappings! {
+                    if mapping.name == "separatedContent" {
+                        let exp = "FUNCTION($entityPolicy, \"separatedContentWithNewLineFromContent:\", FUNCTION($source, \"valueForKey:\", \"content\"))"
+                        mapping.valueExpression = NSExpression(format: exp)
+                    }
+                }
+            }
+        }
+        return mappingModel
+//        name separatedContent, valueExpression FUNCTION($entityPolicy, \\\"separatedContentWithNewLineFromContent:\\\" , FUNCTION($source, \\\"valueForKey:\\\" , \\\"content\\\"))
+//        name folder, valueExpression FUNCTION($manager, \\\"destinationInstancesForSourceRelationshipNamed:sourceInstances:\\\" , \\\"folder\\\", FUNCTION($source, \\\"valueForKey:\\\" , \\\"folder\\\"))
     }
 }
 
