@@ -77,7 +77,17 @@ class DataMigrationManager {
                     destinationModel: to
                 )
         }
-
+ 
+        // 매핑모델이 source와 destination을 연결짓지 못하는 버그를 해결하기 위해 추가
+        // https://stackoverflow.com/questions/9170064/core-data-default-migration-manual
+        let newEntityMappings = mappingModel?.entityMappings
+        for entityMapping in newEntityMappings! {
+            entityMapping.sourceEntityVersionHash = from.entityVersionHashesByName[entityMapping.sourceEntityName!]
+            entityMapping.destinationEntityVersionHash = to.entityVersionHashesByName[entityMapping.destinationEntityName!]
+        }
+        mappingModel?.entityMappings = newEntityMappings
+        
+        
         let targetURL = storeURL.deletingLastPathComponent()
         let destinationName = storeURL.lastPathComponent + "~1"
         let destinationURL = targetURL.appendingPathComponent(destinationName)
@@ -176,27 +186,8 @@ class DataMigrationManager {
     
     // FIXME
     private func mappingModelV2toV3() -> NSMappingModel? {
-        guard let storeModel = storeModel,
-              storeModel.isVersion2 else {
-            return nil
-        }
-
-        let destinationModel = NSManagedObjectModel.version3
-        let mappingModel = try! NSMappingModel.inferredMappingModel(forSourceModel: storeModel, destinationModel: destinationModel)
-        for entityMapping in mappingModel.entityMappings {
-            if entityMapping.sourceEntityName == "Bread" {
-                entityMapping.entityMigrationPolicyClassName = String(describing: NewLineMigrationV2toV3.self)
-                for mapping in entityMapping.attributeMappings! {
-                    if mapping.name == "separatedContent" {
-                        let exp = "FUNCTION($entityPolicy, \"separatedContentWithNewLineFromContent:\", FUNCTION($source, \"valueForKey:\", \"content\"))"
-                        mapping.valueExpression = NSExpression(format: exp)
-                    }
-                }
-            }
-        }
+        let mappingModel = NSMappingModel(contentsOf: Bundle.main.url(forResource: "Model-V2-to-V3", withExtension: "cdm"))
         return mappingModel
-//        name separatedContent, valueExpression FUNCTION($entityPolicy, \\\"separatedContentWithNewLineFromContent:\\\" , FUNCTION($source, \\\"valueForKey:\\\" , \\\"content\\\"))
-//        name folder, valueExpression FUNCTION($manager, \\\"destinationInstancesForSourceRelationshipNamed:sourceInstances:\\\" , \\\"folder\\\", FUNCTION($source, \\\"valueForKey:\\\" , \\\"folder\\\"))
     }
 }
 
