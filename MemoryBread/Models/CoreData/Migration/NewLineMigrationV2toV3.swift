@@ -10,6 +10,30 @@ import CoreData
 
 class NewLineMigrationV2toV3: NSEntityMigrationPolicy {
 
+    override func createDestinationInstances(forSource sInstance: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
+        try super.createDestinationInstances(forSource: sInstance, in: mapping, manager: manager)
+        
+        let srcContent = sInstance.value(forKey: "content") as! String
+        let srcSeparatedContentCount = (sInstance.value(forKey: "separatedContent") as! [String]).count
+        let srcFilterIndexes = sInstance.value(forKey: "filterIndexes") as! [[Int]]
+        
+        var splittedContentWithNewLine: [String] = []
+        splitWithChar(&splittedContentWithNewLine, for: srcContent, using: "\n")
+
+        let newLineCounter = countNewLine(of: splittedContentWithNewLine, atLength: srcSeparatedContentCount)
+        let updatedFilterIndexes = srcFilterIndexes.map { row in
+            row.map { indexOfItem in
+                indexOfItem + newLineCounter[indexOfItem]
+            }
+        }
+
+        let destResults = manager.destinationInstances(forEntityMappingName: mapping.name, sourceInstances: [sInstance])
+        if let destinationBread = destResults.last {
+            destinationBread.setValue(try! NSKeyedArchiver.archivedData(withRootObject: splittedContentWithNewLine, requiringSecureCoding: true), forKey: "separatedContent")
+            destinationBread.setValue(updatedFilterIndexes, forKey: "filterIndexes")
+        }
+    }
+    
     // FUNCTION($entityPolicy, "separatedContentWithNewLineFromContent:", $source.content)
     // FUNCTION($entityPolicy, "updatedFilterIndexesWithNewLineFromContent:SeparatedContent:filterIndexes:", $source.content, $source.separatedContent, $source.filterIndexes)
     // FIXME: 리턴한 값이 마이그레이션되지 못하고 있음. Transformable과 연관이 있을 듯.
