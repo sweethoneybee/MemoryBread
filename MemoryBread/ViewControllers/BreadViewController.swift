@@ -87,6 +87,10 @@ final class BreadViewController: UIViewController {
         sectionTitleViewHeight = bread.title.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font)
         
         toolbarViewController.select(bread.selectedFilters)
+        
+        print("old=\(bread.separatedContent)")
+        print("filterIndexes=\(bread.filterIndexes)")
+        print("content=\(bread.content)")
     }
     
     override func viewWillDisappear(_ animated: Bool) {

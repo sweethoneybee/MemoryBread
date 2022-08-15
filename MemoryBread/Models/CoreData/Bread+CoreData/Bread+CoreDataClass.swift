@@ -18,7 +18,7 @@ public class Bread: NSManagedObject {
     @NSManaged public var touch: Date
     @NSManaged public var title: String
     @NSManaged public var content: String
-    @NSManaged public private(set) var separatedContent: [String]
+    @NSManaged public var separatedContent: [String]
     @NSManaged public var filterIndexes: [[Int]]
     @NSManaged public var selectedFilters: [Int]
     @NSManaged public var folder: Folder
@@ -49,20 +49,24 @@ public class Bread: NSManagedObject {
     
     // 생성자 외부에 숨기기
     // refer to https://www.jessesquires.com/blog/2022/01/26/core-data-optionals/
-    @objc
-    override private init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+//    @objc
+//    override private init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+//        super.init(entity: entity, insertInto: context)
+//    }
+    
+    public override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
         super.init(entity: entity, insertInto: context)
     }
     
-    @available(*, unavailable)
-    public init() {
-        fatalError("\(#function) not implemented")
-    }
-    
-    @available(*, unavailable)
-    public convenience init(context: NSManagedObjectContext) {
-        fatalError("\(#function) not implemented")
-    }
+//    @available(*, unavailable)
+//    public init() {
+//        fatalError("\(#function) not implemented")
+//    }
+//    
+//    @available(*, unavailable)
+//    public convenience init(context: NSManagedObjectContext) {
+//        fatalError("\(#function) not implemented")
+//    }
     
     func updateContent(with newContent: String) {
         content = newContent
