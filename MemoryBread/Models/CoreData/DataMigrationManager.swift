@@ -43,17 +43,17 @@ class DataMigrationManager {
                 migrateStoreAt(
                     URL: storeURL,
                     fromModel: storeModel,
-                    toModel: destinationModel
+                    toModel: destinationModel,
+                    mappingModel: mappingModelV1toV2()
                 )
                 performMigration()
             } else if storeModel.isVersion2 {
                 let destinationModel = NSManagedObjectModel.version3
-                let mappingModel = mappingModelV2toV3()
                 migrateStoreAt(
                     URL: storeURL,
                     fromModel: storeModel,
                     toModel: destinationModel,
-                    mappingModel: mappingModel
+                    mappingModel: mappingModelV2toV3()
                 )
             }
         }
@@ -185,6 +185,11 @@ class DataMigrationManager {
     }
     
     // FIXME
+    private func mappingModelV1toV2() -> NSMappingModel? {
+        let mappingModel = NSMappingModel(contentsOf: Bundle.main.url(forResource: "Model-V1-to-V2", withExtension: "cdm"))
+        return mappingModel
+    }
+    
     private func mappingModelV2toV3() -> NSMappingModel? {
         let mappingModel = NSMappingModel(contentsOf: Bundle.main.url(forResource: "Model-V2-to-V3", withExtension: "cdm"))
         return mappingModel
