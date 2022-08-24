@@ -24,6 +24,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.rootViewController = nvc
         window?.makeKeyAndVisible()
+        
+        if let migrationError = migrationError {
+            let errorAlert = BasicAlert.makeErrorAlert(message: migrationError.localizedDescription)
+            nvc.topViewController?.present(errorAlert, animated: true)
+        }
     }
     
     func sceneWillResignActive(_ scene: UIScene) {

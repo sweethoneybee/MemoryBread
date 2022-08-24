@@ -104,3 +104,11 @@
 "failed_to_copy" = "암기빵 복사에 실패했습니다. 에러코드=%d";
 
 "copy_from_folder" = "%@ 폴더에서 복사";
+
+"migration_fail" = "마이그레이션 실패";
+
+"fetching_memory_bread_error" = "암기빵 불러오기 에러";
+
+"saving_miagrion_result_error" = "마이그레이션 결과 저장 에러";
+
+"contact_developer" = "개발자에게 문의 바랍니다.";

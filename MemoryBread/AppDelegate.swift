@@ -14,11 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Core Data stack
     lazy var coreDataStack: CoreDataStack = {
-        let manager = DataMigrationManager(
-            modelNamed: "MemoryBread",
-            enableMigrations: true
-        )
-        return manager.stack
+        return CoreDataStack(modelName: "MemoryBread")
     }()
     static var coreDataStack: CoreDataStack {
         return (UIApplication.shared.delegate as! AppDelegate).coreDataStack
@@ -32,6 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UserManager.firstLaunch = false
         }
         
+        if !UserManager.didNewLineMigration {
+            migrateForNewLine()
+            UserManager.didNewLineMigration = true
+        }
         
         GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
             if error == nil && user != nil {
@@ -122,6 +122,96 @@ extension AppDelegate {
             tutorialBread.updateFilterIndexes(usingIndexes: $0.filterIndexes)
         }
         context.saveIfNeeded()
+    }
+}
+
+// MARK: - Migration
+enum MigrationError: Error {
+    case fetchingFail
+    case saveFail
+    
+    var localizedDescription: String {
+        var sentence = "migration_fail".localized
+        switch self {
+        case .fetchingFail: sentence += "(" + "fetching_memory_bread_error".localized + ")"
+        case .saveFail: sentence += "(" + "saving_miagrion_result_error".localized + ")"
+        }
+        
+        sentence += ". " + "contact_developer".localized
+        return sentence
+    }
+}
+
+var migrationError: MigrationError? = nil
+
+extension AppDelegate {
+    private func migrateForNewLine() {
+        func splitWithChar(_ arr: inout [String], for str: String, using char: Character) {
+            guard !str.isEmpty else { return }
+            var firstIndex = str.firstIndex(of: char) ?? str.endIndex
+            
+            if firstIndex != str.startIndex {
+                arr.append(String(str[..<firstIndex]))
+                splitWithChar(&arr, for: String(str[firstIndex...]), using: char)
+                return
+            }
+            
+            arr.append(String(str[firstIndex]))
+            firstIndex = str.index(after: firstIndex)
+            splitWithChar(&arr, for: String(str[firstIndex...]), using: char)
+        }
+        
+        func countNewLine(of splittedContentWithNewLine: [String], atLength length: Int) -> [Int] {
+            var newLineCounter = Array(repeating: 0, count: length)
+            var count = 0
+            var index = 0
+            splittedContentWithNewLine.forEach {
+                if $0 == "\n" {
+                    count += 1
+                    return
+                }
+                newLineCounter[index] = count
+                index += 1
+            }
+            
+            return newLineCounter
+        }
+        
+        let fc = Bread.fetchRequest()
+        let context = coreDataStack.viewContext
+        
+        let breads: [Bread]
+        do {
+            breads = try context.fetch(fc)
+        } catch {
+            UserManager.didNewLineMigration = false
+            migrationError = .fetchingFail
+            return
+        }
+        
+        for bread in breads {
+            var splittedContentWithNewLine: [String] = []
+            splitWithChar(&splittedContentWithNewLine, for: bread.content, using: "\n")
+            
+            let newLineCounter = countNewLine(of: splittedContentWithNewLine, atLength: bread.separatedContent.count)
+            let updatedFilterIndexes = bread.filterIndexes.map { row in
+                row.map { indexOfItem in
+                    indexOfItem + newLineCounter[indexOfItem]
+                }
+            }
+            
+            bread.separatedContent = splittedContentWithNewLine
+            bread.filterIndexes = updatedFilterIndexes
+        }
+        
+        do {
+            try context.save()
+            UserManager.didNewLineMigration = true
+        } catch {
+            UserManager.didNewLineMigration = false
+            migrationError = .saveFail
+            return
+        }
     }
 }
 

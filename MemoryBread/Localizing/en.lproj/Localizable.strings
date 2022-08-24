@@ -103,3 +103,11 @@
 "failed_to_copy" = "Failed to copy breads. Error code=%d";
 
 "copy_from_folder" = "Copy from %@";
+
+"migration_fail" = "Migration Failed";
+
+"fetching_memory_bread_error" = "memory bread loading error";
+
+"saving_miagrion_result_error" = "saving migration result error";
+
+"contact_developer" = "Please contact the developer.";

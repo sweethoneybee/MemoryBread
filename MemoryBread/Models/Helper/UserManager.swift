@@ -38,4 +38,7 @@ final class UserManager {
     
     @UserDefault<Int>(key: "wordSize", defaultValue: WordSize.medium.rawValue)
     static var wordSize: Int
+    
+    @UserDefault<Bool>(key: "didNewLineMigration", defaultValue: false)
+    static var didNewLineMigration: Bool
 }
