@@ -190,17 +190,28 @@ extension AppDelegate {
         }
         
         for bread in breads {
-            var splittedContentWithNewLine: [String] = []
-            splitWithChar(&splittedContentWithNewLine, for: bread.content, using: "\n")
+            print("업데이트전 sepa=\(bread.separatedContent)")
+            var contentWithNewLine: [String] = []
+            bread.content.components(separatedBy: [" ", "\t"]).forEach {
+                splitWithChar(&contentWithNewLine, for: $0, using: "\n")
+            }
             
-            let newLineCounter = countNewLine(of: splittedContentWithNewLine, atLength: bread.separatedContent.count)
+            let numberOfNewLines = countNewLine(
+                of: contentWithNewLine,
+                atLength: bread.separatedContent.count
+            )
+            
             let updatedFilterIndexes = bread.filterIndexes.map { row in
                 row.map { indexOfItem in
-                    indexOfItem + newLineCounter[indexOfItem]
+                    indexOfItem + numberOfNewLines[indexOfItem]
                 }
             }
             
-            bread.separatedContent = splittedContentWithNewLine
+            print("업데이트한 sepa=\(contentWithNewLine)")
+            print("numberOfNewLines=\(numberOfNewLines)")
+            print("업데이트전 filter=\(bread.filterIndexes)")
+            print("업데이트한 filter=\(updatedFilterIndexes)")
+            bread.separatedContent = contentWithNewLine
             bread.filterIndexes = updatedFilterIndexes
         }
         
