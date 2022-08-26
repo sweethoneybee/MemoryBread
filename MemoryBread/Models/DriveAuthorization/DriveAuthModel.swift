@@ -7,6 +7,7 @@
 
 import Foundation
 import GoogleSignIn
+import Combine
 
 final class DriveAuthModel {
     
@@ -18,8 +19,8 @@ final class DriveAuthModel {
         arr.append(
             DriveAuthInfo(
                 domain: .googleDrive,
-                isSignIn: (storage.googleDrive != nil) ? true : false,
-                userEmail: storage.googleDrive?.userEmail ?? nil
+                isSignIn: (storage.googleDrive.value != nil) ? true : false,
+                userEmail: storage.googleDrive.value?.userEmail ?? nil
             )
         )
         
@@ -34,17 +35,26 @@ final class DriveAuthModel {
     
     var driveAuthStorageHasChanged: (() -> ())?
     var observers: [NSKeyValueObservation] = []
-    
+    var cancellabes: Set<AnyCancellable> = []
     init() {
-        observers.append(DriveAuthStorage.shared.observe(\.googleDrive, options: [.new]) { [weak self] _, change in
+        DriveAuthStorage.shared.googleDrive.sink { [weak self] authorization in
             let index = DriveDomain.googleDrive.rawValue
-            if let newValue = change.newValue,
-               let auth = newValue {
-                self?.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: true, userEmail: auth.userEmail)
+            
+            guard let authorization = authorization else {
+                self?.authInfos[index] = DriveAuthInfo(
+                    domain: .googleDrive,
+                    isSignIn: false,
+                    userEmail: nil
+                )
                 return
             }
-            self?.authInfos[index] = DriveAuthInfo(domain: .googleDrive, isSignIn: false, userEmail: nil)
-        })
+            
+            self?.authInfos[index] = DriveAuthInfo(
+                domain: .googleDrive,
+                isSignIn: true,
+                userEmail: authorization.userEmail
+            )
+        }.store(in: &cancellabes)
     }
 }
 
@@ -67,7 +77,7 @@ extension DriveAuthModel {
                     completionHandler(error)
                     return
                 }
-                DriveAuthStorage.shared.googleDrive = user?.authentication.fetcherAuthorizer()
+                DriveAuthStorage.shared.googleDrive.value = user?.authentication.fetcherAuthorizer()
                 completionHandler(nil)
             }
         }
@@ -78,7 +88,7 @@ extension DriveAuthModel {
         switch domain {
         case .googleDrive:
             GIDSignIn.sharedInstance.signOut()
-            DriveAuthStorage.shared.googleDrive = nil
+            DriveAuthStorage.shared.googleDrive.value = nil
         }
     }
     

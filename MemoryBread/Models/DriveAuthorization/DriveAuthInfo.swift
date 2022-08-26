@@ -6,10 +6,10 @@
 //
 
 import Foundation
-
+import Combine
 final class DriveAuthStorage: NSObject {
     static var shared = DriveAuthStorage()
-    @objc dynamic var googleDrive: GTMFetcherAuthorizationProtocol?
+    var googleDrive: CurrentValueSubject<GTMFetcherAuthorizationProtocol?, Never> = .init(nil)
 }
 
 enum DriveDomain: Int {

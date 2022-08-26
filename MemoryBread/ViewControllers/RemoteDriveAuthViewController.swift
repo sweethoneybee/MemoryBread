@@ -218,7 +218,7 @@ extension RemoteDriveAuthViewController {
         switch domain {
         case .googleDrive:
             gdDownloader = GDDownloader()
-            gdDownloader?.authorizer = DriveAuthStorage.shared.googleDrive
+            gdDownloader?.authorizer = DriveAuthStorage.shared.googleDrive.value
             let vc = DriveFileListViewController(
                 context: writeContext,
                 folderObjectID: folderObjectID,

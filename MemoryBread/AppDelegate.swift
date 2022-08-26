@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
             if error == nil && user != nil {
-                DriveAuthStorage.shared.googleDrive = user?.authentication.fetcherAuthorizer()
+                DriveAuthStorage.shared.googleDrive.value = user?.authentication.fetcherAuthorizer()
             }
         }
         
