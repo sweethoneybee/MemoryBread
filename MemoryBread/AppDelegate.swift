@@ -190,29 +190,49 @@ extension AppDelegate {
         }
         
         for bread in breads {
-            print("업데이트전 sepa=\(bread.separatedContent)")
-            var contentWithNewLine: [String] = []
-            bread.content.components(separatedBy: [" ", "\t"]).forEach {
-                splitWithChar(&contentWithNewLine, for: $0, using: "\n")
+            var countEmptyString = 0
+            let numberOfEmptyString: [Int] = bread.separatedContent.map {
+                if $0 == "" {
+                    countEmptyString += 1
+                }
+                return countEmptyString
             }
             
-            let numberOfNewLines = countNewLine(
-                of: contentWithNewLine,
-                atLength: bread.separatedContent.count
-            )
-            
-            let updatedFilterIndexes = bread.filterIndexes.map { row in
-                row.map { indexOfItem in
-                    indexOfItem + numberOfNewLines[indexOfItem]
+            // 기존 filterIndexes가 ""를 포함한 separatedContent로부터
+            // index값을 저장하고 있었기 때문에, ""를 제거한 index 값으로 업데이트
+            var newFilterIndexes = bread.filterIndexes.map { row in
+                row.map { index in
+                    return index - numberOfEmptyString[index]
                 }
             }
             
-            print("업데이트한 sepa=\(contentWithNewLine)")
-            print("numberOfNewLines=\(numberOfNewLines)")
-            print("업데이트전 filter=\(bread.filterIndexes)")
-            print("업데이트한 filter=\(updatedFilterIndexes)")
-            bread.separatedContent = contentWithNewLine
-            bread.filterIndexes = updatedFilterIndexes
+            var tempSeparatedContent = bread.content.components(separatedBy: [" ", "\t"])
+            tempSeparatedContent.removeAll { $0 == "" }
+            
+            var newSeparatedContent: [String] = []
+            tempSeparatedContent.forEach {
+                splitWithChar(&newSeparatedContent, for: $0, using: "\n")
+            }
+            
+            // 위의 filterIndexes가 ""를 제거한 상태의 index로 업데이트 되었기에
+            // 기존 separatedContent도 ""를 제거하여 사용
+            var oldSeparatedContent = bread.separatedContent
+            oldSeparatedContent.removeAll { $0 == "" }
+            
+            let numberOfNewLines = countNewLine(
+                of: newSeparatedContent,
+                atLength: oldSeparatedContent.count
+            )
+            
+            // filterIndexes를 중간중간 추가된 \n 개수에 맞게
+            // index를 업데이트
+            newFilterIndexes = newFilterIndexes.map { row in
+                row.map { index in
+                    return index + numberOfNewLines[index]
+                }
+            }
+            bread.separatedContent = newSeparatedContent
+            bread.filterIndexes = newFilterIndexes
         }
         
         do {
