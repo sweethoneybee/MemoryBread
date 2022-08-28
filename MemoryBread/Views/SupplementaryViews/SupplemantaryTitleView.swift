@@ -43,7 +43,7 @@ extension SupplemantaryTitleView {
         label.numberOfLines = 0
         label.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.equalToSuperview().inset(BreadViewController.UIConstants.edgeInset)
+            make.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview().inset(BreadViewController.UIConstants.edgeInset)
             make.bottom.equalToSuperview().inset(UIConstants.bottomInset)
         }

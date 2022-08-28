@@ -133,7 +133,6 @@ final class BreadViewController: UIViewController {
 // MARK: - Configure Views
 extension BreadViewController {
     private func createLayout() -> UICollectionViewLayout {
-//        let layout = UICollectionViewFlowLayout()
         let layout = LeftAlignedCollectionViewFlowLayout()
         layout.minimumInteritemSpacing = UIConstants.wordItemSpacing
         layout.minimumLineSpacing = UIConstants.lineSpacing
