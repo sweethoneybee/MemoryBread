@@ -220,7 +220,7 @@ extension BreadViewController: UICollectionViewDelegateFlowLayout {
     }
     
     private func wordCellSizeForNewLine() -> CGSize {
-        let newLineSize = CGSize(width: collectionViewContentWidth, height: 0)
+        let newLineSize = CGSize(width: collectionViewContentWidth, height: UIConstants.lineSpacing)
         return newLineSize
     }
     
@@ -290,13 +290,17 @@ extension BreadViewController: UICollectionViewDelegate {
             return
         }
         
+        let item = wordPainter.item(forKey: id)
+        guard item?.word != "\n" else {
+            return
+        }
+        
         if isEditing {
             highlightedItemIndexForEditing = indexPath.item
             updateEditModelIfNeeded(forID: id)
             return
         }
         
-        let item = wordPainter.item(forKey: id)
         if let colorIndex = FilterColor.colorIndex(for: item?.filterColor),
            selectedFilters.contains(colorIndex) {
             wordPainter.togglePeekingOfItem(forKey: id)
@@ -313,6 +317,10 @@ extension BreadViewController: UICollectionViewDelegate {
     
     private func updateEditModelIfNeeded(forID id: UUID) {
         guard isEditing else {
+            return
+        }
+        
+        guard wordPainter.item(forKey: id)?.word != "\n" else {
             return
         }
         
