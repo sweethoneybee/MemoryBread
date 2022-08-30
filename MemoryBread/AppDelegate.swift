@@ -206,7 +206,7 @@ extension AppDelegate {
                 }
             }
             
-            var tempSeparatedContent = bread.content.components(separatedBy: [" ", "\t"])
+            var tempSeparatedContent = bread.content.components(separatedBy: .whitespaces)
             tempSeparatedContent.removeAll { $0 == "" }
             
             var newSeparatedContent: [String] = []

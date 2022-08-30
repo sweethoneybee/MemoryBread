@@ -68,7 +68,7 @@ public class Bread: NSManagedObject {
         content = newContent
         
         var contentWithNewLine = [String]()
-        var tempSeparatedContent = newContent.components(separatedBy: [" ", "\t"])
+        var tempSeparatedContent = newContent.components(separatedBy: .whitespaces)
         tempSeparatedContent.removeAll(where: { $0 == "" })
         tempSeparatedContent.forEach {
             splitWithChar(&contentWithNewLine, for: $0, using: "\n")
