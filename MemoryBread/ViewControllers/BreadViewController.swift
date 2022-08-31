@@ -18,7 +18,7 @@ final class BreadViewController: UIViewController {
     struct UIConstants {
         static let edgeInset: CGFloat = 20
         static let wordItemSpacing: CGFloat = 5
-        static let lineSpacing: CGFloat = 15
+        static let lineSpacing: CGFloat = 7
         static let backButtonOffset: CGFloat = -10
     }
     
@@ -32,6 +32,8 @@ final class BreadViewController: UIViewController {
     private var toolbarViewController: ColorFilterToolbarViewController!
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, UUID>!
+    
+    private var previousWord: String? = nil
     
     // MARK: - Alert Action
     private weak var editDoneAction: UIAlertAction?
@@ -123,6 +125,11 @@ final class BreadViewController: UIViewController {
         toolbarViewController.showNumberOfFilterIndexes(using: bread.filterIndexes)
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        previousWord = nil
+    }
+    
     @objc
     private func orientationDidChange(_ notification: Notification) {
         sectionTitleViewHeight = bread.title.height(withConstraintWidth: collectionViewContentWidth, font: SupplemantaryTitleView.font)
@@ -206,22 +213,24 @@ extension BreadViewController {
 }
 
 extension BreadViewController: UICollectionViewDelegateFlowLayout {
-    private func wordCellSizeWith(word: String, attributes: [NSAttributedString.Key: Any]?, maxWidth: CGFloat) -> CGSize {
+    private func wordCellSizeWith(word: String, attributes: [NSAttributedString.Key: Any]?) -> CGSize {
         let fractionalWordSize = word.size(withAttributes: attributes)
         let wordSize = CGSize(width: ceil(fractionalWordSize.width), height: ceil(fractionalWordSize.height))
         let wordWidth = wordSize.width
         
-        if wordWidth <= maxWidth {
+        if wordWidth <= collectionViewContentWidth {
             return wordSize
         }
         
-        let heightMultiplier = ceil(wordWidth / maxWidth)
-        return CGSize(width: maxWidth, height: wordSize.height * heightMultiplier)
+        let heightMultiplier = ceil(wordWidth / collectionViewContentWidth)
+        return CGSize(width: collectionViewContentWidth, height: wordSize.height * heightMultiplier)
     }
     
-    private func wordCellSizeForNewLine() -> CGSize {
-        let newLineSize = CGSize(width: collectionViewContentWidth, height: UIConstants.lineSpacing)
-        return newLineSize
+    private func newLineWordCell(attributes: [NSAttributedString.Key: Any]?) -> CGSize {
+        if previousWord == "\n" {
+            return CGSize(width: collectionViewContentWidth, height: UIConstants.lineSpacing * 2)
+        }
+        return CGSize(width: collectionViewContentWidth, height: UIConstants.lineSpacing)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -229,9 +238,15 @@ extension BreadViewController: UICollectionViewDelegateFlowLayout {
            let item = wordPainter.item(forKey: id) {
             
             let att = [NSAttributedString.Key.font: WordCell.getLabelFont()]
-            return item.word != "\n"
-            ? wordCellSizeWith(word: item.word, attributes: att, maxWidth: collectionViewContentWidth)
-            : wordCellSizeForNewLine()
+            let size: CGSize
+            if item.word == "\n" {
+                size = newLineWordCell(attributes: att)
+            } else {
+                size = wordCellSizeWith(word: item.word, attributes: att)
+            }
+            
+            previousWord = item.word
+            return size
         }
         return CGSize.zero
     }
